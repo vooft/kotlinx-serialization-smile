@@ -1,9 +1,11 @@
-package io.github.vooft.kotlinsmile
+package io.github.vooft.kotlinsmile.adapter
 
+import io.github.vooft.kotlinsmile.Project
+import io.github.vooft.kotlinsmile.User
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
-class SmileDecoderTest {
+class SmileDecoderAdapterTest {
     @Test
     fun `should decode primitive value`() {
         val actual = decodeFromList<Int>(listOf(1))

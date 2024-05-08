@@ -1,4 +1,4 @@
-package io.github.vooft.kotlinsmile
+package io.github.vooft.kotlinsmile.adapter
 
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -8,7 +8,7 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 
-class SmileDecoder(val list: ArrayDeque<Any>) : AbstractDecoder() {
+class SmileDecoderAdapter(val list: ArrayDeque<Any>) : AbstractDecoder() {
     private var elementIndex = 0
 
     override val serializersModule: SerializersModule = EmptySerializersModule()
@@ -21,11 +21,11 @@ class SmileDecoder(val list: ArrayDeque<Any>) : AbstractDecoder() {
     }
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder =
-        SmileDecoder(list)
+        SmileDecoderAdapter(list)
 }
 
 fun <T> decodeFromList(list: List<Any>, deserializer: DeserializationStrategy<T>): T {
-    val decoder = SmileDecoder(ArrayDeque(list))
+    val decoder = SmileDecoderAdapter(ArrayDeque(list))
     return decoder.decodeSerializableValue(deserializer)
 }
 
