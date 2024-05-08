@@ -6,7 +6,7 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 
-class KotlinSmileEncoder : AbstractEncoder() {
+class SmileEncoder : AbstractEncoder() {
     val list = mutableListOf<Any>()
 
     override val serializersModule: SerializersModule = EmptySerializersModule()
@@ -17,7 +17,7 @@ class KotlinSmileEncoder : AbstractEncoder() {
 }
 
 fun <T> encodeToList(serializer: SerializationStrategy<T>, value: T): List<Any> {
-    val encoder = KotlinSmileEncoder()
+    val encoder = SmileEncoder()
     encoder.encodeSerializableValue(serializer, value)
     return encoder.list
 }

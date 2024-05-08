@@ -3,7 +3,7 @@ package io.github.vooft.kotlinsmile
 import io.kotest.matchers.collections.shouldContainExactly
 import kotlin.test.Test
 
-class KotlinSmileEncoderTest {
+class SmileEncoderTest {
     @Test
     fun `should encode primitive`() {
         val result = encodeToList(1)
@@ -14,6 +14,6 @@ class KotlinSmileEncoderTest {
     fun `should encode data class`() {
         val obj = Project("kotlinx.serialization",  User("kotlin"), 9000)
         val result = encodeToList(obj)
-        result shouldContainExactly listOf(obj)
+        result shouldContainExactly listOf("kotlinx.serialization", "kotlin", 9000)
     }
 }
