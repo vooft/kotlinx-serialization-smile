@@ -19,5 +19,5 @@ jackson-dataformat-smile = { module = "com.fasterxml.jackson.dataformat:jackson-
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.5" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.6" }
 kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" }
