@@ -3,12 +3,11 @@ package io.github.vooft.kotlinsmile.jackson
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.dataformat.smile.SmileGenerator
-import io.github.vooft.kotlinsmile.encoder.SmileEncoder
+import io.github.vooft.kotlinsmile.encoder.SmileEncoderFactory
 import io.github.vooft.kotlinsmile.smile.SmallInteger
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
-import kotlinx.io.bytestring.buildByteString
 
 class JacksonCompatibilityTest : ShouldSpec({
     val smileMapper = ObjectMapper(
@@ -30,19 +29,17 @@ class JacksonCompatibilityTest : ShouldSpec({
     }
 
     context("should serialize small integer") {
-        val encoder = SmileEncoder()
+        val encoder = SmileEncoderFactory()
 
         withData(-16..15) {
             val expected = smileMapper.writeValueAsBytes(it)
             println(expected.toBinaryString())
             println(expected.toHexString())
 
-            val actual = buildByteString {
-                encoder.apply {
-                    writeHeader()
-                    writeSmallInteger(it)
-                }
-            }.toByteArray()
+            val actual = encoder.write {
+                header()
+                smallInteger(it)
+            }
 
             actual shouldBe expected
         }

@@ -8,9 +8,7 @@ value class ZigzagSmallInteger private constructor(private val intPlainValue: In
         require(intPlainValue in -16..15) { "SmallInteger must be in range -16..15" }
     }
 
-    val plainValue: Byte get() = intPlainValue.toByte()
-
-    fun toEncoded() = encode(intPlainValue).toByte()
+    fun toEncoded() = ZigzagInteger.encode(intPlainValue).toByte()
     fun toDecoded() = intPlainValue.toByte()
 
     companion object {
@@ -19,15 +17,19 @@ value class ZigzagSmallInteger private constructor(private val intPlainValue: In
         }
 
         fun fromEncoded(encoded: Int): ZigzagSmallInteger {
-            return ZigzagSmallInteger(decode(encoded))
+            return ZigzagSmallInteger(ZigzagInteger.decode(encoded))
         }
     }
 }
 
-private fun encode(value: Int): Int {
-    return (value shl 1) xor (value shr 31)
+internal object ZigzagInteger {
+    fun encode(value: Int): Int {
+        return (value shl 1) xor (value shr 31)
+    }
+
+    fun decode(value: Int): Int {
+        return (value ushr 1) xor -(value and 1)
+    }
 }
 
-private fun decode(value: Int): Int {
-    return (value ushr 1) xor -(value and 1)
-}
+

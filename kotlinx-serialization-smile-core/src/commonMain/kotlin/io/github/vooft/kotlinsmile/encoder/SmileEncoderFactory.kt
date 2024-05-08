@@ -2,21 +2,34 @@ package io.github.vooft.kotlinsmile.encoder
 
 import io.github.vooft.kotlinsmile.smile.SmallInteger
 import kotlinx.io.bytestring.ByteStringBuilder
+import kotlinx.io.bytestring.buildByteString
 import kotlin.experimental.or
+import kotlin.jvm.JvmInline
 
-class SmileEncoder {
-    fun ByteStringBuilder.writeHeader() {
+class SmileEncoderFactory {
+    fun write(block: SmileEncoder.() -> Unit): ByteArray = buildByteString {
+        SmileEncoderSession(this).block()
+    }.toByteArray()
+}
+
+interface SmileEncoder {
+    fun header()
+    fun smallInteger(value: Int)
+    fun smallByte(value: Byte)
+}
+
+@JvmInline
+value class SmileEncoderSession(private val builder: ByteStringBuilder): SmileEncoder {
+    override fun header() = builder.run {
         append(FIXED_HEADER)
         append(VARIABLE_BYTE)
     }
 
-    fun ByteStringBuilder.writeSmallInteger(value: Int) = writeZigzagSmallInteger(ZigzagSmallInteger.fromPlain(value))
+    override fun smallInteger(value: Int) = writeZigzagSmallInteger(ZigzagSmallInteger.fromPlain(value))
 
-    fun ByteStringBuilder.writeSmallByte(value: Byte) = writeZigzagSmallInteger(ZigzagSmallInteger.fromPlain(value.toInt()))
+    override fun smallByte(value: Byte) = writeZigzagSmallInteger(ZigzagSmallInteger.fromPlain(value.toInt()))
 
-    private fun ByteStringBuilder.writeZigzagSmallInteger(zigzag: ZigzagSmallInteger) {
-        append(SmallInteger.mask or zigzag.toEncoded())
-    }
+    private fun writeZigzagSmallInteger(zigzag: ZigzagSmallInteger) = builder.append(SmallInteger.mask or zigzag.toEncoded())
 }
 
 /**
