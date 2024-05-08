@@ -1,55 +1,20 @@
 package io.github.vooft.kotlinsmile.encoder
 
-import io.github.vooft.kotlinsmile.smile.SmallInteger
+import io.github.vooft.kotlinsmile.encoder.writers.HeaderWriter
+import io.github.vooft.kotlinsmile.encoder.writers.HeaderWriterSession
+import io.github.vooft.kotlinsmile.encoder.writers.SmallIntegerWriter
+import io.github.vooft.kotlinsmile.encoder.writers.SmallIntegerWriterSession
 import kotlinx.io.bytestring.ByteStringBuilder
 import kotlinx.io.bytestring.buildByteString
-import kotlin.experimental.or
-import kotlin.jvm.JvmInline
 
 class SmileEncoderFactory {
-    fun write(block: SmileEncoder.() -> Unit): ByteArray = buildByteString {
-        SmileEncoderSession(this).block()
+    fun write(block: SmileWriter.() -> Unit): ByteArray = buildByteString {
+        SmileWriterSession(this).block()
     }.toByteArray()
 }
 
-interface SmileEncoder {
-    fun header()
-    fun smallInteger(value: Int)
-    fun smallByte(value: Byte)
-}
+interface SmileWriter : HeaderWriter, SmallIntegerWriter
 
-@JvmInline
-value class SmileEncoderSession(private val builder: ByteStringBuilder): SmileEncoder {
-    override fun header() = builder.run {
-        append(FIXED_HEADER)
-        append(VARIABLE_BYTE)
-    }
-
-    override fun smallInteger(value: Int) = writeZigzagSmallInteger(ZigzagSmallInteger.fromPlain(value))
-
-    override fun smallByte(value: Byte) = writeZigzagSmallInteger(ZigzagSmallInteger.fromPlain(value.toInt()))
-
-    private fun writeZigzagSmallInteger(zigzag: ZigzagSmallInteger) = builder.append(SmallInteger.mask or zigzag.toEncoded())
-}
-
-/**
- * Constant byte #0: 0x3A (ASCII ':')
- * Constant byte #1: 0x29 (ASCII ')')
- * Constant byte #2: 0x0A (ASCII linefeed, '\n')
- */
-private val FIXED_HEADER = byteArrayOf(0x3A, 0x29, 0x0A)
-
-/**
- * Bits 4-7 (4 MSB): 4-bit version number; 0x00 for current version (note: it is possible that some bits may be reused if necessary)
- *
- * Bits 3: Reserved
- *
- * Bit 2 (mask 0x04) Whether '''raw binary''' (unescaped 8-bit) values may be present in content
- *
- * Bit 1 (mask 0x02): Whether '''shared String value''' checking was enabled during encoding -- if header missing,
- * default value of "false" must be assumed for decoding (meaning parser need not store decoded String values for back referencing)
- *
- * Bit 0 (mask 0x01): Whether '''shared property name''' checking was enabled during encoding -- if header missing,
- * default value of "true" must be assumed for decoding (meaning parser MUST store seen property names for possible back references)
- */
-private val VARIABLE_BYTE = 0b0000_0_0_0_0u.toByte()
+class SmileWriterSession(byteStringBuilder: ByteStringBuilder) : SmileWriter,
+    HeaderWriter by HeaderWriterSession(byteStringBuilder),
+    SmallIntegerWriter by SmallIntegerWriterSession(byteStringBuilder)

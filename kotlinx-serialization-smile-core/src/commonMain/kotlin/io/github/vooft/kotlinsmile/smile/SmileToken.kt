@@ -12,6 +12,9 @@ data object SmallInteger: SmileToken {
     override val mask: Byte = 0b110_0_0000u.toByte()
 }
 
+data object SimpleLiteral : SmileToken {
+    override val mask: Byte = 0b001_0_0000u.toByte()
+}
 
 
 

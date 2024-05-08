@@ -45,6 +45,10 @@ class JacksonCompatibilityTest : ShouldSpec({
         }
     }
 
+    should("bla") {
+        println(byteArrayOf(0x20, 0x21, 0x22).toBinaryString())
+    }
+
 })
 
 private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"

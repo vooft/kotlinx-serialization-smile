@@ -1,4 +1,4 @@
-package io.github.vooft.kotlinsmile.encoder
+package io.github.vooft.kotlinsmile.common
 
 import kotlin.jvm.JvmInline
 
