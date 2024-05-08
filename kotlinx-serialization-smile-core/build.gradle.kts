@@ -5,6 +5,8 @@ plugins {
 
 kotlin {
     jvm()
+    macosArm64()
+
     applyDefaultHierarchyTemplate()
 
     sourceSets {
