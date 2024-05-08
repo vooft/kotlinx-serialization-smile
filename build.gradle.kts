@@ -19,26 +19,7 @@ allprojects {
         config.from(files("$rootDir/detekt.yml"))
         basePath = rootDir.absolutePath
 
-        source.setFrom("src/commonMain/kotlin", "src/commonTest/kotlin")
+        source.setFrom("src/commonMain/kotlin", "src/commonTest/kotlin", "src/jvmTest/kotlin")
     }
 }
 
-subprojects {
-    afterEvaluate {
-        tasks.named<Test>("jvmTest") {
-            useJUnitPlatform()
-            filter {
-                isFailOnNoMatchingTests = false
-            }
-            testLogging {
-                showExceptions = true
-                showStandardStreams = true
-                events = setOf(
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
-                )
-                exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-            }
-        }
-    }
-}
