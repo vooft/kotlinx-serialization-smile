@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="kotlinx-serialization-smile-test-jvm">
-    <output-path>$PROJECT_DIR$/kotlinx-serialization-smile-test/build/libs</output-path>
-    <root id="archive" name="kotlinx-serialization-smile-test-jvm.jar">
-      <element id="module-output" name="kotlinx-serialization-smile.kotlinx-serialization-smile-test.jvmMain" />
-    </root>
-  </artifact>
-</component>
