@@ -12,24 +12,20 @@ interface SimpleLiteralWriter {
 
 class SimpleLiteralWriterSession(private val builder: ByteStringBuilder): SimpleLiteralWriter {
     override fun emptyString() {
-        builder.append(SimpleLiteral.mask or LITERAL_EMPTY_STRING)
+        builder.append(SimpleLiteral.mask or 0)
     }
 
     override fun nullValue() {
-        builder.append(SimpleLiteral.mask or LITERAL_NULL)
+        builder.append(SimpleLiteral.mask or 1)
     }
 
     override fun boolean(value: Boolean) {
         if (value) {
-            builder.append(SimpleLiteral.mask or LITERAL_TRUE)
+            builder.append(SimpleLiteral.mask or 2)
         } else {
-            builder.append(SimpleLiteral.mask or LITERAL_FALSE)
+            builder.append(SimpleLiteral.mask or 3)
         }
     }
 }
 
-private const val LITERAL_EMPTY_STRING: Byte = 0
-private const val LITERAL_NULL: Byte = 1
-private const val LITERAL_TRUE: Byte = 2
-private const val LITERAL_FALSE: Byte = 3
 

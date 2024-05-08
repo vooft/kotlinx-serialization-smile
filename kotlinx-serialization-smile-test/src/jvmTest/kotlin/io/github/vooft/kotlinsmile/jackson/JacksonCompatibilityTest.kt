@@ -23,13 +23,17 @@ class JacksonCompatibilityTest : ShouldSpec({
         println(expected.toBinaryString())
         println(expected.toHexString())
 
-        println("0xC0 = " + 0xC0.toString(2).padStart(8, '0'))
-        println("0xDF = " + 0xDF.toString(2).padStart(8, '0'))
-        println("0x20 = " + 0x20.toString(2).padStart(8, '0'))
-        println("0x21 = " + 0x21.toString(2).padStart(8, '0'))
-        println("0x22 = " + 0x22.toString(2).padStart(8, '0'))
-        println("0x23 = " + 0x23.toString(2).padStart(8, '0'))
-        println("0x3F = " + 0x3F.toString(2).padStart(8, '0'))
+        printlnUByte(0xC0u)
+        printlnUByte(0xDFu)
+        printlnUByte(0x20u)
+        printlnUByte(0x21u)
+        printlnUByte(0x22u)
+        printlnUByte(0x23u)
+        printlnUByte(0x3Fu)
+        printlnUByte(0xF8u)
+        printlnUByte(0xF9u)
+        printlnUByte(0xFAu)
+        printlnUByte(0xFBu)
         println(SmallInteger.mask.toString(2).padStart(8, '0'))
     }
 
@@ -50,11 +54,25 @@ class JacksonCompatibilityTest : ShouldSpec({
         }
     }
 
+    should("serialize simple object") {
+        val obj = TestObject(1)
+
+        val expected = smileMapper.writeValueAsBytes(obj)
+        println(expected.toBinaryString())
+        println(expected.toHexString())
+    }
+
     should("bla") {
         println(byteArrayOf(0x20, 0x21, 0x22).toBinaryString())
     }
 
 })
+
+data class TestObject(val aa: Int)
+
+private fun printlnUByte(uByte: UByte) {
+    println("0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0'))
+}
 
 private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"
 private fun ByteArray.toBinaryString() = joinToString(", ", "[", "]") { it.toUByte().toString(2).padStart(8, '0') }

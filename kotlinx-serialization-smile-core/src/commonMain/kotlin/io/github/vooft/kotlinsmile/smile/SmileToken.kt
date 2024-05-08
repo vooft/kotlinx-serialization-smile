@@ -16,5 +16,20 @@ data object SimpleLiteral : SmileToken {
     override val mask: Byte = 0b001_00000u.toByte()
 }
 
+data object StartObject : SmileToken {
+    override val mask: Byte = 0b111_00000u.toByte()
+}
+
+data object EndObject : SmileToken {
+    override val mask: Byte = 0b111_00000u.toByte()
+}
+
+data object StartArray : SmileToken {
+    override val mask: Byte = 0b111_00000u.toByte()
+}
+
+data object EndArray : SmileToken {
+    override val mask: Byte = 0b111_00000u.toByte()
+}
 
 
