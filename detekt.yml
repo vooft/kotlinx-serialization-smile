@@ -1,8 +1,11 @@
 style:
+  MagicNumber:
+    active: false
   MaxLineLength:
     maxLineLength: 140
   ForbiddenComment:
     comments:
       - reason: 'Forbidden STOPSHIP todo marker in comment, please address the problem before shipping the code.'
         value: 'STOPSHIP:'
+
 

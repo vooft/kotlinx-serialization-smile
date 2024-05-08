@@ -1,11 +1,13 @@
 package io.github.vooft.kotlinsmile.adapter
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.encoding.AbstractEncoder
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 
+@OptIn(ExperimentalSerializationApi::class)
 class SmileEncoderAdapter : AbstractEncoder() {
     val list = mutableListOf<Any>()
 

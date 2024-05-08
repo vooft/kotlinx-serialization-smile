@@ -1,6 +1,7 @@
 package io.github.vooft.kotlinsmile.adapter
 
 import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
@@ -8,6 +9,7 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 
+@OptIn(ExperimentalSerializationApi::class)
 class SmileDecoderAdapter(val list: ArrayDeque<Any>) : AbstractDecoder() {
     private var elementIndex = 0
 
