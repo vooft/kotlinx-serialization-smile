@@ -23,9 +23,14 @@ class JacksonCompatibilityTest : ShouldSpec({
         println(expected.toBinaryString())
         println(expected.toHexString())
 
-        println("0xC0 = " + 0xC0.toString(2))
-        println("0xDF = " + 0xDF.toString(2))
-        println(SmallInteger.mask.toString(2))
+        println("0xC0 = " + 0xC0.toString(2).padStart(8, '0'))
+        println("0xDF = " + 0xDF.toString(2).padStart(8, '0'))
+        println("0x20 = " + 0x20.toString(2).padStart(8, '0'))
+        println("0x21 = " + 0x21.toString(2).padStart(8, '0'))
+        println("0x22 = " + 0x22.toString(2).padStart(8, '0'))
+        println("0x23 = " + 0x23.toString(2).padStart(8, '0'))
+        println("0x3F = " + 0x3F.toString(2).padStart(8, '0'))
+        println(SmallInteger.mask.toString(2).padStart(8, '0'))
     }
 
     context("should serialize small integer") {
