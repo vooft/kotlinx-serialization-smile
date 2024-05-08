@@ -23,9 +23,5 @@ kotlin {
             implementation(libs.kotest.framework.datatest)
             implementation(libs.kotlin.reflect)
         }
-
-        jvmTest.dependencies {
-            implementation(libs.kotest.runner.junit5)
-        }
     }
 }
