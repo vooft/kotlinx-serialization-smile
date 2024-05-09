@@ -13,6 +13,7 @@ kotlin {
         jvmTest.dependencies {
             implementation(project(":kotlinx-serialization-smile-core"))
             implementation(libs.jackson.dataformat.smile)
+            implementation(libs.jackson.module.kotlin)
             implementation(libs.kotest.runner.junit5)
             implementation(libs.kotest.framework.datatest)
             implementation(libs.kotlin.reflect)

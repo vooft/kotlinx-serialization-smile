@@ -32,4 +32,11 @@ data object EndArray : SmileToken {
     override val mask: Byte = 0b111_00000u.toByte()
 }
 
+data object TinyUnicode : SmileToken {
+    override val mask: Byte = 0b100_00000u.toByte()
+}
+
+data object TinyAscii : SmileToken {
+    override val mask: Byte = 0b010_00000u.toByte()
+}
 

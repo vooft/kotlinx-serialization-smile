@@ -16,7 +16,7 @@ class JacksonCompatibilityTest : ShouldSpec({
             .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, false)
             .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, false)
             .build()
-    )
+    ).findAndRegisterModules()
 
     should("should serialize empty message") {
         val expected = smileMapper.writeValueAsBytes(1)
@@ -34,6 +34,10 @@ class JacksonCompatibilityTest : ShouldSpec({
         printlnUByte(0xF9u)
         printlnUByte(0xFAu)
         printlnUByte(0xFBu)
+        printlnUByte(0x80u)
+        printlnUByte(0x9Fu)
+        printlnUByte(0x40u)
+        printlnUByte(0x5Fu)
         println(SmallInteger.mask.toString(2).padStart(8, '0'))
     }
 
@@ -47,7 +51,7 @@ class JacksonCompatibilityTest : ShouldSpec({
 
             val actual = encoder.write {
                 header()
-                smallInteger(it)
+
             }
 
             actual shouldBe expected
@@ -55,11 +59,18 @@ class JacksonCompatibilityTest : ShouldSpec({
     }
 
     should("serialize simple object") {
-        val obj = TestObject(1)
+        val obj = TestObject(1, 2)
 
         val expected = smileMapper.writeValueAsBytes(obj)
         println(expected.toBinaryString())
         println(expected.toHexString())
+
+//        val encoder = SmileEncoderFactory()
+//        val actual = encoder.write {
+//            header()
+//            startObject()
+//
+//        }
     }
 
     should("bla") {
@@ -68,7 +79,8 @@ class JacksonCompatibilityTest : ShouldSpec({
 
 })
 
-data class TestObject(val aa: Int)
+//data class TestObject(val aa: Int, val `a👨‍💼`: Int)
+data class TestObject(val a: Int, val bb: Int)
 
 private fun printlnUByte(uByte: UByte) {
     println("0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0'))
