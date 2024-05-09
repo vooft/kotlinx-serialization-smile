@@ -35,6 +35,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         printlnUByte(0xFAu)
         printlnUByte(0xFBu)
         printlnUByte(0x80u)
+        printlnUByte(0xBFu)
         printlnUByte(0x9Fu)
         printlnUByte(0x40u)
         printlnUByte(0x5Fu)
@@ -51,7 +52,7 @@ class JacksonCompatibilityTest : ShouldSpec({
 
             val actual = encoder.write {
                 header()
-
+                smallInteger(it)
             }
 
             actual shouldBe expected
@@ -65,12 +66,20 @@ class JacksonCompatibilityTest : ShouldSpec({
         println(expected.toBinaryString())
         println(expected.toHexString())
 
-//        val encoder = SmileEncoderFactory()
-//        val actual = encoder.write {
-//            header()
-//            startObject()
-//
-//        }
+        val encoder = SmileEncoderFactory()
+        val actual = encoder.write {
+            header()
+            startObject()
+            keyShortAscii("a")
+            smallInteger(obj.a)
+            keyShortAscii("bb")
+            smallInteger(obj.bb)
+            endObject()
+        }
+        println(actual.toBinaryString())
+        println(actual.toHexString())
+
+        actual shouldBe expected
     }
 
     should("bla") {

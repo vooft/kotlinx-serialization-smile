@@ -1,4 +1,4 @@
-package io.github.vooft.kotlinsmile.encoder.writers
+package io.github.vooft.kotlinsmile.encoder.values
 
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.FunSpec

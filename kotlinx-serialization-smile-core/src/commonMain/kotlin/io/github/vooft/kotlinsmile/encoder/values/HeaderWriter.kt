@@ -1,4 +1,4 @@
-package io.github.vooft.kotlinsmile.encoder.writers
+package io.github.vooft.kotlinsmile.encoder.values
 
 import kotlinx.io.bytestring.ByteStringBuilder
 import kotlin.jvm.JvmInline

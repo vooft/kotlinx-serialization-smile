@@ -17,6 +17,7 @@ kotlin {
             implementation(libs.kotest.runner.junit5)
             implementation(libs.kotest.framework.datatest)
             implementation(libs.kotlin.reflect)
+            implementation(libs.kotlinx.io.bytestring)
         }
     }
 
