@@ -50,7 +50,7 @@ sealed interface SmileKeyToken : SmileToken {
         val BYTE_LENGTHS = 1..64
     }
 
-    data object KeyLongAscii : SmileKeyToken {
+    data object KeyLongUnicode : SmileKeyToken {
         override val range = 0x34..0x34
 
         val mask = range.first.toByte()
@@ -63,6 +63,8 @@ sealed interface SmileKeyToken : SmileToken {
         val mask = (range.first - 2).toByte() // length starts with 2, so we subtract 1
         val BYTE_LENGTHS = 2..57
     }
+
+
 }
 
 object SmileMarkers {

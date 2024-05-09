@@ -4,8 +4,9 @@ import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.common.isUnicode
 import io.github.vooft.kotlinsmile.encoder.SmileWriter
 import io.github.vooft.kotlinsmile.encoder.SmileWriterSession
-import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongAscii
+import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
+import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
@@ -46,12 +47,18 @@ class SmileEncoderAdapter : AbstractEncoder() {
     override fun encodeElement(descriptor: SerialDescriptor, index: Int): Boolean {
         val name = descriptor.getElementName(index)
 
+        // TODO: create wrapper and calculate everything once
         if (name.isUnicode()) {
-            error("not supported yet")
+            val encoded = name.encodeToByteArray()
+            when (encoded.size) {
+                in KeyShortUnicode.BYTE_LENGTHS -> session.keyShortUnicode(name)
+                in KeyLongUnicode.BYTE_LENGTHS -> session.keyLongUnicode(name)
+                else -> error("Element name $name is too long")
+            }
         } else {
             when (name.length) {
                 in KeyShortAscii.BYTE_LENGTHS -> session.keyShortAscii(name)
-                in KeyLongAscii.BYTE_LENGTHS -> session.keyLongAscii(name)
+                in KeyLongUnicode.BYTE_LENGTHS -> session.keyLongUnicode(name)
                 else -> error("Element name $name is too long")
             }
         }

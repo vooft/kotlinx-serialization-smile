@@ -27,7 +27,7 @@ class JacksonCompatibilityTest : ShouldSpec({
             listOf(
                 ObjWithSerializer(TestObject(1, 2)),
                 ObjWithSerializer(CompositeObject(5, TestObject(6, 7))),
-//                ObjWithSerializer(UnicodePropertyObject(2)),
+                ObjWithSerializer(UnicodePropertyObject(2)),
                 ObjWithSerializer(LongPropertyName(3))
             )
         ) {
@@ -64,9 +64,9 @@ class JacksonCompatibilityTest : ShouldSpec({
     }
 })
 
-//@Suppress("ConstructorParameterNaming")
-//@Serializable
-//data class UnicodePropertyObject(val `a👨‍💼`: Int)
+@Suppress("ConstructorParameterNaming")
+@Serializable
+data class UnicodePropertyObject(val `a👨‍💼`: Int)
 
 @Serializable
 data class LongPropertyName(val aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: Int)
