@@ -26,6 +26,8 @@ sealed interface SmileValueToken : SmileToken {
 
     data object TinyAscii : SmileValueToken {
         override val range = 0x40..0x5F
+
+        val LENGTH_RANGE = 1..32
     }
 
     data object StructuralMarker : SmileValueToken {
@@ -39,10 +41,31 @@ sealed interface SmileValueToken : SmileToken {
 }
 
 sealed interface SmileKeyToken : SmileToken {
-    data object ShortAsciiName : SmileKeyToken {
+    data object KeyShortAscii : SmileKeyToken {
         override val range = 0x80..0xBF
         override val offset = (range.first - 1).toByte() // length can't be 0, so we subtract 1
 
-        val LENGTH_RANGE = 1..64
+        val BYTE_LENGTHS = 1..64
+    }
+
+    data object KeyLongAscii : SmileKeyToken {
+        override val range = 0x34..0x34
+
+        val BYTE_LENGTHS = 65..1024
+    }
+
+    data object KeyShortUnicode : SmileKeyToken {
+        override val range = 0xC0..0xF7
+        override val offset = (range.first - 2).toByte() // length starts with 2, so we subtract 1
+
+        val BYTE_LENGTHS = 2..57
     }
 }
+
+object SmileMarkers {
+    const val STRING_END_MARKER = 0xFC.toByte()
+    const val EOF_MARKER = 0xFF.toByte()
+}
+
+
+

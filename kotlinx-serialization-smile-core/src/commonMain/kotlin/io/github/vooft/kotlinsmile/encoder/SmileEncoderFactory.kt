@@ -2,8 +2,8 @@ package io.github.vooft.kotlinsmile.encoder
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.common.buildByteArray
-import io.github.vooft.kotlinsmile.encoder.keys.KeyShortAsciiWriter
-import io.github.vooft.kotlinsmile.encoder.keys.KeyShortAsciiWriterSession
+import io.github.vooft.kotlinsmile.encoder.keys.KeyAsciiWriter
+import io.github.vooft.kotlinsmile.encoder.keys.KeyAsciiWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.HeaderWriter
 import io.github.vooft.kotlinsmile.encoder.values.HeaderWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.SmallIntegerWriter
@@ -21,7 +21,7 @@ class SmileEncoderFactory {
     }
 }
 
-interface SmileWriter : HeaderWriter, SmallIntegerWriter, StructuralWriter, TinyAsciiWriter, TinyUnicodeWriter, KeyShortAsciiWriter
+interface SmileWriter : HeaderWriter, SmallIntegerWriter, StructuralWriter, TinyAsciiWriter, TinyUnicodeWriter, KeyAsciiWriter
 
 class SmileWriterSession(builder: ByteArrayBuilder) : SmileWriter,
     HeaderWriter by HeaderWriterSession(builder),
@@ -29,4 +29,4 @@ class SmileWriterSession(builder: ByteArrayBuilder) : SmileWriter,
     StructuralWriter by StructuralWriterSession(builder),
     TinyAsciiWriter by TinyAsciiWriterSession(builder),
     TinyUnicodeWriter by TinyUnicodeWriterSession(builder),
-    KeyShortAsciiWriter by KeyShortAsciiWriterSession(builder)
+    KeyAsciiWriter by KeyAsciiWriterSession(builder)

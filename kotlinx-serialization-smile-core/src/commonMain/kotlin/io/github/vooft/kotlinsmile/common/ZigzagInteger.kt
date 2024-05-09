@@ -3,13 +3,13 @@ package io.github.vooft.kotlinsmile.common
 import kotlin.jvm.JvmInline
 
 @JvmInline
-value class ZigzagSmallInteger private constructor(private val intPlainValue: Int) {
+value class ZigzagSmallInteger private constructor(val plainValue: Int) {
     init {
-        require(intPlainValue in -16..15) { "SmallInteger must be in range -16..15" }
+        require(plainValue in -16..15) { "SmallInteger must be in range -16..15" }
     }
 
-    fun toEncoded() = ZigzagInteger.encode(intPlainValue).toByte()
-    fun toDecoded() = intPlainValue.toByte()
+    fun toEncoded() = ZigzagInteger.encode(plainValue).toByte()
+    fun toDecoded() = plainValue.toByte()
 
     companion object {
         fun fromPlain(plain: Int): ZigzagSmallInteger {

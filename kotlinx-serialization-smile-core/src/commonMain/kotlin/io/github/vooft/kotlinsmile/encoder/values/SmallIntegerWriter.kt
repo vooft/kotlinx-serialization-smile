@@ -11,7 +11,7 @@ interface SmallIntegerWriter {
 }
 
 @JvmInline
-value class SmallIntegerWriterSession(private val builder: ByteArrayBuilder): SmallIntegerWriter {
+value class SmallIntegerWriterSession(private val builder: ByteArrayBuilder) : SmallIntegerWriter {
     override fun smallInteger(value: Byte) {
         writeZigzagSmallInteger(ZigzagSmallInteger.fromPlain(value.toInt()))
     }
@@ -21,6 +21,10 @@ value class SmallIntegerWriterSession(private val builder: ByteArrayBuilder): Sm
     }
 
     private fun writeZigzagSmallInteger(zigzag: ZigzagSmallInteger) {
+        require(zigzag.plainValue in SmallInteger.VALUES_RANGE) {
+            "Value must be in ${SmallInteger.VALUES_RANGE}, actual: ${zigzag.plainValue}"
+        }
+
         builder.append(byte = zigzag.toEncoded(), offset = SmallInteger.offset)
     }
 }

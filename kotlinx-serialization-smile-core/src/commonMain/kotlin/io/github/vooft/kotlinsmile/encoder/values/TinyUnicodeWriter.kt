@@ -11,6 +11,6 @@ class TinyUnicodeWriterSession(private val builder: ByteArrayBuilder): TinyUnico
     override fun tinyUnicode(value: String) {
         require(value.length < 32)
         builder.append(byte = value.length.toByte(), offset = TinyUnicode.offset)
-        value.forEach { builder.append(it.code.toByte()) }
+        value.forEach { builder.append(it.code.toByte()) } // TODO: this is incorrect
     }
 }

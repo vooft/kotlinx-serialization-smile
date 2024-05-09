@@ -5,7 +5,6 @@ import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.vooft.kotlinsmile.ObjWithSerializer
 import io.github.vooft.kotlinsmile.Smile
-import io.github.vooft.kotlinsmile.encoder.SmileEncoderFactory
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
@@ -13,6 +12,8 @@ import io.kotest.matchers.shouldBe
 import kotlinx.serialization.Serializable
 
 class JacksonCompatibilityTest : ShouldSpec({
+    System.setProperty("kotest.assertions.collection.print.size", "1000")
+
     val smileMapper = ObjectMapper(
         SmileFactory.builder()
 //            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
@@ -21,11 +22,28 @@ class JacksonCompatibilityTest : ShouldSpec({
             .build()
     ).findAndRegisterModules()
 
-    should("should serialize empty message") {
-        val expected = smileMapper.writeValueAsBytes(1)
-        println(expected.toBinaryString())
-        println(expected.toHexString())
+    context("should serialize object same as jackson") {
+        withData(
+            listOf(
+                ObjWithSerializer(TestObject(1, 2)),
+                ObjWithSerializer(CompositeObject(5, TestObject(6, 7))),
+//                ObjWithSerializer(UnicodePropertyObject(2)),
+                ObjWithSerializer(LongPropertyName(3))
+            )
+        ) {
+            val expected = smileMapper.writeValueAsBytes(it.obj)
+            println(expected.toBinaryString())
+            println(expected.toHexString())
 
+            val actual = Smile.encode(it)
+            println(actual.toBinaryString())
+            println(actual.toHexString())
+
+            actual shouldBe expected
+        }
+    }
+
+    should("bla") {
         printlnUByte(0xC0u)
         printlnUByte(0xDFu)
         printlnUByte(0x20u)
@@ -44,75 +62,14 @@ class JacksonCompatibilityTest : ShouldSpec({
         printlnUByte(0x5Fu)
         println(SmallInteger.offset.toString(2).padStart(8, '0'))
     }
-
-    context("should serialize small integer") {
-        val encoder = SmileEncoderFactory()
-
-        withData(-16..15) {
-            println(it)
-            val expected = smileMapper.writeValueAsBytes(it)
-            println(expected.toBinaryString())
-            println(expected.toHexString())
-
-            val actual = encoder.write {
-                header()
-                smallInteger(it)
-            }
-
-            println(actual.toBinaryString())
-            println(actual.toHexString())
-
-            actual shouldBe expected
-        }
-    }
-
-    should("serialize simple object manually") {
-        val obj = TestObject(1, 2)
-
-        val expected = smileMapper.writeValueAsBytes(obj)
-        println(expected.toBinaryString())
-        println(expected.toHexString())
-
-        val encoder = SmileEncoderFactory()
-        val actual = encoder.write {
-            header()
-            startObject()
-            keyShortAscii("a")
-            smallInteger(obj.a)
-            keyShortAscii("bb")
-            smallInteger(obj.bb)
-            endObject()
-        }
-        println(actual.toBinaryString())
-        println(actual.toHexString())
-
-        actual shouldBe expected
-    }
-
-    context("should serialize object same as jackson") {
-        withData(
-            ObjWithSerializer(TestObject(1, 2)),
-            ObjWithSerializer(CompositeObject(5, TestObject(6, 7)))
-        ) {
-            val expected = smileMapper.writeValueAsBytes(it.obj)
-            println(expected.toBinaryString())
-            println(expected.toHexString())
-
-            val actual = Smile.encode(it)
-            println(actual.toBinaryString())
-            println(actual.toHexString())
-
-            actual shouldBe expected
-        }
-    }
-
-    should("bla") {
-        println(byteArrayOf(0x20, 0x21, 0x22).toBinaryString())
-    }
-
 })
 
-//data class TestObject(val aa: Int, val `a👨‍💼`: Int)
+//@Suppress("ConstructorParameterNaming")
+//@Serializable
+//data class UnicodePropertyObject(val `a👨‍💼`: Int)
+
+@Serializable
+data class LongPropertyName(val aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: Int)
 
 @Serializable
 data class TestObject(val a: Int, val bb: Int)

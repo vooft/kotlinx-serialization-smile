@@ -17,6 +17,6 @@ object Smile {
 }
 
 // temp solution for testing
-data class ObjWithSerializer<T>(val obj: T, val serializer: SerializationStrategy<T>)
+class ObjWithSerializer<T>(val obj: T, val serializer: SerializationStrategy<T>)
 inline fun <reified T> ObjWithSerializer(obj: T) = ObjWithSerializer(obj, serializer<T>())
 
