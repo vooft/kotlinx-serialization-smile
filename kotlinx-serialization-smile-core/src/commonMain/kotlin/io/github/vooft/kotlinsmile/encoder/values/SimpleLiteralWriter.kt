@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.encoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
-import io.github.vooft.kotlinsmile.smile.SimpleLiteral
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteral
 
 interface SimpleLiteralWriter {
     fun emptyString()

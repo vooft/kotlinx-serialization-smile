@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.encoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
-import io.github.vooft.kotlinsmile.smile.StructuralMarker
+import io.github.vooft.kotlinsmile.token.SmileValueToken.StructuralMarker
 
 interface StructuralWriter {
     fun startObject()

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.vooft.kotlinsmile.encoder.SmileEncoderFactory
-import io.github.vooft.kotlinsmile.smile.SmallInteger
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
@@ -46,6 +46,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         val encoder = SmileEncoderFactory()
 
         withData(-16..15) {
+            println(it)
             val expected = smileMapper.writeValueAsBytes(it)
             println(expected.toBinaryString())
             println(expected.toHexString())
@@ -54,6 +55,9 @@ class JacksonCompatibilityTest : ShouldSpec({
                 header()
                 smallInteger(it)
             }
+
+            println(actual.toBinaryString())
+            println(actual.toHexString())
 
             actual shouldBe expected
         }
