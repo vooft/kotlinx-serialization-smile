@@ -60,7 +60,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         printlnUByte(0x9Fu)
         printlnUByte(0x40u)
         printlnUByte(0x5Fu)
-        println(SmallInteger.offset.toString(2).padStart(8, '0'))
+        println(SmallInteger.mask.toString(2).padStart(8, '0'))
     }
 })
 

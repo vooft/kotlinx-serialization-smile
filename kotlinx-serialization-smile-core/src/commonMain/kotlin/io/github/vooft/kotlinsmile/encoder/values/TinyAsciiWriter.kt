@@ -13,7 +13,7 @@ class TinyAsciiWriterSession(private val builder: ByteArrayBuilder) : TinyAsciiW
         require(value.length in TinyAscii.LENGTH_RANGE) { "Length must be in ${TinyAscii.LENGTH_RANGE}, actual: ${value.length}" }
         require(value.isAscii()) { "Only ASCII characters are allowed, actual: $value" }
 
-        builder.append(byte = value.length.toByte(), offset = TinyAscii.offset)
+        builder.append(byte = value.length.toByte(), orMask = TinyAscii.mask)
         value.forEach { builder.append(it.code.toByte()) }
     }
 }

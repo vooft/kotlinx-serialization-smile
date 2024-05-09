@@ -3,7 +3,7 @@ package io.github.vooft.kotlinsmile.common
 import kotlinx.io.bytestring.ByteStringBuilder
 
 interface ByteArrayBuilder {
-    fun append(byte: Byte, offset: Byte = 0)
+    fun append(byte: Byte, orMask: Byte = 0)
     fun append(array: ByteArray)
 
     fun toByteArray(): ByteArray
@@ -20,9 +20,9 @@ fun buildByteArray(block: ByteArrayBuilder.() -> Unit): ByteArray {
 class ByteStringByteArrayBuilder: ByteArrayBuilder {
     private val builder = ByteStringBuilder()
 
-    override fun append(byte: Byte, offset: Byte) {
-        val sum = byte.toUByte() + offset.toUByte()
-        require(sum <= UByte.MAX_VALUE) { "Overflow after adding offset $offset to byte $byte" }
+    override fun append(byte: Byte, orMask: Byte) {
+        val sum = byte.toUByte() + orMask.toUByte()
+        require(sum <= UByte.MAX_VALUE) { "Overflow after adding offset $orMask to byte $byte" }
         builder.append(sum.toByte())
     }
 

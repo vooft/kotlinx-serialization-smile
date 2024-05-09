@@ -16,7 +16,7 @@ class KeyAsciiWriterSession(private val builder: ByteArrayBuilder) : KeyAsciiWri
         require(value.length in KeyShortAscii.BYTE_LENGTHS) { "Length must be in ${KeyShortAscii.BYTE_LENGTHS}, actual: ${value.length}" }
         require(value.isAscii()) { "Only ASCII characters are allowed, actual: $value" }
 
-        builder.append(byte = value.length.toByte(), offset = KeyShortAscii.offset)
+        builder.append(byte = value.length.toByte(), orMask = KeyShortAscii.mask)
         value.forEach { builder.append(it.code.toByte()) }
     }
 
@@ -24,7 +24,7 @@ class KeyAsciiWriterSession(private val builder: ByteArrayBuilder) : KeyAsciiWri
         require(value.length in KeyLongAscii.BYTE_LENGTHS) { "Length must be in ${KeyLongAscii.BYTE_LENGTHS}, actual: ${value.length}" }
         require(value.isAscii()) { "Only ASCII characters are allowed, actual: $value" }
 
-        builder.append(KeyLongAscii.offset)
+        builder.append(KeyLongAscii.mask)
         value.forEach { builder.append(it.code.toByte()) }
         builder.append(SmileMarkers.STRING_END_MARKER)
     }

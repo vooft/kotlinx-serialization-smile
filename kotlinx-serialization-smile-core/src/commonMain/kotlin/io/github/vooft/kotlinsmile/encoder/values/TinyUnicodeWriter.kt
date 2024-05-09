@@ -10,7 +10,7 @@ interface TinyUnicodeWriter {
 class TinyUnicodeWriterSession(private val builder: ByteArrayBuilder): TinyUnicodeWriter {
     override fun tinyUnicode(value: String) {
         require(value.length < 32)
-        builder.append(byte = value.length.toByte(), offset = TinyUnicode.offset)
+        builder.append(byte = value.length.toByte(), orMask = TinyUnicode.mask)
         value.forEach { builder.append(it.code.toByte()) } // TODO: this is incorrect
     }
 }

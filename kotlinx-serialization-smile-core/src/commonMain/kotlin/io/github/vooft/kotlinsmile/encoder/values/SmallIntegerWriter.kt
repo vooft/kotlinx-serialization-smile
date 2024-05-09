@@ -25,6 +25,6 @@ value class SmallIntegerWriterSession(private val builder: ByteArrayBuilder) : S
             "Value must be in ${SmallInteger.VALUES_RANGE}, actual: ${zigzag.plainValue}"
         }
 
-        builder.append(byte = zigzag.toEncoded(), offset = SmallInteger.offset)
+        builder.append(byte = zigzag.toEncoded(), orMask = SmallInteger.mask)
     }
 }

@@ -9,7 +9,7 @@ interface KeyShortUnicodeWriter {
 
 class KeyShortUnicodeWriterSession(private val builder: ByteArrayBuilder) : KeyShortUnicodeWriter {
     override fun keyShortUnicode(value: String) {
-        builder.append(byte = value.length.toByte(), offset = KeyShortAscii.offset)
+        builder.append(byte = value.length.toByte(), orMask = KeyShortAscii.mask)
         value.forEach { builder.append(it.code.toByte()) }
     }
 }

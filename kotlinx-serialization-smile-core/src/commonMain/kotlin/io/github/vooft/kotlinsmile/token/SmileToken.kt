@@ -2,13 +2,13 @@ package io.github.vooft.kotlinsmile.token
 
 sealed interface SmileToken {
     val range: IntRange
-    val offset: Byte get() = range.first.toByte()
 }
 
 sealed interface SmileValueToken : SmileToken {
     data object SmallInteger: SmileValueToken {
         override val range = 0xC0..0xDF
 
+        val mask = range.first.toByte()
         val VALUES_RANGE = -16..15
     }
 
@@ -22,11 +22,13 @@ sealed interface SmileValueToken : SmileToken {
 
     data object TinyUnicode : SmileValueToken {
         override val range = 0x80..0x9F
+        val mask = TinyAscii.range.first.toByte()
     }
 
     data object TinyAscii : SmileValueToken {
         override val range = 0x40..0x5F
 
+        val mask = range.first.toByte()
         val LENGTH_RANGE = 1..32
     }
 
@@ -43,21 +45,22 @@ sealed interface SmileValueToken : SmileToken {
 sealed interface SmileKeyToken : SmileToken {
     data object KeyShortAscii : SmileKeyToken {
         override val range = 0x80..0xBF
-        override val offset = (range.first - 1).toByte() // length can't be 0, so we subtract 1
 
+        val mask = (range.first - 1).toByte()
         val BYTE_LENGTHS = 1..64
     }
 
     data object KeyLongAscii : SmileKeyToken {
         override val range = 0x34..0x34
 
+        val mask = range.first.toByte()
         val BYTE_LENGTHS = 65..1024
     }
 
     data object KeyShortUnicode : SmileKeyToken {
         override val range = 0xC0..0xF7
-        override val offset = (range.first - 2).toByte() // length starts with 2, so we subtract 1
 
+        val mask = (range.first - 2).toByte() // length starts with 2, so we subtract 1
         val BYTE_LENGTHS = 2..57
     }
 }
