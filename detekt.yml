@@ -7,5 +7,8 @@ style:
     comments:
       - reason: 'Forbidden STOPSHIP todo marker in comment, please address the problem before shipping the code.'
         value: 'STOPSHIP:'
-
+naming:
+  FunctionNaming:
+    # can't handle factory pattern methods, like fun MyClass(arg: String) = MyClass(arg.toInt())
+    active: false
 

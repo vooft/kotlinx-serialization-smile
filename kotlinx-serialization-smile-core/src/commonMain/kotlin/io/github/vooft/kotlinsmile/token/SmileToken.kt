@@ -8,6 +8,8 @@ sealed interface SmileToken {
 sealed interface SmileValueToken : SmileToken {
     data object SmallInteger: SmileValueToken {
         override val range = 0xC0..0xDF
+
+        val VALUES_RANGE = -16..15
     }
 
     data object SimpleLiteral : SmileValueToken {
@@ -40,5 +42,7 @@ sealed interface SmileKeyToken : SmileToken {
     data object ShortAsciiName : SmileKeyToken {
         override val range = 0x80..0xBF
         override val offset = (range.first - 1).toByte() // length can't be 0, so we subtract 1
+
+        val LENGTH_RANGE = 1..64
     }
 }

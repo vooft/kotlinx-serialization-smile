@@ -3,11 +3,14 @@ package io.github.vooft.kotlinsmile.jackson
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.dataformat.smile.SmileGenerator
+import io.github.vooft.kotlinsmile.ObjWithSerializer
+import io.github.vooft.kotlinsmile.Smile
 import io.github.vooft.kotlinsmile.encoder.SmileEncoderFactory
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.Serializable
 
 class JacksonCompatibilityTest : ShouldSpec({
     val smileMapper = ObjectMapper(
@@ -63,7 +66,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         }
     }
 
-    should("serialize simple object") {
+    should("serialize simple object manually") {
         val obj = TestObject(1, 2)
 
         val expected = smileMapper.writeValueAsBytes(obj)
@@ -86,6 +89,23 @@ class JacksonCompatibilityTest : ShouldSpec({
         actual shouldBe expected
     }
 
+    context("should serialize object same as jackson") {
+        withData(
+            ObjWithSerializer(TestObject(1, 2)),
+            ObjWithSerializer(CompositeObject(5, TestObject(6, 7)))
+        ) {
+            val expected = smileMapper.writeValueAsBytes(it.obj)
+            println(expected.toBinaryString())
+            println(expected.toHexString())
+
+            val actual = Smile.encode(it)
+            println(actual.toBinaryString())
+            println(actual.toHexString())
+
+            actual shouldBe expected
+        }
+    }
+
     should("bla") {
         println(byteArrayOf(0x20, 0x21, 0x22).toBinaryString())
     }
@@ -93,7 +113,12 @@ class JacksonCompatibilityTest : ShouldSpec({
 })
 
 //data class TestObject(val aa: Int, val `a👨‍💼`: Int)
+
+@Serializable
 data class TestObject(val a: Int, val bb: Int)
+
+@Serializable
+data class CompositeObject(val a: Int, val b: TestObject)
 
 private fun printlnUByte(uByte: UByte) {
     println("0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0'))

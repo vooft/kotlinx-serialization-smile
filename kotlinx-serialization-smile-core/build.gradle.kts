@@ -12,8 +12,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.serialization.core)
-            implementation(libs.kotlinx.io.bytestring)
+            api(libs.kotlinx.serialization.core)
+            api(libs.kotlinx.io.bytestring)
         }
 
         commonTest.dependencies {
