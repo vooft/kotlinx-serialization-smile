@@ -53,7 +53,7 @@ class SmileEncoderAdapter : AbstractEncoder() {
             when (encoded.size) {
                 in KeyShortUnicode.BYTE_LENGTHS -> session.keyShortUnicode(name)
                 in KeyLongUnicode.BYTE_LENGTHS -> session.keyLongUnicode(name)
-                else -> error("Element name $name is too long")
+                else -> error("Element name $name is too long: ${encoded.size} bytes")
             }
         } else {
             when (name.length) {

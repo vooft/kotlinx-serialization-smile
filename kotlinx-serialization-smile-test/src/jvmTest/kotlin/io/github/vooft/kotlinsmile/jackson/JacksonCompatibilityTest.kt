@@ -28,7 +28,8 @@ class JacksonCompatibilityTest : ShouldSpec({
                 ObjWithSerializer(TestObject(1, 2)),
                 ObjWithSerializer(CompositeObject(5, TestObject(6, 7))),
                 ObjWithSerializer(UnicodePropertyObject(2)),
-                ObjWithSerializer(LongPropertyName(3))
+                ObjWithSerializer(LongPropertyName(3)),
+                ObjWithSerializer(UnicodeLongPropertyName(3))
             )
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
@@ -67,6 +68,10 @@ class JacksonCompatibilityTest : ShouldSpec({
 @Suppress("ConstructorParameterNaming")
 @Serializable
 data class UnicodePropertyObject(val `a👨‍💼`: Int)
+
+@Suppress("ConstructorParameterNaming")
+@Serializable
+data class UnicodeLongPropertyName(val `a👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼`: Int) // this is more than 100 bytes!
 
 @Serializable
 data class LongPropertyName(val aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: Int)
