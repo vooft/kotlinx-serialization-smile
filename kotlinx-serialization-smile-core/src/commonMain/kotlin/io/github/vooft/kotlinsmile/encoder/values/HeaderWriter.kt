@@ -1,6 +1,6 @@
 package io.github.vooft.kotlinsmile.encoder.values
 
-import kotlinx.io.bytestring.ByteStringBuilder
+import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import kotlin.jvm.JvmInline
 
 interface HeaderWriter {
@@ -8,7 +8,7 @@ interface HeaderWriter {
 }
 
 @JvmInline
-value class HeaderWriterSession(private val builder: ByteStringBuilder): HeaderWriter {
+value class HeaderWriterSession(private val builder: ByteArrayBuilder): HeaderWriter {
     override fun header() = builder.run {
         append(FIXED_HEADER)
         append(VARIABLE_BYTE)

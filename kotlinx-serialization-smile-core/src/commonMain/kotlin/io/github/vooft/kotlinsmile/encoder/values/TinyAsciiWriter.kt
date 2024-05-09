@@ -1,17 +1,16 @@
 package io.github.vooft.kotlinsmile.encoder.values
 
+import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.smile.TinyUnicode
-import kotlinx.io.bytestring.ByteStringBuilder
-import kotlin.experimental.or
 
 interface TinyAsciiWriter {
     fun tinyAscii(value: String)
 }
 
-class TinyAsciiWriterSession(private val builder: ByteStringBuilder): TinyAsciiWriter {
+class TinyAsciiWriterSession(private val builder: ByteArrayBuilder): TinyAsciiWriter {
     override fun tinyAscii(value: String) {
         require(value.length < 32)
-        builder.append(TinyUnicode.mask or value.length.toByte())
+        builder.append(byte = value.length.toByte(), offset = TinyUnicode.offset)
         value.forEach { builder.append(it.code.toByte()) }
     }
 }

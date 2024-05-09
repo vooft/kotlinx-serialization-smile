@@ -1,5 +1,7 @@
 package io.github.vooft.kotlinsmile.encoder
 
+import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
+import io.github.vooft.kotlinsmile.common.buildByteArray
 import io.github.vooft.kotlinsmile.encoder.keys.KeyShortAsciiWriter
 import io.github.vooft.kotlinsmile.encoder.keys.KeyShortAsciiWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.HeaderWriter
@@ -12,21 +14,19 @@ import io.github.vooft.kotlinsmile.encoder.values.TinyAsciiWriter
 import io.github.vooft.kotlinsmile.encoder.values.TinyAsciiWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.TinyUnicodeWriter
 import io.github.vooft.kotlinsmile.encoder.values.TinyUnicodeWriterSession
-import kotlinx.io.bytestring.ByteStringBuilder
-import kotlinx.io.bytestring.buildByteString
 
 class SmileEncoderFactory {
-    fun write(block: SmileWriter.() -> Unit): ByteArray = buildByteString {
+    fun write(block: SmileWriter.() -> Unit): ByteArray = buildByteArray {
         SmileWriterSession(this).block()
-    }.toByteArray()
+    }
 }
 
 interface SmileWriter : HeaderWriter, SmallIntegerWriter, StructuralWriter, TinyAsciiWriter, TinyUnicodeWriter, KeyShortAsciiWriter
 
-class SmileWriterSession(byteStringBuilder: ByteStringBuilder) : SmileWriter,
-    HeaderWriter by HeaderWriterSession(byteStringBuilder),
-    SmallIntegerWriter by SmallIntegerWriterSession(byteStringBuilder),
-    StructuralWriter by StructuralWriterSession(byteStringBuilder),
-    TinyAsciiWriter by TinyAsciiWriterSession(byteStringBuilder),
-    TinyUnicodeWriter by TinyUnicodeWriterSession(byteStringBuilder),
-    KeyShortAsciiWriter by KeyShortAsciiWriterSession(byteStringBuilder)
+class SmileWriterSession(builder: ByteArrayBuilder) : SmileWriter,
+    HeaderWriter by HeaderWriterSession(builder),
+    SmallIntegerWriter by SmallIntegerWriterSession(builder),
+    StructuralWriter by StructuralWriterSession(builder),
+    TinyAsciiWriter by TinyAsciiWriterSession(builder),
+    TinyUnicodeWriter by TinyUnicodeWriterSession(builder),
+    KeyShortAsciiWriter by KeyShortAsciiWriterSession(builder)
