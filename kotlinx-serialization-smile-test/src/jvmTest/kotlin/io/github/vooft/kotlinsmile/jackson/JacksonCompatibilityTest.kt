@@ -32,7 +32,9 @@ class JacksonCompatibilityTest : ShouldSpec({
                 ObjWithSerializer(LongPropertyName()),
                 ObjWithSerializer(UnicodeLongPropertyName()),
                 ObjWithSerializer(AsciiTinyPropertyValue()),
-                ObjWithSerializer(UnicodeTinyPropertyValue())
+                ObjWithSerializer(UnicodeTinyPropertyValue()),
+                ObjWithSerializer(AsciiShortPropertyValue()),
+                ObjWithSerializer(UnicodeShortPropertyValue())
             )
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
@@ -94,6 +96,12 @@ data class AsciiTinyPropertyValue(val a: String = "test123")
 
 @Serializable
 data class UnicodeTinyPropertyValue(val a: String = "👨‍💼")
+
+@Serializable
+data class AsciiShortPropertyValue(val a: String = "a".repeat(50))
+
+@Serializable
+data class UnicodeShortPropertyValue(val a: String = "👨‍💼".repeat(5))
 
 private fun printlnUByte(uByte: UByte) {
     println("0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0'))

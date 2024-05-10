@@ -21,8 +21,8 @@ value class SmallIntegerWriterSession(private val builder: ByteArrayBuilder) : S
     }
 
     private fun writeZigzagSmallInteger(zigzag: ZigzagSmallInteger) {
-        require(zigzag.plainValue in SmallInteger.VALUES_RANGE) {
-            "Value must be in ${SmallInteger.VALUES_RANGE}, actual: ${zigzag.plainValue}"
+        require(zigzag.plainValue in SmallInteger.values) {
+            "Value must be in ${SmallInteger.values}, actual: ${zigzag.plainValue}"
         }
 
         builder.append(byte = zigzag.toEncoded(), orMask = SmallInteger.mask)

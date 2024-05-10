@@ -10,6 +10,8 @@ import io.github.vooft.kotlinsmile.encoder.SmileWriterSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
+import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
+import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
@@ -37,7 +39,7 @@ class SmileEncoderAdapter : AbstractEncoder() {
 
     override fun encodeInt(value: Int) {
         when (value) {
-            in SmallInteger.VALUES_RANGE -> session.smallInteger(value)
+            in SmallInteger.values -> session.smallInteger(value)
             else -> TODO("Int value $value not supported yet")
         }
     }
@@ -48,10 +50,18 @@ class SmileEncoderAdapter : AbstractEncoder() {
     override fun encodeString(value: String) {
         val smileString = value.toSmile()
 
-        when {
-            smileString.isAscii && smileString.length in TinyAscii.BYTE_LENGTHS -> session.valueTinyAscii(smileString)
-            smileString.isUnicode && smileString.length in TinyUnicode.BYTE_LENGTHS -> session.valueTinyUnicode(smileString)
-            else -> error("String $value is too long")
+        if (smileString.isAscii) {
+            when (smileString.length) {
+                in TinyAscii.lengths -> session.valueTinyAscii(smileString)
+                in ShortAscii.lengths -> session.valueShortAscii(smileString)
+                else -> error("String $value is too long")
+            }
+        } else {
+            when (smileString.length) {
+                in TinyUnicode.lengths -> session.valueTinyUnicode(smileString)
+                in ShortUnicode.lengths -> session.valueShortUnicode(smileString)
+                else -> error("String $value is too long")
+            }
         }
     }
 
