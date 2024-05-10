@@ -8,6 +8,7 @@ import io.github.vooft.kotlinsmile.common.requireLength
 import io.github.vooft.kotlinsmile.common.requireUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SmileValueShortStringToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 
@@ -19,39 +20,22 @@ interface ValueStringWriter {
 }
 
 class ValueStringWriterSession(private val builder: ByteArrayBuilder) : ValueStringWriter {
-    override fun valueTinyAscii(value: SmileString) {
-        value.requireLength(TinyAscii.lengths)
-        value.requireAscii()
 
-        val writtenLength = value.length - TinyAscii.lengths.first
-        builder.append(byte = writtenLength.toByte(), orMask = TinyAscii.mask)
-        builder.append(value.encoded)
-    }
+    override fun valueTinyAscii(value: SmileString) = TinyAscii.append(value)
+    override fun valueShortAscii(value: SmileString) = ShortAscii.append(value)
+    override fun valueTinyUnicode(value: SmileString) = TinyUnicode.append(value)
+    override fun valueShortUnicode(value: SmileString) = ShortUnicode.append(value)
 
-    override fun valueShortAscii(value: SmileString) {
-        value.requireLength(ShortAscii.lengths)
-        value.requireAscii()
+    private fun SmileValueShortStringToken.append(value: SmileString) {
+        value.requireLength(lengths)
+        if (isUnicode) {
+            value.requireUnicode()
+        } else {
+            value.requireAscii()
+        }
 
-        val writtenLength = value.length - ShortAscii.lengths.first
-        builder.append(byte = writtenLength.toByte(), orMask = ShortAscii.mask)
-        builder.append(value.encoded)
-    }
-
-    override fun valueTinyUnicode(value: SmileString) {
-        value.requireLength(TinyUnicode.lengths)
-        value.requireUnicode()
-
-        val writtenLength = value.length - TinyUnicode.lengths.first
-        builder.append(byte = writtenLength.toByte(), orMask = TinyUnicode.mask)
-        builder.append(value.encoded)
-    }
-
-    override fun valueShortUnicode(value: SmileString) {
-        value.requireLength(ShortUnicode.lengths)
-        value.requireUnicode()
-
-        val writtenLength = value.length - ShortUnicode.lengths.first
-        builder.append(byte = writtenLength.toByte(), orMask = ShortUnicode.mask)
+        val writtenLength = value.length - lengths.first
+        builder.append(byte = writtenLength.toByte(), orMask = mask)
         builder.append(value.encoded)
     }
 }

@@ -20,32 +20,38 @@ sealed interface SmileValueToken : SmileToken {
         const val VALUE_FALSE = 0x23.toByte()
     }
 
-    data object TinyUnicode : SmileValueToken {
+    sealed interface SmileValueShortStringToken : SmileValueToken {
+        val mask: Byte get() = tokenRange.first.toByte()
+        val lengths: IntRange
+        val isUnicode: Boolean
+    }
+
+    data object TinyUnicode : SmileValueShortStringToken {
         override val tokenRange = 0x80..0x9F
 
-        val mask = tokenRange.first.toByte()
-        val lengths = 2..33
+        override val lengths = 2..33
+        override val isUnicode = true
     }
 
-    data object TinyAscii : SmileValueToken {
+    data object TinyAscii : SmileValueShortStringToken {
         override val tokenRange = 0x40..0x5F
 
-        val mask = tokenRange.first.toByte()
-        val lengths = 1..32
+        override val lengths = 1..32
+        override val isUnicode = false
     }
 
-    data object ShortAscii : SmileValueToken {
+    data object ShortAscii : SmileValueShortStringToken {
         override val tokenRange = 0x60..0x7F
 
-        val mask = tokenRange.first.toByte()
-        val lengths = 33..64
+        override val lengths = 33..64
+        override val isUnicode = false
     }
 
-    data object ShortUnicode : SmileValueToken {
+    data object ShortUnicode : SmileValueShortStringToken {
         override val tokenRange = 0xA0..0xBF
 
-        val mask = tokenRange.first.toByte()
-        val lengths = 34..65
+        override val lengths = 34..65
+        override val isUnicode = true
     }
 
     data object StructuralMarker : SmileValueToken {
