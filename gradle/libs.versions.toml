@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.9.24"
-# kotest on native doesn't work with k2 yet
+# kotest on native doesn't work with k2 yet https://github.com/kotest/kotest/issues/3994
 #kotlin = "2.0.0-RC2"
 kotest = "5.9.0"
 
