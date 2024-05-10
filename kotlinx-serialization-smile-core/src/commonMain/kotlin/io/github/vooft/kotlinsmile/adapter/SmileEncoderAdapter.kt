@@ -54,13 +54,13 @@ class SmileEncoderAdapter : AbstractEncoder() {
             when (smileString.length) {
                 in TinyAscii.lengths -> session.valueTinyAscii(smileString)
                 in ShortAscii.lengths -> session.valueShortAscii(smileString)
-                else -> error("String $value is too long")
+                else -> session.valueLongAscii(smileString)
             }
         } else {
             when (smileString.length) {
                 in TinyUnicode.lengths -> session.valueTinyUnicode(smileString)
                 in ShortUnicode.lengths -> session.valueShortUnicode(smileString)
-                else -> error("String $value is too long")
+                else -> session.valueLongUnicode(smileString)
             }
         }
     }

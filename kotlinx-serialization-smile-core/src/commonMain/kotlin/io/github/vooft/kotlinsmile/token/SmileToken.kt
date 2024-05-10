@@ -54,6 +54,16 @@ sealed interface SmileValueToken : SmileToken {
         override val isUnicode = true
     }
 
+    data object LongAscii : SmileValueToken {
+        override val tokenRange = 0xE0..0xE0
+        val firstByte = tokenRange.first.toByte()
+    }
+
+    data object LongUnicode : SmileValueToken {
+        override val tokenRange = 0xE4..0xE4
+        val firstByte = tokenRange.first.toByte()
+    }
+
     data object StructuralMarker : SmileValueToken {
         override val tokenRange = 0xF8..0xFB
 

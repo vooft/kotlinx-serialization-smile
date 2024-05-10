@@ -10,8 +10,10 @@ import io.github.vooft.kotlinsmile.encoder.structure.StructuralWriter
 import io.github.vooft.kotlinsmile.encoder.structure.StructuralWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.SmallIntegerWriter
 import io.github.vooft.kotlinsmile.encoder.values.SmallIntegerWriterSession
-import io.github.vooft.kotlinsmile.encoder.values.ValueStringWriter
-import io.github.vooft.kotlinsmile.encoder.values.ValueStringWriterSession
+import io.github.vooft.kotlinsmile.encoder.values.ValueLongStringWriter
+import io.github.vooft.kotlinsmile.encoder.values.ValueLongStringWriterSession
+import io.github.vooft.kotlinsmile.encoder.values.ValueShortStringWriter
+import io.github.vooft.kotlinsmile.encoder.values.ValueShortStringWriterSession
 
 class SmileEncoderFactory {
     fun write(block: SmileWriter.() -> Unit): ByteArray = buildByteArray {
@@ -19,11 +21,12 @@ class SmileEncoderFactory {
     }
 }
 
-interface SmileWriter : HeaderWriter, SmallIntegerWriter, StructuralWriter, ValueStringWriter, KeyStringWriter
+interface SmileWriter : HeaderWriter, SmallIntegerWriter, StructuralWriter, ValueShortStringWriter, KeyStringWriter, ValueLongStringWriter
 
 class SmileWriterSession(builder: ByteArrayBuilder) : SmileWriter,
     HeaderWriter by HeaderWriterSession(builder),
     SmallIntegerWriter by SmallIntegerWriterSession(builder),
     StructuralWriter by StructuralWriterSession(builder),
-    ValueStringWriter by ValueStringWriterSession(builder),
-    KeyStringWriter by KeyStringWriterSession(builder)
+    ValueShortStringWriter by ValueShortStringWriterSession(builder),
+    KeyStringWriter by KeyStringWriterSession(builder),
+    ValueLongStringWriter by ValueLongStringWriterSession(builder)

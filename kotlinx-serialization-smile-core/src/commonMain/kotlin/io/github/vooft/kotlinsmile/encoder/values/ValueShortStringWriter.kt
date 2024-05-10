@@ -12,14 +12,14 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.SmileValueShortStringTo
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 
-interface ValueStringWriter {
+interface ValueShortStringWriter {
     fun valueTinyAscii(value: SmileString)
     fun valueShortAscii(value: SmileString)
     fun valueTinyUnicode(value: SmileString)
     fun valueShortUnicode(value: SmileString)
 }
 
-class ValueStringWriterSession(private val builder: ByteArrayBuilder) : ValueStringWriter {
+class ValueShortStringWriterSession(private val builder: ByteArrayBuilder) : ValueShortStringWriter {
 
     override fun valueTinyAscii(value: SmileString) = TinyAscii.append(value)
     override fun valueShortAscii(value: SmileString) = ShortAscii.append(value)
