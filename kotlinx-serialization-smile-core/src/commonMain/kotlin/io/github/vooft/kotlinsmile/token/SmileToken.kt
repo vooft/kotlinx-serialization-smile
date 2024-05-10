@@ -2,6 +2,27 @@ package io.github.vooft.kotlinsmile.token
 
 sealed interface SmileToken {
     val tokenRange: IntRange
+
+    companion object {
+        val ALL_TOKENS = listOf(
+            SmileValueToken.SmallInteger,
+            SmileValueToken.SimpleLiteral,
+            SmileValueToken.TinyUnicode,
+            SmileValueToken.TinyAscii,
+            SmileValueToken.ShortAscii,
+            SmileValueToken.ShortUnicode,
+            SmileValueToken.LongAscii,
+            SmileValueToken.LongUnicode,
+            SmileValueToken.StructuralMarker,
+            SmileKeyToken.KeyShortAscii,
+            SmileKeyToken.KeyLongUnicode,
+            SmileKeyToken.KeyShortUnicode
+        )
+
+        fun fromByte(byte: Byte): SmileToken {
+            return ALL_TOKENS.first { it.tokenRange.contains(byte.toInt() and 0xFF) }
+        }
+    }
 }
 
 sealed interface SmileValueToken : SmileToken {
@@ -95,14 +116,35 @@ sealed interface SmileKeyToken : SmileToken {
         val mask = (tokenRange.first - 2).toByte() // length starts with 2, so we subtract 1
         val BYTE_LENGTHS = 2..57
     }
-
-
 }
 
 object SmileMarkers {
+    /**
+     * Constant byte #0: 0x3A (ASCII ':')
+     * Constant byte #1: 0x29 (ASCII ')')
+     * Constant byte #2: 0x0A (ASCII linefeed, '\n')
+     */
+    val FIXED_HEADER = byteArrayOf(0x3A, 0x29, 0x0A)
+
+    /**
+     * Bits 4-7 (4 MSB): 4-bit version number; 0x00 for current version (note: it is possible that some bits may be reused if necessary)
+     *
+     * Bits 3: Reserved
+     *
+     * Bit 2 (mask 0x04) Whether '''raw binary''' (unescaped 8-bit) values may be present in content
+     *
+     * Bit 1 (mask 0x02): Whether '''shared String value''' checking was enabled during encoding -- if header missing,
+     * default value of "false" must be assumed for decoding (meaning parser need not store decoded String values for back referencing)
+     *
+     * Bit 0 (mask 0x01): Whether '''shared property name''' checking was enabled during encoding -- if header missing,
+     * default value of "true" must be assumed for decoding (meaning parser MUST store seen property names for possible back references)
+     */
+    const val VERSION_MASK = 0x00.toByte()
+    const val HAS_RAW_BINARY_MASK = 0x04.toByte()
+    const val SHARED_STRING_VALUE_MASK = 0x02.toByte()
+    const val SHARED_STRING_PROPERTY_NAME_MASK = 0x01.toByte()
+
     const val STRING_END_MARKER = 0xFC.toByte()
     const val EOF_MARKER = 0xFF.toByte()
 }
-
-
 
