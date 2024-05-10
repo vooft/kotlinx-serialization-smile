@@ -22,14 +22,16 @@ sealed interface SmileValueToken : SmileToken {
 
     data object TinyUnicode : SmileValueToken {
         override val range = 0x80..0x9F
-        val mask = TinyAscii.range.first.toByte()
+
+        val mask = range.first.toByte()
+        val BYTE_LENGTHS = 2..33
     }
 
     data object TinyAscii : SmileValueToken {
         override val range = 0x40..0x5F
 
         val mask = range.first.toByte()
-        val LENGTH_RANGE = 1..32
+        val BYTE_LENGTHS = 2..33
     }
 
     data object StructuralMarker : SmileValueToken {

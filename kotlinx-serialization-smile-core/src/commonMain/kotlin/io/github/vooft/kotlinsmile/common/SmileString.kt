@@ -6,12 +6,12 @@ data class SmileString(val value: String) {
 
 val SmileString.isUnicode: Boolean get() = value.length != encoded.size
 val SmileString.isAscii: Boolean get() = value.length == encoded.size
-val SmileString.byteLength: Int get() = encoded.size
+val SmileString.length: Int get() = encoded.size
 
 fun String.toSmile() = SmileString(this)
 
 fun SmileString.requireLength(range: IntRange) {
-    require(byteLength in range) { "Length must be in $range, actual: $byteLength" }
+    require(length in range) { "Length must be in $range, actual: $length" }
 }
 
 fun SmileString.requireAscii() {

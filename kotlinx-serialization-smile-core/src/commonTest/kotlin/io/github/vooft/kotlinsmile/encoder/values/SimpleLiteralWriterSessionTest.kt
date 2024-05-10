@@ -8,7 +8,7 @@ class SimpleLiteralWriterSessionTest {
     @Test
     fun `should write empty string`() {
         val builder = ByteArrayBuilder()
-        val session = SimpleLiteralWriterSession(builder)
+        val session = ValueSimpleLiteralWriterSession(builder)
 
         session.emptyString()
 
@@ -18,7 +18,7 @@ class SimpleLiteralWriterSessionTest {
     @Test
     fun `should write null`() {
         val builder = ByteArrayBuilder()
-        val session = SimpleLiteralWriterSession(builder)
+        val session = ValueSimpleLiteralWriterSession(builder)
 
         session.nullValue()
 
@@ -28,7 +28,7 @@ class SimpleLiteralWriterSessionTest {
     @Test
     fun `should write true`() {
         val builder = ByteArrayBuilder()
-        val session = SimpleLiteralWriterSession(builder)
+        val session = ValueSimpleLiteralWriterSession(builder)
 
         session.boolean(true)
 
@@ -38,7 +38,7 @@ class SimpleLiteralWriterSessionTest {
     @Test
     fun `should write false`() {
         val builder = ByteArrayBuilder()
-        val session = SimpleLiteralWriterSession(builder)
+        val session = ValueSimpleLiteralWriterSession(builder)
 
         session.boolean(false)
 

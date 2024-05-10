@@ -2,7 +2,7 @@ package io.github.vooft.kotlinsmile.encoder.keys
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.common.SmileString
-import io.github.vooft.kotlinsmile.common.byteLength
+import io.github.vooft.kotlinsmile.common.length
 import io.github.vooft.kotlinsmile.common.requireAscii
 import io.github.vooft.kotlinsmile.common.requireLength
 import io.github.vooft.kotlinsmile.common.requireUnicode
@@ -22,7 +22,7 @@ class KeyStringWriterSession(private val builder: ByteArrayBuilder) : KeyStringW
         value.requireLength(KeyShortAscii.BYTE_LENGTHS)
         value.requireAscii()
 
-        builder.append(byte = value.byteLength.toByte(), orMask = KeyShortAscii.mask)
+        builder.append(byte = value.length.toByte(), orMask = KeyShortAscii.mask)
         builder.append(value.encoded)
     }
 
@@ -30,7 +30,7 @@ class KeyStringWriterSession(private val builder: ByteArrayBuilder) : KeyStringW
         value.requireUnicode()
         value.requireLength(KeyShortUnicode.BYTE_LENGTHS)
 
-        builder.append(byte = value.byteLength.toByte(), orMask = KeyShortUnicode.mask)
+        builder.append(byte = value.length.toByte(), orMask = KeyShortUnicode.mask)
         builder.append(value.encoded)
     }
 

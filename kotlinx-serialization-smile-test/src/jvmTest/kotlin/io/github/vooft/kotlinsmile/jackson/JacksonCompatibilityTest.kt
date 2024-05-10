@@ -23,24 +23,29 @@ class JacksonCompatibilityTest : ShouldSpec({
     ).findAndRegisterModules()
 
     context("should serialize object same as jackson") {
-        withData(
-            listOf(
+        withData<ObjWithSerializer<*>>(
+            nameFn = { it.obj!!::class.simpleName!! },
+            ts = listOf(
                 ObjWithSerializer(TestObject()),
                 ObjWithSerializer(CompositeObject()),
                 ObjWithSerializer(UnicodePropertyObject()),
                 ObjWithSerializer(LongPropertyName()),
                 ObjWithSerializer(UnicodeLongPropertyName()),
-//                ObjWithSerializer(AsciiShortPropertyValue()),
-//                ObjWithSerializer(UnicodeShortPropertyValue())
+                ObjWithSerializer(AsciiTinyPropertyValue()),
+                ObjWithSerializer(UnicodeTinyPropertyValue())
             )
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
-            println(expected.toBinaryString())
-            println(expected.toHexString())
 
             val actual = Smile.encode(it)
+
+            println(it.obj!!::class.simpleName)
+            println(expected.toBinaryString())
             println(actual.toBinaryString())
+
+            println(expected.toHexString())
             println(actual.toHexString())
+            println()
 
             actual shouldBe expected
         }
@@ -85,10 +90,10 @@ data class TestObject(val a: Int = 1, val bb: Int = 2)
 data class CompositeObject(val a: Int = 1, val b: TestObject = TestObject())
 
 @Serializable
-data class AsciiShortPropertyValue(val a: String = "test123")
+data class AsciiTinyPropertyValue(val a: String = "test123")
 
 @Serializable
-data class UnicodeShortPropertyValue(val a: String = "👨‍💼")
+data class UnicodeTinyPropertyValue(val a: String = "👨‍💼")
 
 private fun printlnUByte(uByte: UByte) {
     println("0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0'))

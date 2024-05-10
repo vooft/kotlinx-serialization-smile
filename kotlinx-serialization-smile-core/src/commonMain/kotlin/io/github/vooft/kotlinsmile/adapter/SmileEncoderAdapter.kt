@@ -1,9 +1,9 @@
 package io.github.vooft.kotlinsmile.adapter
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
-import io.github.vooft.kotlinsmile.common.byteLength
 import io.github.vooft.kotlinsmile.common.isAscii
 import io.github.vooft.kotlinsmile.common.isUnicode
+import io.github.vooft.kotlinsmile.common.length
 import io.github.vooft.kotlinsmile.common.toSmile
 import io.github.vooft.kotlinsmile.encoder.SmileWriter
 import io.github.vooft.kotlinsmile.encoder.SmileWriterSession
@@ -11,6 +11,8 @@ import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
+import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
+import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -44,20 +46,26 @@ class SmileEncoderAdapter : AbstractEncoder() {
     override fun encodeShort(value: Short) = encodeInt(value.toInt())
 
     override fun encodeString(value: String) {
-        super.encodeString(value)
+        val smileString = value.toSmile()
+
+        when {
+            smileString.isAscii && smileString.length in TinyAscii.BYTE_LENGTHS -> session.valueTinyAscii(smileString)
+            smileString.isUnicode && smileString.length in TinyUnicode.BYTE_LENGTHS -> session.valueTinyUnicode(smileString)
+            else -> error("String $value is too long")
+        }
     }
 
     override fun encodeElement(descriptor: SerialDescriptor, index: Int): Boolean {
         val name = descriptor.getElementName(index).toSmile()
 
         when {
-            name.byteLength in KeyLongUnicode.BYTE_LENGTHS -> session.keyLongUnicode(name)
-            name.isUnicode && name.byteLength in KeyShortUnicode.BYTE_LENGTHS-> session.keyShortUnicode(name)
-            name.isAscii && name.byteLength in KeyShortAscii.BYTE_LENGTHS -> session.keyShortAscii(name)
+            name.length in KeyLongUnicode.BYTE_LENGTHS -> session.keyLongUnicode(name)
+            name.isUnicode && name.length in KeyShortUnicode.BYTE_LENGTHS-> session.keyShortUnicode(name)
+            name.isAscii && name.length in KeyShortAscii.BYTE_LENGTHS -> session.keyShortAscii(name)
             else -> error("Element name $name is too long")
         }
 
-        return super.encodeElement(descriptor, index)
+        return true
     }
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeEncoder {
@@ -66,7 +74,7 @@ class SmileEncoderAdapter : AbstractEncoder() {
             else -> TODO("Not implemented yet ${descriptor.kind}")
         }
 
-        return super.beginStructure(descriptor)
+        return this
     }
 
     override fun endStructure(descriptor: SerialDescriptor) {
@@ -74,8 +82,6 @@ class SmileEncoderAdapter : AbstractEncoder() {
             StructureKind.CLASS, StructureKind.OBJECT -> session.endObject()
             else -> TODO("Not implemented yet ${descriptor.kind}")
         }
-
-        super.endStructure(descriptor)
     }
 
     override fun <T> encodeSerializableValue(serializer: SerializationStrategy<T>, value: T) {

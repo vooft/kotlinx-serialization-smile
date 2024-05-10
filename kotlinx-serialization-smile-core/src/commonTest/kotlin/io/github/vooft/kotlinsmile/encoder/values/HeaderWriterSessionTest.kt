@@ -1,6 +1,7 @@
 package io.github.vooft.kotlinsmile.encoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
+import io.github.vooft.kotlinsmile.encoder.structure.HeaderWriterSession
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 

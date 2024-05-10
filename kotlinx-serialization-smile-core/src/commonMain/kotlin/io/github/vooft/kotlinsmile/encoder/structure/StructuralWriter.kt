@@ -1,4 +1,4 @@
-package io.github.vooft.kotlinsmile.encoder.values
+package io.github.vooft.kotlinsmile.encoder.structure
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.token.SmileValueToken.StructuralMarker
