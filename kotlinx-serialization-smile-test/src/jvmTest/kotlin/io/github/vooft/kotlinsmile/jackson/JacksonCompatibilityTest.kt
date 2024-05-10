@@ -22,22 +22,24 @@ class JacksonCompatibilityTest : ShouldSpec({
             .build()
     ).findAndRegisterModules()
 
+    val testData = listOf(
+        ObjWithSerializer(TestObject()),
+        ObjWithSerializer(CompositeObject()),
+        ObjWithSerializer(UnicodePropertyObject()),
+        ObjWithSerializer(LongPropertyName()),
+        ObjWithSerializer(UnicodeLongPropertyName()),
+        ObjWithSerializer(AsciiTinyPropertyValue()),
+        ObjWithSerializer(UnicodeTinyPropertyValue()),
+        ObjWithSerializer(AsciiShortPropertyValue()),
+        ObjWithSerializer(UnicodeShortPropertyValue()),
+        ObjWithSerializer(AsciiLongPropertyValue()),
+        ObjWithSerializer(UnicodeLongPropertyValue())
+    )
+
     context("should serialize object same as jackson") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.obj!!::class.simpleName!! },
-            ts = listOf(
-                ObjWithSerializer(TestObject()),
-                ObjWithSerializer(CompositeObject()),
-                ObjWithSerializer(UnicodePropertyObject()),
-                ObjWithSerializer(LongPropertyName()),
-                ObjWithSerializer(UnicodeLongPropertyName()),
-                ObjWithSerializer(AsciiTinyPropertyValue()),
-                ObjWithSerializer(UnicodeTinyPropertyValue()),
-                ObjWithSerializer(AsciiShortPropertyValue()),
-                ObjWithSerializer(UnicodeShortPropertyValue()),
-                ObjWithSerializer(AsciiLongPropertyValue()),
-                ObjWithSerializer(UnicodeLongPropertyValue())
-            )
+            ts = testData
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
 
@@ -52,6 +54,18 @@ class JacksonCompatibilityTest : ShouldSpec({
             println()
 
             actual shouldBe expected
+        }
+    }
+
+    context("should deserialize object from jackson output") {
+        withData<ObjWithSerializer<*>>(
+            nameFn = { it.obj!!::class.simpleName!! },
+            ts = testData
+        ) {
+            val data = smileMapper.writeValueAsBytes(it.obj)
+
+            val actual = Smile.decode(it.serializer, data)
+            actual shouldBe it.obj
         }
     }
 
@@ -72,7 +86,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         printlnUByte(0x9Fu)
         printlnUByte(0x40u)
         printlnUByte(0x5Fu)
-        println(SmallInteger.mask.toString(2).padStart(8, '0'))
+        println(SmallInteger.offset.toString(2).padStart(8, '0'))
     }
 })
 

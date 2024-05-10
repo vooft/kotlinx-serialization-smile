@@ -6,9 +6,15 @@ import kotlin.test.Test
 
 class SmileTokenTest {
     @Test
-    fun `should have all tokens in a list`() {
-        val allSubclasses = SmileToken::class.findSubclassesDataObjects()
-        SmileToken.ALL_TOKENS shouldContainExactlyInAnyOrder allSubclasses
+    fun `should have all value tokens in a list`() {
+        val allSubclasses = SmileValueToken::class.findSubclassesDataObjects()
+        SmileToken.VALUE_TOKENS shouldContainExactlyInAnyOrder allSubclasses
+    }
+
+    @Test
+    fun `should have all key tokens in a list`() {
+        val allSubclasses = SmileKeyToken::class.findSubclassesDataObjects()
+        SmileToken.KEY_TOKENS shouldContainExactlyInAnyOrder allSubclasses
     }
 
     @Test
@@ -33,11 +39,11 @@ class SmileTokenTest {
         }
     }
 
-    private fun <T: SmileToken> KClass<T>.findSubclassesDataObjects(): List<SmileToken> = buildList {
+    private fun <T: SmileToken> KClass<T>.findSubclassesDataObjects(): List<T> = buildList {
         for (subclass in sealedSubclasses) {
             val subclassObject = subclass.objectInstance
             if (subclassObject != null) {
-                add(subclassObject as SmileToken)
+                add(subclassObject as T)
             } else {
                 require(subclass.java.isInterface) { "Class $subclass is not interface" }
                 require(subclass.isSealed) { "Interface $subclass is not sealed" }

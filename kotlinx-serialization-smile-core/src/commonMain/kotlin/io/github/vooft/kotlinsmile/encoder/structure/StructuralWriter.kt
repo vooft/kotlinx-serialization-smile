@@ -1,7 +1,10 @@
 package io.github.vooft.kotlinsmile.encoder.structure
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
-import io.github.vooft.kotlinsmile.token.SmileValueToken.StructuralMarker
+import io.github.vooft.kotlinsmile.token.SmileValueToken.EndArrayMarker
+import io.github.vooft.kotlinsmile.token.SmileValueToken.EndObjectMarker
+import io.github.vooft.kotlinsmile.token.SmileValueToken.StartArrayMarker
+import io.github.vooft.kotlinsmile.token.SmileValueToken.StartObjectMarker
 
 interface StructuralWriter {
     fun startObject()
@@ -11,11 +14,11 @@ interface StructuralWriter {
 }
 
 class StructuralWriterSession(private val builder: ByteArrayBuilder): StructuralWriter {
-    override fun startObject() = builder.append(StructuralMarker.START_OBJECT)
+    override fun startObject() = builder.append(StartObjectMarker.firstByte)
 
-    override fun endObject() = builder.append(StructuralMarker.END_OBJECT)
+    override fun endObject() = builder.append(EndObjectMarker.firstByte)
 
-    override fun startArray() = builder.append(StructuralMarker.START_ARRAY)
+    override fun startArray() = builder.append(StartArrayMarker.firstByte)
 
-    override fun endArray() = builder.append(StructuralMarker.END_ARRAY)
+    override fun endArray() = builder.append(EndArrayMarker.firstByte)
 }

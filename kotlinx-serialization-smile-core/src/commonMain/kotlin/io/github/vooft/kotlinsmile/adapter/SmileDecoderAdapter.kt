@@ -1,34 +1,88 @@
 package io.github.vooft.kotlinsmile.adapter
 
-import kotlinx.serialization.DeserializationStrategy
+import io.github.vooft.kotlinsmile.common.ByteArrayIteratorImpl
+import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
+import io.github.vooft.kotlinsmile.token.SmileKeyToken
+import io.github.vooft.kotlinsmile.token.SmileValueToken
+import io.github.vooft.kotlinsmile.token.SmileValueToken.EndArrayMarker
+import io.github.vooft.kotlinsmile.token.SmileValueToken.EndObjectMarker
+import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
+import io.github.vooft.kotlinsmile.token.SmileValueToken.LongUnicode
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteral
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
+import io.github.vooft.kotlinsmile.token.SmileValueToken.StartArrayMarker
+import io.github.vooft.kotlinsmile.token.SmileValueToken.StartObjectMarker
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.serializer
 
 @OptIn(ExperimentalSerializationApi::class)
-class SmileDecoderAdapter(val list: ArrayDeque<Any>) : AbstractDecoder() {
-    private var elementIndex = 0
+class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
+    private val session = SmileDecoderSession(ByteArrayIteratorImpl(data))
+    private val config = session.header()
+
+    private lateinit var currentValueDescriptor: SerialDescriptor
 
     override val serializersModule: SerializersModule = EmptySerializersModule()
 
-    override fun decodeValue(): Any = list.removeFirst()
-
-    override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
-        if (elementIndex == descriptor.elementsCount) return CompositeDecoder.DECODE_DONE
-        return elementIndex++
+    override fun decodeValue(): Any {
+        val nextToken = session.peekValueToken()
+        return when (nextToken) {
+            LongAscii -> TODO()
+            SimpleLiteral -> TODO()
+            SmallInteger -> session.smallInteger().castIfNecessary(currentValueDescriptor)
+            EndArrayMarker -> TODO()
+            EndObjectMarker -> TODO()
+            LongUnicode -> TODO()
+            StartArrayMarker -> TODO()
+            StartObjectMarker -> TODO()
+            SmileValueToken.ShortAscii -> TODO()
+            SmileValueToken.ShortUnicode -> TODO()
+            SmileValueToken.TinyAscii -> TODO()
+            SmileValueToken.TinyUnicode -> TODO()
+        }
     }
 
-    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder =
-        SmileDecoderAdapter(list)
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
+        val nextToken = session.peekKeyToken()
+        val propertyName = when (nextToken) {
+            SmileKeyToken.KeyLongUnicode -> TODO()
+            SmileKeyToken.KeyShortAscii -> session.keyShortAscii()
+            SmileKeyToken.KeyShortUnicode -> session.keyShortUnicode()
+            SmileKeyToken.KeyEndObjectMarker -> return CompositeDecoder.DECODE_DONE
+            SmileKeyToken.KeyStartObjectMarker -> TODO()
+        }
+
+        val index = descriptor.getElementIndex(propertyName)
+        currentValueDescriptor = descriptor.getElementDescriptor(index)
+        return index
+    }
+
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
+        when (descriptor.kind) {
+            StructureKind.CLASS, StructureKind.OBJECT -> println("ok class")
+            else -> TODO("Not implemented yet ${descriptor.kind}")
+        }
+
+        val nextToken = session.peekValueToken()
+        require(nextToken == StartObjectMarker) { "Expected start object token, but got $nextToken" }
+        session.skip()
+        return this
+    }
 }
 
-fun <T> decodeFromList(list: List<Any>, deserializer: DeserializationStrategy<T>): T {
-    val decoder = SmileDecoderAdapter(ArrayDeque(list))
-    return decoder.decodeSerializableValue(deserializer)
+@OptIn(ExperimentalSerializationApi::class)
+private fun Byte.castIfNecessary(descriptor: SerialDescriptor): Any {
+    return when (descriptor.serialName) {
+        Byte::class.qualifiedName -> this
+        Short::class.qualifiedName -> this.toShort()
+        Int::class.qualifiedName -> this.toInt()
+        Long::class.qualifiedName -> this.toLong()
+        else -> throw IllegalArgumentException("Unsupported type ${descriptor.serialName}")
+    }
 }
 
-inline fun <reified T> decodeFromList(list: List<Any>): T = decodeFromList(list, serializer())

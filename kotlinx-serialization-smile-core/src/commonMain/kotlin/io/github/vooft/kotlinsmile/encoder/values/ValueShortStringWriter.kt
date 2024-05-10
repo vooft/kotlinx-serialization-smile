@@ -35,7 +35,7 @@ class ValueShortStringWriterSession(private val builder: ByteArrayBuilder) : Val
         }
 
         val writtenLength = value.length - lengths.first
-        builder.append(byte = writtenLength.toByte(), orMask = mask)
+        builder.append(byte = writtenLength.toByte(), offset = offset)
         builder.append(value.encoded)
     }
 }

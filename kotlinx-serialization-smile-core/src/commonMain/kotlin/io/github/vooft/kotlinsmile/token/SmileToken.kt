@@ -4,7 +4,7 @@ sealed interface SmileToken {
     val tokenRange: IntRange
 
     companion object {
-        val ALL_TOKENS = listOf(
+        val VALUE_TOKENS: List<SmileValueToken> = listOf(
             SmileValueToken.SmallInteger,
             SmileValueToken.SimpleLiteral,
             SmileValueToken.TinyUnicode,
@@ -13,14 +13,28 @@ sealed interface SmileToken {
             SmileValueToken.ShortUnicode,
             SmileValueToken.LongAscii,
             SmileValueToken.LongUnicode,
-            SmileValueToken.StructuralMarker,
-            SmileKeyToken.KeyShortAscii,
-            SmileKeyToken.KeyLongUnicode,
-            SmileKeyToken.KeyShortUnicode
+            SmileValueToken.StartArrayMarker,
+            SmileValueToken.EndArrayMarker,
+            SmileValueToken.StartObjectMarker,
+            SmileValueToken.EndObjectMarker,
         )
 
-        fun fromByte(byte: Byte): SmileToken {
-            return ALL_TOKENS.first { it.tokenRange.contains(byte.toInt() and 0xFF) }
+        val KEY_TOKENS: List<SmileKeyToken> = listOf(
+            SmileKeyToken.KeyShortAscii,
+            SmileKeyToken.KeyLongUnicode,
+            SmileKeyToken.KeyShortUnicode,
+            SmileKeyToken.KeyStartObjectMarker,
+            SmileKeyToken.KeyEndObjectMarker,
+        )
+
+        fun valueToken(byte: Byte): SmileValueToken {
+            // TODO: improve performance?
+            return VALUE_TOKENS.first { byte in it }
+        }
+
+        fun keyToken(byte: Byte): SmileKeyToken {
+            // TODO: improve performance?
+            return KEY_TOKENS.first { byte in it }
         }
     }
 }
@@ -29,7 +43,7 @@ sealed interface SmileValueToken : SmileToken {
     data object SmallInteger : SmileValueToken {
         override val tokenRange = 0xC0..0xDF
 
-        val mask = tokenRange.first.toByte()
+        val offset = tokenRange.first.toByte()
         val values = -16..15
     }
 
@@ -42,9 +56,13 @@ sealed interface SmileValueToken : SmileToken {
     }
 
     sealed interface SmileValueShortStringToken : SmileValueToken {
-        val mask: Byte get() = tokenRange.first.toByte()
+        val offset: Byte get() = tokenRange.first.toByte()
         val lengths: IntRange
         val isUnicode: Boolean
+    }
+
+    sealed interface SmileValueFirstByteToken : SmileValueToken {
+        val firstByte: Byte get() = tokenRange.first.toByte()
     }
 
     data object TinyUnicode : SmileValueShortStringToken {
@@ -80,41 +98,60 @@ sealed interface SmileValueToken : SmileToken {
         val firstByte = tokenRange.first.toByte()
     }
 
-    data object LongUnicode : SmileValueToken {
+    data object LongUnicode : SmileValueFirstByteToken {
         override val tokenRange = 0xE4..0xE4
-        val firstByte = tokenRange.first.toByte()
     }
 
-    data object StructuralMarker : SmileValueToken {
-        override val tokenRange = 0xF8..0xFB
+    data object StartArrayMarker : SmileValueFirstByteToken {
+        override val tokenRange = 0xF8..0xF8
+    }
 
-        const val START_ARRAY = 0xF8.toByte()
-        const val END_ARRAY = 0xF9.toByte()
-        const val START_OBJECT = 0xFA.toByte()
-        const val END_OBJECT = 0xFB.toByte()
+    data object EndArrayMarker : SmileValueFirstByteToken {
+        override val tokenRange = 0xF9..0xF9
+    }
+
+    data object StartObjectMarker : SmileValueFirstByteToken {
+        override val tokenRange = 0xFA..0xFA
+    }
+
+    data object EndObjectMarker : SmileValueFirstByteToken {
+        override val tokenRange = 0xFB..0xFB
     }
 }
 
 sealed interface SmileKeyToken : SmileToken {
+
+    sealed interface SmileKeyFirstByteToken : SmileKeyToken {
+        val firstByte: Byte get() = tokenRange.first.toByte()
+    }
+
     data object KeyShortAscii : SmileKeyToken {
         override val tokenRange = 0x80..0xBF
 
-        val mask = (tokenRange.first - 1).toByte()
+        val offset = (tokenRange.first - 1).toByte()
         val BYTE_LENGTHS = 1..64
     }
 
     data object KeyLongUnicode : SmileKeyToken {
         override val tokenRange = 0x34..0x34
 
-        val mask = tokenRange.first.toByte()
+        val offset = tokenRange.first.toByte()
         val BYTE_LENGTHS = 65..1024
     }
 
     data object KeyShortUnicode : SmileKeyToken {
         override val tokenRange = 0xC0..0xF7
 
-        val mask = (tokenRange.first - 2).toByte() // length starts with 2, so we subtract 1
+        val offset = (tokenRange.first - 2).toByte() // length starts with 2, so we subtract 1
         val BYTE_LENGTHS = 2..57
+    }
+
+    data object KeyStartObjectMarker : SmileKeyFirstByteToken {
+        override val tokenRange = 0xFA..0xFA
+    }
+
+    data object KeyEndObjectMarker : SmileKeyFirstByteToken {
+        override val tokenRange = 0xFB..0xFB
     }
 }
 
@@ -147,4 +184,6 @@ object SmileMarkers {
     const val STRING_END_MARKER = 0xFC.toByte()
     const val EOF_MARKER = 0xFF.toByte()
 }
+
+operator fun SmileToken.contains(byte: Byte): Boolean = byte.toInt() and 0xFF in tokenRange
 
