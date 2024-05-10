@@ -5,7 +5,6 @@ import io.github.vooft.kotlinsmile.common.isAscii
 import io.github.vooft.kotlinsmile.common.isUnicode
 import io.github.vooft.kotlinsmile.common.length
 import io.github.vooft.kotlinsmile.common.toSmile
-import io.github.vooft.kotlinsmile.encoder.SmileWriter
 import io.github.vooft.kotlinsmile.encoder.SmileWriterSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
@@ -27,7 +26,7 @@ import kotlinx.serialization.modules.SerializersModule
 @OptIn(ExperimentalSerializationApi::class)
 class SmileEncoderAdapter : AbstractEncoder() {
     private val builder = ByteArrayBuilder()
-    private val session: SmileWriter = SmileWriterSession(builder).apply { header() }
+    private val session = SmileWriterSession(builder).apply { header() }
 
     override val serializersModule: SerializersModule = EmptySerializersModule()
 
