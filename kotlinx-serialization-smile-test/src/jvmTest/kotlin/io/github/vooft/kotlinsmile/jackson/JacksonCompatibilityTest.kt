@@ -25,11 +25,13 @@ class JacksonCompatibilityTest : ShouldSpec({
     context("should serialize object same as jackson") {
         withData(
             listOf(
-                ObjWithSerializer(TestObject(1, 2)),
-                ObjWithSerializer(CompositeObject(5, TestObject(6, 7))),
-                ObjWithSerializer(UnicodePropertyObject(2)),
-                ObjWithSerializer(LongPropertyName(3)),
-                ObjWithSerializer(UnicodeLongPropertyName(3))
+                ObjWithSerializer(TestObject()),
+                ObjWithSerializer(CompositeObject()),
+                ObjWithSerializer(UnicodePropertyObject()),
+                ObjWithSerializer(LongPropertyName()),
+                ObjWithSerializer(UnicodeLongPropertyName()),
+//                ObjWithSerializer(AsciiShortPropertyValue()),
+//                ObjWithSerializer(UnicodeShortPropertyValue())
             )
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
@@ -67,20 +69,26 @@ class JacksonCompatibilityTest : ShouldSpec({
 
 @Suppress("ConstructorParameterNaming")
 @Serializable
-data class UnicodePropertyObject(val `a👨‍💼`: Int)
+data class UnicodePropertyObject(val `a👨‍💼`: Int = 1)
 
 @Suppress("ConstructorParameterNaming")
 @Serializable
-data class UnicodeLongPropertyName(val `a👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼`: Int) // this is more than 100 bytes!
+data class UnicodeLongPropertyName(val `a👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼`: Int = 1) // this is more than 100 bytes!
 
 @Serializable
-data class LongPropertyName(val aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: Int)
+data class LongPropertyName(val aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: Int = 1)
 
 @Serializable
-data class TestObject(val a: Int, val bb: Int)
+data class TestObject(val a: Int = 1, val bb: Int = 2)
 
 @Serializable
-data class CompositeObject(val a: Int, val b: TestObject)
+data class CompositeObject(val a: Int = 1, val b: TestObject = TestObject())
+
+@Serializable
+data class AsciiShortPropertyValue(val a: String = "test123")
+
+@Serializable
+data class UnicodeShortPropertyValue(val a: String = "👨‍💼")
 
 private fun printlnUByte(uByte: UByte) {
     println("0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0'))
