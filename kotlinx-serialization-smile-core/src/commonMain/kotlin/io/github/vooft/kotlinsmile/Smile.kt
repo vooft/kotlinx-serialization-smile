@@ -6,7 +6,7 @@ import kotlinx.serialization.serializer
 
 object Smile {
     fun <T> encode(serializer: SerializationStrategy<T>, value: T): ByteArray {
-        val encoder = SmileEncoderAdapter()
+        val encoder = SmileEncoderAdapter(SmileConfig.DEFAULT)
         encoder.encodeSerializableValue(serializer, value)
         return encoder.toByteArray()
     }

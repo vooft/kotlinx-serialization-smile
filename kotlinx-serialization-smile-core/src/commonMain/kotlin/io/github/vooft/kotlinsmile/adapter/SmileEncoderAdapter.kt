@@ -1,5 +1,6 @@
 package io.github.vooft.kotlinsmile.adapter
 
+import io.github.vooft.kotlinsmile.SmileConfig
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.common.isAscii
 import io.github.vooft.kotlinsmile.common.isUnicode
@@ -24,9 +25,9 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 
 @OptIn(ExperimentalSerializationApi::class)
-class SmileEncoderAdapter : AbstractEncoder() {
+class SmileEncoderAdapter(private val config: SmileConfig) : AbstractEncoder() {
     private val builder = ByteArrayBuilder()
-    private val session = SmileEncoderSession(builder).apply { header() }
+    private val session = SmileEncoderSession(builder).apply { header(config) }
 
     override val serializersModule: SerializersModule = EmptySerializersModule()
 
