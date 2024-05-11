@@ -7,6 +7,8 @@ import io.github.vooft.kotlinsmile.decoder.structure.HeaderReader
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.SmallIntegerReader
 import io.github.vooft.kotlinsmile.decoder.values.SmallIntegerReaderSession
+import io.github.vooft.kotlinsmile.decoder.values.ValueLongStringReader
+import io.github.vooft.kotlinsmile.decoder.values.ValueLongStringReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.ValueShortStringReader
 import io.github.vooft.kotlinsmile.decoder.values.ValueShortStringReaderSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken
@@ -17,7 +19,8 @@ class SmileDecoderSession(private val iterator: ByteArrayIterator) :
     HeaderReader by HeaderReaderSession(iterator),
     KeyStringReader by KeyStringReaderSession(iterator),
     SmallIntegerReader by SmallIntegerReaderSession(iterator),
-    ValueShortStringReader by ValueShortStringReaderSession(iterator) {
+    ValueShortStringReader by ValueShortStringReaderSession(iterator),
+    ValueLongStringReader by ValueLongStringReaderSession(iterator) {
 
     fun skip() {
         iterator.next()

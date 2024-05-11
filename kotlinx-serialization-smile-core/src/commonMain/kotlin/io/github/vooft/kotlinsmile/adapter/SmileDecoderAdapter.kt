@@ -35,12 +35,12 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
     override fun decodeValue(): Any {
         val nextToken = session.peekValueToken()
         return when (nextToken) {
-            LongAscii -> TODO()
+            LongAscii -> session.valueLongAscii()
             SimpleLiteral -> TODO()
             SmallInteger -> session.smallInteger().castIfNecessary(currentValueDescriptor)
             EndArrayMarker -> TODO()
             EndObjectMarker -> TODO()
-            LongUnicode -> TODO()
+            LongUnicode -> session.valueLongUnicode()
             StartArrayMarker -> TODO()
             StartObjectMarker -> TODO()
             ShortAscii -> session.valueShortAscii()
