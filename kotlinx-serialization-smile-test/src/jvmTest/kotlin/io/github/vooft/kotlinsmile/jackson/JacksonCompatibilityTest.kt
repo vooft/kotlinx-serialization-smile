@@ -37,8 +37,14 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(UnicodeLongPropertyValue()),
         ObjWithSerializer(SimpleLiteralObject()),
         ObjWithSerializer(ClassWithObjectsArray()),
-        ObjWithSerializer(ClassWithList()),
-        ObjWithSerializer(ClassWithSet()),
+        ObjWithSerializer(ClassWithObjectList()),
+        ObjWithSerializer(ClassWithObjectSet()),
+        ObjWithSerializer(ClassWithIntArray()),
+        ObjWithSerializer(ClassWithIntList()),
+        ObjWithSerializer(1),
+        ObjWithSerializer("test"),
+        ObjWithSerializer(intArrayOf(1, 2, 3)),
+        ObjWithSerializer(listOf(1, 2, 3))
     )
 
     context("should serialize object same as jackson") {
@@ -135,6 +141,26 @@ data class UnicodeLongPropertyValue(val a: String = "👨‍💼".repeat(50))
 data class SimpleLiteralObject(val e: String = "", val n: String? = null, val t: Boolean = true, val f: Boolean = false)
 
 @Serializable
+data class ClassWithIntArray(val l: IntArray = intArrayOf(1, 2, 3)) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ClassWithIntArray
+
+        return l.contentEquals(other.l)
+    }
+
+    override fun hashCode(): Int {
+        return l.contentHashCode()
+    }
+}
+
+@Serializable
+data class ClassWithIntList(val l: List<Int> = listOf(1, 2, 3))
+
+
+@Serializable
 data class ClassWithObjectsArray(val l: Array<TestObject> = arrayOf(TestObject(), TestObject())) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -151,10 +177,10 @@ data class ClassWithObjectsArray(val l: Array<TestObject> = arrayOf(TestObject()
 }
 
 @Serializable
-data class ClassWithList(val l: List<TestObject> = listOf(TestObject(), TestObject()))
+data class ClassWithObjectList(val l: List<TestObject> = listOf(TestObject(), TestObject()))
 
 @Serializable
-data class ClassWithSet(val l: Set<TestObject> = setOf(TestObject(), TestObject()))
+data class ClassWithObjectSet(val l: Set<TestObject> = setOf(TestObject(), TestObject()))
 
 
 private fun printlnUByte(uByte: UByte) {

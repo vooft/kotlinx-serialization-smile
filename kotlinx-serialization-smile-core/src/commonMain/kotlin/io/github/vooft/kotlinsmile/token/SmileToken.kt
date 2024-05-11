@@ -18,17 +18,13 @@ sealed interface SmileToken {
             SmileValueToken.StartArrayMarker,
             SmileValueToken.EndArrayMarker,
             SmileValueToken.StartObjectMarker,
-            SmileValueToken.EndObjectMarker,
         )
 
         val KEY_TOKENS: List<SmileKeyToken> = listOf(
             SmileKeyToken.KeyShortAscii,
             SmileKeyToken.KeyLongUnicode,
             SmileKeyToken.KeyShortUnicode,
-            SmileKeyToken.KeyStartObjectMarker,
             SmileKeyToken.KeyEndObjectMarker,
-            SmileKeyToken.KeyStartArrayMarker,
-            SmileKeyToken.KeyEndArrayMarker,
         )
 
         fun valueToken(byte: Byte): SmileValueToken? {
@@ -122,12 +118,9 @@ sealed interface SmileValueToken : SmileToken {
         override val tokenRange = 0xF9..0xF9
     }
 
+    // StartObject is a value, EndObject is a key
     data object StartObjectMarker : SmileValueFirstByteToken {
         override val tokenRange = 0xFA..0xFA
-    }
-
-    data object EndObjectMarker : SmileValueFirstByteToken {
-        override val tokenRange = 0xFB..0xFB
     }
 }
 
@@ -158,20 +151,9 @@ sealed interface SmileKeyToken : SmileToken {
         val BYTE_LENGTHS = 2..57
     }
 
-    data object KeyStartObjectMarker : SmileKeyFirstByteToken {
-        override val tokenRange = 0xFA..0xFA
-    }
-
+    // EndObject is more of a key marker, rather than value marker
     data object KeyEndObjectMarker : SmileKeyFirstByteToken {
         override val tokenRange = 0xFB..0xFB
-    }
-
-    data object KeyStartArrayMarker : SmileKeyFirstByteToken {
-        override val tokenRange = 0xF8..0xF8
-    }
-
-    data object KeyEndArrayMarker : SmileKeyFirstByteToken {
-        override val tokenRange = 0xF9..0xF9
     }
 }
 

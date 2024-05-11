@@ -5,7 +5,6 @@ import io.github.vooft.kotlinsmile.common.ByteArrayIteratorImpl
 import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.EndArrayMarker
-import io.github.vooft.kotlinsmile.token.SmileValueToken.EndObjectMarker
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
@@ -35,12 +34,24 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
     private val config = session.header()
 
     private var currentListElementIndex = 0
-    private lateinit var currentValueDescriptor: SerialDescriptor
 
     override val serializersModule: SerializersModule = EmptySerializersModule()
 
     init {
         println(config)
+    }
+
+    override fun decodeByte(): Byte {
+        return session.smallInteger()
+    }
+
+    override fun decodeInt(): Int {
+        // TODO: add support for large ones
+        return session.smallInteger().toInt()
+    }
+
+    override fun decodeShort(): Short {
+        return session.smallInteger().toShort()
     }
 
     override fun decodeValue(): Any {
@@ -49,8 +60,6 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
             LongAscii -> session.valueLongAscii()
             SimpleLiteralBoolean -> session.valueBoolean()
             SimpleLiteralEmptyString -> session.valueEmptyString()
-            SimpleLiteralNull -> error("null values should be decoded beforehand")
-            SmallInteger -> session.smallInteger().castIfNecessary(currentValueDescriptor)
             EndArrayMarker -> TODO()
             LongUnicode -> session.valueLongUnicode()
             StartArrayMarker -> TODO()
@@ -58,36 +67,46 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
             ShortUnicode -> session.valueShortUnicode()
             TinyAscii -> session.valueTinyAscii()
             TinyUnicode -> session.valueTinyUnicode()
-            StartObjectMarker, EndObjectMarker -> error("Expected ${currentValueDescriptor.serialName}, but got $token")
+            SimpleLiteralNull, SmallInteger, StartObjectMarker -> error("$token should be handled separately")
         }.also {
             logger.info { "Decoded value $token: $it" }
         }
     }
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
-        val nextToken = session.peekKeyToken()
-        logger.info { "Decoding element $nextToken" }
+        when (descriptor.kind) {
+            StructureKind.CLASS, StructureKind.OBJECT -> {
+                // key decoding
+                val nextToken = session.peekKeyToken()
+                logger.info { "Decoding element $nextToken" }
 
-        val propertyName = when (nextToken) {
-            SmileKeyToken.KeyLongUnicode -> session.keyLongUnicode()
-            SmileKeyToken.KeyShortAscii -> session.keyShortAscii()
-            SmileKeyToken.KeyShortUnicode -> session.keyShortUnicode()
-            SmileKeyToken.KeyEndObjectMarker -> {
-                session.skip()
-                return CompositeDecoder.DECODE_DONE
-            }
+                val propertyName = when (nextToken) {
+                    SmileKeyToken.KeyLongUnicode -> session.keyLongUnicode()
+                    SmileKeyToken.KeyShortAscii -> session.keyShortAscii()
+                    SmileKeyToken.KeyShortUnicode -> session.keyShortUnicode()
+                    SmileKeyToken.KeyEndObjectMarker -> {
+                        session.skip()
+                        return CompositeDecoder.DECODE_DONE
+                    }
 
-            SmileKeyToken.KeyStartObjectMarker -> return currentListElementIndex++
-            SmileKeyToken.KeyStartArrayMarker -> TODO()
-            SmileKeyToken.KeyEndArrayMarker -> {
-                session.skip()
-                return CompositeDecoder.DECODE_DONE
+                }
+
+                return descriptor.getElementIndex(propertyName)
             }
+            StructureKind.LIST -> {
+                // value decoding
+                val nextValue = session.peekValueToken()
+                if (nextValue == EndArrayMarker) {
+                    session.skip()
+                    return CompositeDecoder.DECODE_DONE
+                } else {
+                    return currentListElementIndex++
+                }
+            }
+            else -> TODO()
         }
 
-        val index = descriptor.getElementIndex(propertyName)
-        currentValueDescriptor = descriptor.getElementDescriptor(index)
-        return index
+
     }
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
@@ -127,17 +146,6 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
             else -> return true
         }
 
-    }
-}
-
-@OptIn(ExperimentalSerializationApi::class)
-private fun Byte.castIfNecessary(descriptor: SerialDescriptor): Any {
-    return when (descriptor.serialName) {
-        Byte::class.qualifiedName -> this
-        Short::class.qualifiedName -> this.toShort()
-        Int::class.qualifiedName -> this.toInt()
-        Long::class.qualifiedName -> this.toLong()
-        else -> throw IllegalArgumentException("Unsupported type ${descriptor.serialName}")
     }
 }
 
