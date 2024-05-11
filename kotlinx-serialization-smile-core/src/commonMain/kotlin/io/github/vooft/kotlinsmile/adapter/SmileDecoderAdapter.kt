@@ -39,21 +39,20 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
     }
 
     override fun decodeValue(): Any {
-        return when (session.peekValueToken()) {
+        return when (val token = session.peekValueToken()) {
             LongAscii -> session.valueLongAscii()
             SimpleLiteralBoolean -> session.valueBoolean()
             SimpleLiteralEmptyString -> session.valueEmptyString()
-            SimpleLiteralNull -> TODO()
+            SimpleLiteralNull -> error("null values should be decoded beforehand")
             SmallInteger -> session.smallInteger().castIfNecessary(currentValueDescriptor)
             EndArrayMarker -> TODO()
-            EndObjectMarker -> TODO()
             LongUnicode -> session.valueLongUnicode()
             StartArrayMarker -> TODO()
-            StartObjectMarker -> TODO()
             ShortAscii -> session.valueShortAscii()
             ShortUnicode -> session.valueShortUnicode()
             TinyAscii -> session.valueTinyAscii()
             TinyUnicode -> session.valueTinyUnicode()
+            StartObjectMarker, EndObjectMarker -> error("Expected ${currentValueDescriptor.serialName}, but got $token")
         }
     }
 
