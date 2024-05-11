@@ -27,6 +27,6 @@ object Smile {
 }
 
 // temp solution for testing
-class ObjWithSerializer<T>(val obj: T, val serializer: KSerializer<T>)
-inline fun <reified T> ObjWithSerializer(obj: T) = ObjWithSerializer(obj, serializer<T>())
+class ObjWithSerializer<T>(val obj: T, val serializer: KSerializer<T>, val name: String?)
+inline fun <reified T> ObjWithSerializer(obj: T, name: String? = null) = ObjWithSerializer(obj, serializer<T>(), name)
 

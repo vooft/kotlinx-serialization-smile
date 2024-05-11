@@ -21,7 +21,7 @@ class SmileKeyDecoder(
 
     override fun decodeByte(): Byte = decodeString().toByte()
 
-    override fun decodeChar(): Char = TODO()
+    override fun decodeChar(): Char = decodeString().single()
 
     override fun decodeDouble(): Double {
         TODO("Not yet implemented")
@@ -47,7 +47,7 @@ class SmileKeyDecoder(
     @ExperimentalSerializationApi
     override fun decodeNull(): Nothing = error("Null key is not allowed in Smile")
 
-    override fun decodeShort(): Short = TODO()
+    override fun decodeShort(): Short = decodeString().toShort()
 
     override fun decodeString(): String = session.keyString()
 }

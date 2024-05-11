@@ -21,9 +21,7 @@ class SmileKeyEncoder(
 
     override fun encodeByte(value: Byte) = encodeString(value.toString())
 
-    override fun encodeChar(value: Char) {
-        TODO("Not yet implemented")
-    }
+    override fun encodeChar(value: Char) = encodeString(value.toString())
 
     override fun encodeDouble(value: Double) {
         TODO("Not yet implemented")

@@ -41,20 +41,22 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(ClassWithObjectSet()),
         ObjWithSerializer(ClassWithIntArray()),
         ObjWithSerializer(ClassWithIntList()),
-        ObjWithSerializer(1),
-        ObjWithSerializer("test"),
-        ObjWithSerializer(intArrayOf(1, 2, 3)),
-        ObjWithSerializer(listOf(1, 2, 3)),
-        ObjWithSerializer(mapOf("a" to 1, "b" to 2)),
-        ObjWithSerializer(mapOf("1" to 1, "2" to 2)),
-        ObjWithSerializer(mapOf(1 to 1, 2 to 2)), // int keys are encoded as strings
-        ObjWithSerializer(mapOf(1L to 1, 2L to 2)), // long keys are encoded as strings
-        ObjWithSerializer(mapOf(true to 1, false to 2)), // boolean keys are encoded as strings
+        ObjWithSerializer(1, "root level int"),
+        ObjWithSerializer("test", "root level string"),
+        ObjWithSerializer(intArrayOf(1, 2, 3), "root level int array"),
+        ObjWithSerializer(listOf(1, 2, 3), "root level int list"),
+        ObjWithSerializer(mapOf("a" to 1, "b" to 2), "root level map with string keys"),
+        ObjWithSerializer(mapOf("1" to 1, "2" to 2), "root level map with int-as-string keys"),
+        ObjWithSerializer(mapOf(1 to 1, 2 to 2), "root level map with int keys"), // int keys are encoded as strings
+        ObjWithSerializer(mapOf(1L to 1, 2L to 2), "root level map with long keys"), // long keys are encoded as strings
+        ObjWithSerializer(mapOf(1.toShort() to 1, 2.toShort() to 2), "root level map with short keys"), // short keys are encoded as strings
+        ObjWithSerializer(mapOf(true to 1, false to 2), "root level map with boolean keys"), // boolean keys are encoded as strings
+        ObjWithSerializer(mapOf('a' to 1, 'b' to 2), "root level map with char keys"), // char keys are encoded as strings
     )
 
     context("should serialize object same as jackson") {
         withData<ObjWithSerializer<*>>(
-            nameFn = { it.obj!!::class.simpleName!! },
+            nameFn = { it.name ?: it.obj!!::class.simpleName!! },
             ts = testData
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
