@@ -9,15 +9,19 @@ import io.github.vooft.kotlinsmile.encoder.SmileEncoderSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
-import io.github.vooft.kotlinsmile.token.SmileValueToken
+import io.github.vooft.kotlinsmile.token.SmileValueToken.LongInteger
+import io.github.vooft.kotlinsmile.token.SmileValueToken.RegularInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 
-fun SmileEncoderSession.valueInt(value: Int) = when (value) {
-    in SmileValueToken.SmallInteger.values -> smallInteger(value)
-    else -> TODO()
+fun SmileEncoderSession.valueInteger(value: Long) = when (value) {
+    in SmallInteger.values -> smallInteger(value.toInt())
+    in RegularInteger.values -> regularInteger(value.toInt())
+    in LongInteger.values -> longInteger(value)
+    else -> error("Invalid value $value is too big")
 }
 
 fun SmileEncoderSession.valueString(value: SmileString) {

@@ -7,7 +7,7 @@ import io.kotest.datatest.withData
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 
-class SmallIntegerWriterSessionTest : FunSpec({
+class IntegerWriterSessionTest : FunSpec({
 
     context("should write small integer") {
         withData(
@@ -16,7 +16,7 @@ class SmallIntegerWriterSessionTest : FunSpec({
             -16 to 0b110_11111u.toUByte(),
         ) { (number, expected) ->
             val builder = ByteArrayBuilder()
-            val session = SmallIntegerWriterSession(builder)
+            val session = IntegerWriterSession(builder)
 
             session.smallInteger(number)
 
@@ -30,24 +30,19 @@ class SmallIntegerWriterSessionTest : FunSpec({
         }
     }
 
-    context("should write small byte") {
+    context("should write regular integers") {
         withData(
-            1.toByte() to 0b110_00010u.toUByte(),
-            15.toByte() to 0b110_11110u.toUByte(),
-            (-16).toByte() to 0b110_11111u.toUByte(),
+            100 to byteArrayOf(1),
+            1500 to byteArrayOf(2),
+            -16000 to byteArrayOf(3),
         ) { (number, expected) ->
             val builder = ByteArrayBuilder()
-            val session = SmallIntegerWriterSession(builder)
+            val session = IntegerWriterSession(builder)
 
-            session.smallInteger(number)
+            session.regularInteger(number)
 
             val actualArray = builder.toByteArray()
-            actualArray shouldHaveSize 1
-
-            val actual = actualArray.single().toUByte()
-            withClue("actual: ${actual.toString(2)}, expected: ${expected.toString(2)}") {
-                actual shouldBe expected
-            }
+            actualArray shouldBe expected
         }
     }
 })

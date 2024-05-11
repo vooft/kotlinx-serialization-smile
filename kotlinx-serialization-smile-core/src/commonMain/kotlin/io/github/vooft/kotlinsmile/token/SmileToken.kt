@@ -6,6 +6,8 @@ sealed interface SmileToken {
     companion object {
         val VALUE_TOKENS: List<SmileValueToken> = listOf(
             SmileValueToken.SmallInteger,
+            SmileValueToken.RegularInteger,
+            SmileValueToken.LongInteger,
             SmileValueToken.SimpleLiteralEmptyString,
             SmileValueToken.SimpleLiteralNull,
             SmileValueToken.SimpleLiteralBoolean,
@@ -40,11 +42,34 @@ sealed interface SmileToken {
 }
 
 sealed interface SmileValueToken : SmileToken {
+
+    sealed interface SmileStringToken : SmileValueToken
+
+    sealed interface SmileValueShortStringToken : SmileStringToken {
+        val offset: Byte get() = tokenRange.first.toByte()
+        val lengths: IntRange
+        val isUnicode: Boolean
+    }
+
+    sealed interface SmileValueFirstByteToken : SmileValueToken {
+        val firstByte: Byte get() = tokenRange.first.toByte()
+    }
+
     data object SmallInteger : SmileValueToken {
         override val tokenRange = 0xC0..0xDF
 
         val offset = tokenRange.first.toByte()
         val values = -16..15
+    }
+
+    data object RegularInteger : SmileValueFirstByteToken {
+        override val tokenRange = 0x24..0x24
+        val values = Int.MIN_VALUE..Int.MAX_VALUE
+    }
+
+    data object LongInteger : SmileValueFirstByteToken {
+        override val tokenRange = 0x25..0x25
+        val values = Long.MIN_VALUE..Long.MAX_VALUE
     }
 
     data object SimpleLiteralEmptyString : SmileStringToken {
@@ -61,18 +86,6 @@ sealed interface SmileValueToken : SmileToken {
         override val tokenRange = 0x22..0x23
         val valueFalse = tokenRange.first.toByte()
         val valueTrue = tokenRange.last.toByte()
-    }
-
-    sealed interface SmileStringToken : SmileValueToken
-
-    sealed interface SmileValueShortStringToken : SmileStringToken {
-        val offset: Byte get() = tokenRange.first.toByte()
-        val lengths: IntRange
-        val isUnicode: Boolean
-    }
-
-    sealed interface SmileValueFirstByteToken : SmileValueToken {
-        val firstByte: Byte get() = tokenRange.first.toByte()
     }
 
     data object TinyUnicode : SmileValueShortStringToken {

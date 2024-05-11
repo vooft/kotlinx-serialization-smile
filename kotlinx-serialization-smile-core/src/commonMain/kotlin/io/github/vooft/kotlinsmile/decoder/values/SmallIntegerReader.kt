@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.decoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
-import io.github.vooft.kotlinsmile.common.ZigzagSmallInteger
+import io.github.vooft.kotlinsmile.common.ZigzagInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 
 interface SmallIntegerReader {
@@ -12,6 +12,6 @@ class SmallIntegerReaderSession(private val iterator: ByteArrayIterator): SmallI
     override fun smallInteger(): Byte {
         val byte = iterator.next()
         val zigzag = byte.toUByte() - SmallInteger.offset.toUByte()
-        return ZigzagSmallInteger.fromEncoded(zigzag.toInt()).toDecoded()
+        return ZigzagInteger.decode(zigzag.toInt()).toByte()
     }
 }

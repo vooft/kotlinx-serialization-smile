@@ -56,7 +56,7 @@ class SmileValueDecoder(
 
     override fun decodeByte(): Byte = session.smallInteger()
 
-    override fun decodeChar(): Char = session.smallInteger().toInt().toChar()
+    override fun decodeChar(): Char = session.valueString().single()
 
     override fun decodeDouble(): Double {
         TODO("Not yet implemented")

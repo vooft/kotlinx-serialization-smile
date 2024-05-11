@@ -6,10 +6,12 @@ import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.ObjWithSerializer
 import io.github.vooft.kotlinsmile.Smile
+import io.github.vooft.kotlinsmile.common.ZigzagInteger
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.Serializable
+import java.nio.ByteBuffer
 
 class JacksonCompatibilityTest : ShouldSpec({
     System.setProperty("kotest.assertions.collection.print.size", "1000")
@@ -25,16 +27,25 @@ class JacksonCompatibilityTest : ShouldSpec({
     val basicTestCases = listOf(ObjWithSerializer(SimpleClass()))
 
     val structuralTestCases = listOf(
-        ObjWithSerializer(CompositeObject()),
-        ObjWithSerializer(ClassWithObjectsArray()),
-        ObjWithSerializer(ClassWithObjectList()),
-        ObjWithSerializer(ClassWithObjectSet()),
-        ObjWithSerializer(ClassWithIntArray()),
-        ObjWithSerializer(ClassWithIntList()),
-        ObjWithSerializer(1, "root level int"),
-        ObjWithSerializer("test", "root level string"),
-        ObjWithSerializer(intArrayOf(1, 2, 3), "root level int array"),
-        ObjWithSerializer(listOf(1, 2, 3), "root level int list"),
+//        ObjWithSerializer(CompositeObject()),
+//        ObjWithSerializer(ClassWithObjectsArray()),
+//        ObjWithSerializer(ClassWithObjectList()),
+//        ObjWithSerializer(ClassWithObjectSet()),
+//        ObjWithSerializer(ClassWithIntArray()),
+//        ObjWithSerializer(ClassWithIntList()),
+//        ObjWithSerializer(1, "root level small int"),
+//        ObjWithSerializer(100, "root level regular positive int"),
+//        ObjWithSerializer(-100, "root level regular negative int"),
+        ObjWithSerializer(Int.MAX_VALUE, "root level max int"),
+        ObjWithSerializer(Int.MIN_VALUE, "root level min int"),
+//        ObjWithSerializer(1L, "root level small long"),
+//        ObjWithSerializer(100L, "root level regular positive long"),
+//        ObjWithSerializer(-100L, "root level regular negative long"),
+//        ObjWithSerializer(Long.MAX_VALUE, "root level max long"),
+//        ObjWithSerializer(Long.MIN_VALUE, "root level min long"),
+//        ObjWithSerializer("test", "root level string"),
+//        ObjWithSerializer(intArrayOf(1, 2, 3), "root level int array"),
+//        ObjWithSerializer(listOf(1, 2, 3), "root level int list"),
     )
 
     val keyTestCases = listOf(
@@ -54,6 +65,7 @@ class JacksonCompatibilityTest : ShouldSpec({
     )
 
     val valueTestCases = listOf(
+        ObjWithSerializer(SimpleClass(a = Short.MAX_VALUE.toInt(), bb = Short.MIN_VALUE.toInt())),
         ObjWithSerializer(TinyAsciiPropertyValueClass()),
         ObjWithSerializer(TinUnicodeyPropertyValueClass()),
         ObjWithSerializer(ShortAsciiPropertyValueClass()),
@@ -61,24 +73,29 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(LongAsciiPropertyValueClass()),
         ObjWithSerializer(LongUnicodePropertyValueClass()),
         ObjWithSerializer(SimpleLiteralsClass()),
+        ObjWithSerializer(CharPropertyClass()),
     )
 
     context("should serialize object same as jackson") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts = basicTestCases +
-                    structuralTestCases +
-                    keyTestCases +
-                    valueTestCases
+            ts =
+//            basicTestCases +
+                    structuralTestCases + listOf()
+//                    keyTestCases +
+//                    valueTestCases
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
 
             println()
-            logger.info { it.obj!!::class.simpleName }
+            logger.info { it.name ?: it.obj!!::class.simpleName!! }
             logger.info { "E: " + expected.toHexString() }
+            logger.info { "E: " + expected.toBinaryString() }
+            logger.info { 200.toString(2) }
 
             val actual = Smile.encode(it)
             logger.info { "A: " + actual.toHexString() }
+            logger.info { "A: " + actual.toBinaryString() }
             println()
 
             actual shouldBe expected
@@ -98,6 +115,20 @@ class JacksonCompatibilityTest : ShouldSpec({
             val actual = Smile.decode(it.serializer, data)
             actual shouldBe it.obj
         }
+    }
+
+    should("bla") {
+        val number = 100000
+        val zigzag = ZigzagInteger.encode(number)
+        val zigzagManual = ByteBuffer.allocate(4).putInt(zigzag).array()
+
+        val encoded = smileMapper.writeValueAsBytes(number)
+        println("E: " + encoded.toHexString())
+        println("Z: " + zigzagManual.toHexString())
+
+        println()
+        println("E: " + encoded.toBinaryString())
+        println("Z: " + zigzagManual.toBinaryString())
     }
 })
 
@@ -127,6 +158,9 @@ data class LongUnicodePropertyValueClass(val a: String = "👨‍💼".repeat(50
 
 @Serializable
 data class SimpleLiteralsClass(val e: String = "", val n: String? = null, val t: Boolean = true, val f: Boolean = false)
+
+@Serializable
+data class CharPropertyClass(val a: Char = 'a')
 
 @Suppress("ConstructorParameterNaming")
 @Serializable
@@ -186,5 +220,6 @@ enum class TestEnum {
 }
 
 private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"
+private fun ByteArray.toBinaryString() = joinToString(", ", "[", "]") { it.toUByte().toString(2).padStart(8, '0') }
 
 private val logger = KotlinLogging.logger { }

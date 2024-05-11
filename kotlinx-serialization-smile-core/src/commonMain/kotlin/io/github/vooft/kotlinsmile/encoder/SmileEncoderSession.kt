@@ -7,8 +7,8 @@ import io.github.vooft.kotlinsmile.encoder.structure.HeaderWriter
 import io.github.vooft.kotlinsmile.encoder.structure.HeaderWriterSession
 import io.github.vooft.kotlinsmile.encoder.structure.StructuralWriter
 import io.github.vooft.kotlinsmile.encoder.structure.StructuralWriterSession
-import io.github.vooft.kotlinsmile.encoder.values.SmallIntegerWriter
-import io.github.vooft.kotlinsmile.encoder.values.SmallIntegerWriterSession
+import io.github.vooft.kotlinsmile.encoder.values.IntegerWriter
+import io.github.vooft.kotlinsmile.encoder.values.IntegerWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.ValueLongStringWriter
 import io.github.vooft.kotlinsmile.encoder.values.ValueLongStringWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.ValueShortStringWriter
@@ -18,7 +18,7 @@ import io.github.vooft.kotlinsmile.encoder.values.ValueSimpleLiteralWriterSessio
 
 class SmileEncoderSession(private val builder: ByteArrayBuilder) :
     HeaderWriter by HeaderWriterSession(builder),
-    SmallIntegerWriter by SmallIntegerWriterSession(builder),
+    IntegerWriter by IntegerWriterSession(builder),
     StructuralWriter by StructuralWriterSession(builder),
     ValueShortStringWriter by ValueShortStringWriterSession(builder),
     KeyStringWriter by KeyStringWriterSession(builder),
