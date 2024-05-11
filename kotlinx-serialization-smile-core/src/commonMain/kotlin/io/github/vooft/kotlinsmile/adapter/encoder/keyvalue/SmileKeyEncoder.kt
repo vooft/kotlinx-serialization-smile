@@ -9,6 +9,7 @@ import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.SerializersModule
 
+@OptIn(ExperimentalSerializationApi::class)
 class SmileKeyEncoder(
     private val session: SmileEncoderSession,
     override val serializersModule: SerializersModule
@@ -23,17 +24,11 @@ class SmileKeyEncoder(
 
     override fun encodeChar(value: Char) = encodeString(value.toString())
 
-    override fun encodeDouble(value: Double) {
-        TODO("Not yet implemented")
-    }
+    override fun encodeDouble(value: Double) = encodeString(value.toString())
 
-    override fun encodeEnum(enumDescriptor: SerialDescriptor, index: Int) {
-        TODO("Not yet implemented")
-    }
+    override fun encodeEnum(enumDescriptor: SerialDescriptor, index: Int) = encodeString(enumDescriptor.getElementName(index))
 
-    override fun encodeFloat(value: Float) {
-        TODO("Not yet implemented")
-    }
+    override fun encodeFloat(value: Float) = encodeString(value.toString())
 
     override fun encodeInline(descriptor: SerialDescriptor): Encoder = this
 

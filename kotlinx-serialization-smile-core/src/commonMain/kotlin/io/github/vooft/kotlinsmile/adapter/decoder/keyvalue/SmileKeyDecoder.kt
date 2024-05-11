@@ -23,17 +23,11 @@ class SmileKeyDecoder(
 
     override fun decodeChar(): Char = decodeString().single()
 
-    override fun decodeDouble(): Double {
-        TODO("Not yet implemented")
-    }
+    override fun decodeDouble(): Double = decodeString().toDouble()
 
-    override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
-        TODO("Not yet implemented")
-    }
+    override fun decodeEnum(enumDescriptor: SerialDescriptor): Int = enumDescriptor.getElementIndex(decodeString())
 
-    override fun decodeFloat(): Float {
-        TODO("Not yet implemented")
-    }
+    override fun decodeFloat(): Float = decodeString().toFloat()
 
     override fun decodeInline(descriptor: SerialDescriptor): Decoder = this
 

@@ -52,6 +52,9 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(mapOf(1.toShort() to 1, 2.toShort() to 2), "root level map with short keys"), // short keys are encoded as strings
         ObjWithSerializer(mapOf(true to 1, false to 2), "root level map with boolean keys"), // boolean keys are encoded as strings
         ObjWithSerializer(mapOf('a' to 1, 'b' to 2), "root level map with char keys"), // char keys are encoded as strings
+        ObjWithSerializer(mapOf(TestEnum.A to 1, TestEnum.B to 2), "root level map with enum keys"), // char keys are encoded as strings
+        ObjWithSerializer(mapOf(1f to 1, 2f to 2), "root level map with float keys"), // char keys are encoded as strings
+        ObjWithSerializer(mapOf(1.0 to 1, 2.0 to 2), "root level map with double keys"), // char keys are encoded as strings
     )
 
     context("should serialize object same as jackson") {
@@ -189,6 +192,9 @@ data class ClassWithObjectList(val l: List<TestObject> = listOf(TestObject(), Te
 @Serializable
 data class ClassWithObjectSet(val l: Set<TestObject> = setOf(TestObject(), TestObject()))
 
+enum class TestEnum {
+    A, B, C
+}
 
 private fun printlnUByte(uByte: UByte) {
     logger.info { "0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0') }
