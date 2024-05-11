@@ -16,11 +16,13 @@ import io.github.vooft.kotlinsmile.encoder.values.ValueShortStringWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.ValueSimpleLiteralWriter
 import io.github.vooft.kotlinsmile.encoder.values.ValueSimpleLiteralWriterSession
 
-class SmileEncoderSession(builder: ByteArrayBuilder) :
+class SmileEncoderSession(private val builder: ByteArrayBuilder) :
     HeaderWriter by HeaderWriterSession(builder),
     SmallIntegerWriter by SmallIntegerWriterSession(builder),
     StructuralWriter by StructuralWriterSession(builder),
     ValueShortStringWriter by ValueShortStringWriterSession(builder),
     KeyStringWriter by KeyStringWriterSession(builder),
     ValueLongStringWriter by ValueLongStringWriterSession(builder),
-    ValueSimpleLiteralWriter by ValueSimpleLiteralWriterSession(builder)
+    ValueSimpleLiteralWriter by ValueSimpleLiteralWriterSession(builder) {
+        fun toByteArray(): ByteArray = builder.toByteArray()
+    }
