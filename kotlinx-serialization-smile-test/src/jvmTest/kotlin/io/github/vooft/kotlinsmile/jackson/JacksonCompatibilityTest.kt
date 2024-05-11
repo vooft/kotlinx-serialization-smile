@@ -6,7 +6,6 @@ import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.ObjWithSerializer
 import io.github.vooft.kotlinsmile.Smile
-import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
@@ -23,19 +22,10 @@ class JacksonCompatibilityTest : ShouldSpec({
             .build()
     ).findAndRegisterModules()
 
-    val testData = listOf(
-        ObjWithSerializer(TestObject()),
+    val basicTestCases = listOf(ObjWithSerializer(SimpleClass()))
+
+    val structuralTestCases = listOf(
         ObjWithSerializer(CompositeObject()),
-        ObjWithSerializer(UnicodePropertyObject()),
-        ObjWithSerializer(LongPropertyName()),
-        ObjWithSerializer(UnicodeLongPropertyName()),
-        ObjWithSerializer(AsciiTinyPropertyValue()),
-        ObjWithSerializer(UnicodeTinyPropertyValue()),
-        ObjWithSerializer(AsciiShortPropertyValue()),
-        ObjWithSerializer(UnicodeShortPropertyValue()),
-        ObjWithSerializer(AsciiLongPropertyValue()),
-        ObjWithSerializer(UnicodeLongPropertyValue()),
-        ObjWithSerializer(SimpleLiteralObject()),
         ObjWithSerializer(ClassWithObjectsArray()),
         ObjWithSerializer(ClassWithObjectList()),
         ObjWithSerializer(ClassWithObjectSet()),
@@ -45,6 +35,12 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer("test", "root level string"),
         ObjWithSerializer(intArrayOf(1, 2, 3), "root level int array"),
         ObjWithSerializer(listOf(1, 2, 3), "root level int list"),
+    )
+
+    val keyTestCases = listOf(
+        ObjWithSerializer(UnicodePropertyNameClass()),
+        ObjWithSerializer(LongAsciiPropertyNameClass()),
+        ObjWithSerializer(LongUnicodePropertyNameClass()),
         ObjWithSerializer(mapOf("a" to 1, "b" to 2), "root level map with string keys"),
         ObjWithSerializer(mapOf("1" to 1, "2" to 2), "root level map with int-as-string keys"),
         ObjWithSerializer(mapOf(1 to 1, 2 to 2), "root level map with int keys"), // int keys are encoded as strings
@@ -57,21 +53,31 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(mapOf(1.0 to 1, 2.0 to 2), "root level map with double keys"), // char keys are encoded as strings
     )
 
+    val valueTestCases = listOf(
+        ObjWithSerializer(TinyAsciiPropertyValueClass()),
+        ObjWithSerializer(TinUnicodeyPropertyValueClass()),
+        ObjWithSerializer(ShortAsciiPropertyValueClass()),
+        ObjWithSerializer(ShortUnicodePropertyValueClass()),
+        ObjWithSerializer(LongAsciiPropertyValueClass()),
+        ObjWithSerializer(LongUnicodePropertyValueClass()),
+        ObjWithSerializer(SimpleLiteralsClass()),
+    )
+
     context("should serialize object same as jackson") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts = testData
+            ts = basicTestCases +
+                    structuralTestCases +
+                    keyTestCases +
+                    valueTestCases
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
 
-            val actual = Smile.encode(it)
-
             println()
             logger.info { it.obj!!::class.simpleName }
-            logger.info { "E: " + expected.toBinaryString() }
-            logger.info { "A: " + actual.toBinaryString() }
-
             logger.info { "E: " + expected.toHexString() }
+
+            val actual = Smile.encode(it)
             logger.info { "A: " + actual.toHexString() }
             println()
 
@@ -82,7 +88,10 @@ class JacksonCompatibilityTest : ShouldSpec({
     context("should deserialize object from jackson output") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.obj!!::class.simpleName!! },
-            ts = testData
+            ts = basicTestCases +
+                    structuralTestCases +
+                    keyTestCases +
+                    valueTestCases
         ) {
             val data = smileMapper.writeValueAsBytes(it.obj)
 
@@ -90,65 +99,45 @@ class JacksonCompatibilityTest : ShouldSpec({
             actual shouldBe it.obj
         }
     }
-
-    should("bla") {
-        printlnUByte(0xC0u)
-        printlnUByte(0xDFu)
-        printlnUByte(0x20u)
-        printlnUByte(0x21u)
-        printlnUByte(0x22u)
-        printlnUByte(0x23u)
-        printlnUByte(0x3Fu)
-        printlnUByte(0xF8u)
-        printlnUByte(0xF9u)
-        printlnUByte(0xFAu)
-        printlnUByte(0xFBu)
-        printlnUByte(0x80u)
-        printlnUByte(0xBFu)
-        printlnUByte(0x9Fu)
-        printlnUByte(0x40u)
-        printlnUByte(0x5Fu)
-        logger.info { SmallInteger.offset.toString(2).padStart(8, '0') }
-    }
 })
 
-@Suppress("ConstructorParameterNaming")
 @Serializable
-data class UnicodePropertyObject(val `a👨‍💼`: Int = 1)
+data class SimpleClass(val a: Int = 1, val bb: Int = 2)
+
+@Serializable
+data class CompositeObject(val a: Int = 1, val b: SimpleClass = SimpleClass())
+
+@Serializable
+data class TinyAsciiPropertyValueClass(val a: String = "test123")
+
+@Serializable
+data class TinUnicodeyPropertyValueClass(val a: String = "👨‍💼")
+
+@Serializable
+data class ShortAsciiPropertyValueClass(val a: String = "a".repeat(50))
+
+@Serializable
+data class ShortUnicodePropertyValueClass(val a: String = "👨‍💼".repeat(5))
+
+@Serializable
+data class LongAsciiPropertyValueClass(val a: String = "a".repeat(500))
+
+@Serializable
+data class LongUnicodePropertyValueClass(val a: String = "👨‍💼".repeat(50))
+
+@Serializable
+data class SimpleLiteralsClass(val e: String = "", val n: String? = null, val t: Boolean = true, val f: Boolean = false)
 
 @Suppress("ConstructorParameterNaming")
 @Serializable
-data class UnicodeLongPropertyName(val `a👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼`: Int = 1) // this is more than 100 bytes!
+data class UnicodePropertyNameClass(val `a👨‍💼`: Int = 1)
+
+@Suppress("ConstructorParameterNaming")
+@Serializable
+data class LongUnicodePropertyNameClass(val `a👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼👨‍💼`: Int = 1) // this is more than 100 bytes!
 
 @Serializable
-data class LongPropertyName(val aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: Int = 1)
-
-@Serializable
-data class TestObject(val a: Int = 1, val bb: Int = 2)
-
-@Serializable
-data class CompositeObject(val a: Int = 1, val b: TestObject = TestObject())
-
-@Serializable
-data class AsciiTinyPropertyValue(val a: String = "test123")
-
-@Serializable
-data class UnicodeTinyPropertyValue(val a: String = "👨‍💼")
-
-@Serializable
-data class AsciiShortPropertyValue(val a: String = "a".repeat(50))
-
-@Serializable
-data class UnicodeShortPropertyValue(val a: String = "👨‍💼".repeat(5))
-
-@Serializable
-data class AsciiLongPropertyValue(val a: String = "a".repeat(500))
-
-@Serializable
-data class UnicodeLongPropertyValue(val a: String = "👨‍💼".repeat(50))
-
-@Serializable
-data class SimpleLiteralObject(val e: String = "", val n: String? = null, val t: Boolean = true, val f: Boolean = false)
+data class LongAsciiPropertyNameClass(val aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: Int = 1)
 
 @Serializable
 data class ClassWithIntArray(val l: IntArray = intArrayOf(1, 2, 3)) {
@@ -171,7 +160,7 @@ data class ClassWithIntList(val l: List<Int> = listOf(1, 2, 3))
 
 
 @Serializable
-data class ClassWithObjectsArray(val l: Array<TestObject> = arrayOf(TestObject(), TestObject())) {
+data class ClassWithObjectsArray(val l: Array<SimpleClass> = arrayOf(SimpleClass(), SimpleClass())) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -187,20 +176,15 @@ data class ClassWithObjectsArray(val l: Array<TestObject> = arrayOf(TestObject()
 }
 
 @Serializable
-data class ClassWithObjectList(val l: List<TestObject> = listOf(TestObject(), TestObject()))
+data class ClassWithObjectList(val l: List<SimpleClass> = listOf(SimpleClass(), SimpleClass()))
 
 @Serializable
-data class ClassWithObjectSet(val l: Set<TestObject> = setOf(TestObject(), TestObject()))
+data class ClassWithObjectSet(val l: Set<SimpleClass> = setOf(SimpleClass(), SimpleClass()))
 
 enum class TestEnum {
     A, B, C
 }
 
-private fun printlnUByte(uByte: UByte) {
-    logger.info { "0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0') }
-}
-
 private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"
-private fun ByteArray.toBinaryString() = joinToString(", ", "[", "]") { it.toUByte().toString(2).padStart(8, '0') }
 
-private val logger = KotlinLogging.logger {  }
+private val logger = KotlinLogging.logger { }
