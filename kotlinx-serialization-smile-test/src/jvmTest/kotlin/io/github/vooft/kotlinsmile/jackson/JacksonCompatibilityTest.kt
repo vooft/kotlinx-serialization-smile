@@ -48,6 +48,7 @@ class JacksonCompatibilityTest : ShouldSpec({
 
             val actual = Smile.encode(it)
 
+            println()
             logger.info { it.obj!!::class.simpleName }
             logger.info { expected.toBinaryString() }
             logger.info { actual.toBinaryString() }
