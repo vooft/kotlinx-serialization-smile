@@ -77,7 +77,13 @@ class SmileEncoderAdapter(private val config: SmileConfig) : AbstractEncoder() {
     }
 
     override fun encodeElement(descriptor: SerialDescriptor, index: Int): Boolean {
+        if (descriptor.kind == StructureKind.LIST) {
+            // this will be invoked for every list item, we want all of them without any keys
+            return true
+        }
+
         val name = descriptor.getElementName(index).toSmile()
+        println("encodeElement: descriptor=${descriptor.kind}, property name=$name")
 
         when {
             name.length in KeyLongUnicode.BYTE_LENGTHS -> session.keyLongUnicode(name)
@@ -89,9 +95,18 @@ class SmileEncoderAdapter(private val config: SmileConfig) : AbstractEncoder() {
         return true
     }
 
+//    override fun beginCollection(descriptor: SerialDescriptor, collectionSize: Int): CompositeEncoder {
+//        session.startArray()
+//        return this
+//    }
+
+
+
     override fun beginStructure(descriptor: SerialDescriptor): CompositeEncoder {
+        println("beginStructure: ${descriptor.kind}")
         when (descriptor.kind) {
             StructureKind.CLASS, StructureKind.OBJECT -> session.startObject()
+            StructureKind.LIST -> session.startArray()
             else -> TODO("Not implemented yet ${descriptor.kind}")
         }
 
@@ -101,6 +116,7 @@ class SmileEncoderAdapter(private val config: SmileConfig) : AbstractEncoder() {
     override fun endStructure(descriptor: SerialDescriptor) {
         when (descriptor.kind) {
             StructureKind.CLASS, StructureKind.OBJECT -> session.endObject()
+            StructureKind.LIST -> session.endArray()
             else -> TODO("Not implemented yet ${descriptor.kind}")
         }
     }
