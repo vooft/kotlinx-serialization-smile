@@ -3,6 +3,7 @@ package io.github.vooft.kotlinsmile.jackson
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.dataformat.smile.SmileGenerator
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.ObjWithSerializer
 import io.github.vooft.kotlinsmile.Smile
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
@@ -47,12 +48,12 @@ class JacksonCompatibilityTest : ShouldSpec({
 
             val actual = Smile.encode(it)
 
-            println(it.obj!!::class.simpleName)
-            println(expected.toBinaryString())
-            println(actual.toBinaryString())
+            logger.info { it.obj!!::class.simpleName }
+            logger.info { expected.toBinaryString() }
+            logger.info { actual.toBinaryString() }
 
-            println(expected.toHexString())
-            println(actual.toHexString())
+            logger.info { expected.toHexString() }
+            logger.info { actual.toHexString() }
             println()
 
             actual shouldBe expected
@@ -88,7 +89,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         printlnUByte(0x9Fu)
         printlnUByte(0x40u)
         printlnUByte(0x5Fu)
-        println(SmallInteger.offset.toString(2).padStart(8, '0'))
+        logger.info { SmallInteger.offset.toString(2).padStart(8, '0') }
     }
 })
 
@@ -134,8 +135,10 @@ data class SimpleLiteralObject(val e: String = "", val n: String? = null, val t:
 data class ClassWithObjectsArray(val l: Array<TestObject> = arrayOf(TestObject(), TestObject()))
 
 private fun printlnUByte(uByte: UByte) {
-    println("0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0'))
+    logger.info { "0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0') }
 }
 
 private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"
 private fun ByteArray.toBinaryString() = joinToString(", ", "[", "]") { it.toUByte().toString(2).padStart(8, '0') }
+
+private val logger = KotlinLogging.logger {  }

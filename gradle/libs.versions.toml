@@ -3,11 +3,19 @@ kotlin = "1.9.24"
 # kotest on native doesn't work with k2 yet https://github.com/kotest/kotest/issues/3994
 #kotlin = "2.0.0-RC2"
 kotest = "5.9.0"
+kotlin-logging = "6.0.9"
 
 [libraries]
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.6.3" }
 kotlinx-io-bytestring = { module = "org.jetbrains.kotlinx:kotlinx-io-bytestring", version = "0.3.4" }
 
+# logging
+kotlin-logging-core = { module = "io.github.oshai:kotlin-logging", version.ref = "kotlin-logging" }
+kotlin-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version = "2.0.13" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version = "1.5.6" }
+
+# testing
 kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
@@ -22,3 +30,6 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.6" }
 kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" }
+
+[bundles]
+logging-jvm = ["kotlin-logging-jvm", "slf4j-api", "logback-classic"]

@@ -14,6 +14,7 @@ kotlin {
         commonMain.dependencies {
             api(libs.kotlinx.serialization.core)
             api(libs.kotlinx.io.bytestring)
+            implementation(libs.kotlin.logging.core)
         }
 
         commonTest.dependencies {
@@ -27,6 +28,7 @@ kotlin {
         jvmTest.dependencies {
             // must be present even for commonTests only
             implementation(libs.kotest.runner.junit5)
+            implementation(libs.bundles.logging.jvm)
         }
     }
 

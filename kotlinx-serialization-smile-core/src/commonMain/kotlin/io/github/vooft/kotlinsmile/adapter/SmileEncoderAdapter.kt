@@ -1,5 +1,6 @@
 package io.github.vooft.kotlinsmile.adapter
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.SmileConfig
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.common.isAscii
@@ -27,6 +28,8 @@ import kotlinx.serialization.modules.SerializersModule
 
 @OptIn(ExperimentalSerializationApi::class)
 class SmileEncoderAdapter(private val config: SmileConfig) : AbstractEncoder() {
+
+    private val logger = KotlinLogging.logger { }
     private val builder = ByteArrayBuilder()
     private val session = SmileEncoderSession(builder).apply { header(config) }
 
@@ -83,11 +86,11 @@ class SmileEncoderAdapter(private val config: SmileConfig) : AbstractEncoder() {
         }
 
         val name = descriptor.getElementName(index).toSmile()
-        println("encodeElement: descriptor=${descriptor.kind}, property name=$name")
+        logger.info { "encodeElement: descriptor=${descriptor.kind}, property name=$name" }
 
         when {
             name.length in KeyLongUnicode.BYTE_LENGTHS -> session.keyLongUnicode(name)
-            name.isUnicode && name.length in KeyShortUnicode.BYTE_LENGTHS-> session.keyShortUnicode(name)
+            name.isUnicode && name.length in KeyShortUnicode.BYTE_LENGTHS -> session.keyShortUnicode(name)
             name.isAscii && name.length in KeyShortAscii.BYTE_LENGTHS -> session.keyShortAscii(name)
             else -> error("Element name $name is too long")
         }
@@ -101,9 +104,8 @@ class SmileEncoderAdapter(private val config: SmileConfig) : AbstractEncoder() {
 //    }
 
 
-
     override fun beginStructure(descriptor: SerialDescriptor): CompositeEncoder {
-        println("beginStructure: ${descriptor.kind}")
+        logger.info { "beginStructure: ${descriptor.kind}" }
         when (descriptor.kind) {
             StructureKind.CLASS, StructureKind.OBJECT -> session.startObject()
             StructureKind.LIST -> session.startArray()
