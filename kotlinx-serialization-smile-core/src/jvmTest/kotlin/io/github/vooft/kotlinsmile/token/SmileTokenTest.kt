@@ -39,7 +39,7 @@ class SmileTokenTest {
         }
     }
 
-    private fun <T: SmileToken> KClass<T>.findSubclassesDataObjects(): List<T> = buildList {
+    private fun <T: SmileToken> KClass<T>.findSubclassesDataObjects(): Set<T> = buildSet {
         for (subclass in sealedSubclasses) {
             val subclassObject = subclass.objectInstance
             if (subclassObject != null) {
