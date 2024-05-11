@@ -4,6 +4,7 @@ complexity:
   CyclomaticComplexMethod:
     active: false
 
+
 style:
   MagicNumber:
     active: false
@@ -13,6 +14,9 @@ style:
     comments:
       - reason: 'Forbidden STOPSHIP todo marker in comment, please address the problem before shipping the code.'
         value: 'STOPSHIP:'
+  ReturnCount:
+    max: 5
+
 naming:
   FunctionNaming:
     # can't handle factory pattern methods, like fun MyClass(arg: String) = MyClass(arg.toInt())

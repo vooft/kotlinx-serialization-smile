@@ -32,13 +32,13 @@ class SmileDecoderSession(private val iterator: ByteArrayIterator) :
     fun peekKeyToken(): SmileKeyToken {
         val byte = iterator.next()
         iterator.rollback(1)
-        return SmileToken.keyToken(byte)
+        return SmileToken.keyToken(byte) ?: error("Unknown key token: ${byte.toUByte().toString(16)}")
     }
 
     fun peekValueToken(): SmileValueToken {
         val byte = iterator.next()
         iterator.rollback(1)
-        return SmileToken.valueToken(byte)
+        return SmileToken.valueToken(byte) ?: error("Unknown key token: ${byte.toUByte().toString(16)}")
     }
 }
 

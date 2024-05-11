@@ -27,16 +27,18 @@ sealed interface SmileToken {
             SmileKeyToken.KeyShortUnicode,
             SmileKeyToken.KeyStartObjectMarker,
             SmileKeyToken.KeyEndObjectMarker,
+            SmileKeyToken.KeyStartArrayMarker,
+            SmileKeyToken.KeyEndArrayMarker,
         )
 
-        fun valueToken(byte: Byte): SmileValueToken {
+        fun valueToken(byte: Byte): SmileValueToken? {
             // TODO: improve performance?
-            return VALUE_TOKENS.first { byte in it }
+            return VALUE_TOKENS.firstOrNull { byte in it }
         }
 
-        fun keyToken(byte: Byte): SmileKeyToken {
+        fun keyToken(byte: Byte): SmileKeyToken? {
             // TODO: improve performance?
-            return KEY_TOKENS.first { byte in it }
+            return KEY_TOKENS.firstOrNull { byte in it }
         }
     }
 }
@@ -162,6 +164,14 @@ sealed interface SmileKeyToken : SmileToken {
 
     data object KeyEndObjectMarker : SmileKeyFirstByteToken {
         override val tokenRange = 0xFB..0xFB
+    }
+
+    data object KeyStartArrayMarker : SmileKeyFirstByteToken {
+        override val tokenRange = 0xF8..0xF8
+    }
+
+    data object KeyEndArrayMarker : SmileKeyFirstByteToken {
+        override val tokenRange = 0xF9..0xF9
     }
 }
 

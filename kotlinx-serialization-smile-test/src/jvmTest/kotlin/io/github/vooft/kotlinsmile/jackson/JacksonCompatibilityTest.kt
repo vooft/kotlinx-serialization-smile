@@ -133,7 +133,21 @@ data class UnicodeLongPropertyValue(val a: String = "👨‍💼".repeat(50))
 data class SimpleLiteralObject(val e: String = "", val n: String? = null, val t: Boolean = true, val f: Boolean = false)
 
 @Serializable
-data class ClassWithObjectsArray(val l: Array<TestObject> = arrayOf(TestObject(), TestObject()))
+data class ClassWithObjectsArray(val l: Array<TestObject> = arrayOf(TestObject(), TestObject())) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ClassWithObjectsArray
+
+        return l.contentEquals(other.l)
+    }
+
+    override fun hashCode(): Int {
+        return l.contentHashCode()
+    }
+}
+
 
 private fun printlnUByte(uByte: UByte) {
     logger.info { "0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0') }
