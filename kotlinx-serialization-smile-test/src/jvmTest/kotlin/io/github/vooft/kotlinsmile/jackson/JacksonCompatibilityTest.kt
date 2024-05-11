@@ -33,7 +33,8 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(AsciiShortPropertyValue()),
         ObjWithSerializer(UnicodeShortPropertyValue()),
         ObjWithSerializer(AsciiLongPropertyValue()),
-        ObjWithSerializer(UnicodeLongPropertyValue())
+        ObjWithSerializer(UnicodeLongPropertyValue()),
+        ObjWithSerializer(SimpleLiteralObject())
     )
 
     context("should serialize object same as jackson") {
@@ -124,6 +125,9 @@ data class AsciiLongPropertyValue(val a: String = "a".repeat(500))
 
 @Serializable
 data class UnicodeLongPropertyValue(val a: String = "👨‍💼".repeat(50))
+
+@Serializable
+data class SimpleLiteralObject(val e: String = "", val n: String? = null, val t: Boolean = true, val f: Boolean = false)
 
 private fun printlnUByte(uByte: UByte) {
     println("0x" + uByte.toString(16).uppercase().padStart(2, '0') + " = " + uByte.toString(2).padStart(8, '0'))

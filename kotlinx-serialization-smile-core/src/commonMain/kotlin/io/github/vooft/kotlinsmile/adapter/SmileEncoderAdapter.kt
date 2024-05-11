@@ -3,6 +3,7 @@ package io.github.vooft.kotlinsmile.adapter
 import io.github.vooft.kotlinsmile.SmileConfig
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.common.isAscii
+import io.github.vooft.kotlinsmile.common.isEmpty
 import io.github.vooft.kotlinsmile.common.isUnicode
 import io.github.vooft.kotlinsmile.common.length
 import io.github.vooft.kotlinsmile.common.toSmile
@@ -37,11 +38,19 @@ class SmileEncoderAdapter(private val config: SmileConfig) : AbstractEncoder() {
         error("Should not be called for ${value::class}: $value")
     }
 
+    override fun encodeNull() {
+        session.nullValue()
+    }
+
     override fun encodeInt(value: Int) {
         when (value) {
             in SmallInteger.values -> session.smallInteger(value)
             else -> TODO("Int value $value not supported yet")
         }
+    }
+
+    override fun encodeBoolean(value: Boolean) {
+        session.boolean(value)
     }
 
     override fun encodeByte(value: Byte) = encodeInt(value.toInt())
@@ -50,7 +59,9 @@ class SmileEncoderAdapter(private val config: SmileConfig) : AbstractEncoder() {
     override fun encodeString(value: String) {
         val smileString = value.toSmile()
 
-        if (smileString.isAscii) {
+        if (smileString.isEmpty) {
+            session.emptyString()
+        } else if (smileString.isAscii) {
             when (smileString.length) {
                 in TinyAscii.lengths -> session.valueTinyAscii(smileString)
                 in ShortAscii.lengths -> session.valueShortAscii(smileString)

@@ -51,8 +51,8 @@ sealed interface SmileValueToken : SmileToken {
         override val tokenRange = 0x20..0x23
         const val VALUE_EMPTY_STRING = 0x20.toByte()
         const val VALUE_NULL = 0x21.toByte()
-        const val VALUE_TRUE = 0x22.toByte()
-        const val VALUE_FALSE = 0x23.toByte()
+        const val VALUE_FALSE = 0x22.toByte()
+        const val VALUE_TRUE = 0x23.toByte()
     }
 
     sealed interface SmileValueShortStringToken : SmileValueToken {

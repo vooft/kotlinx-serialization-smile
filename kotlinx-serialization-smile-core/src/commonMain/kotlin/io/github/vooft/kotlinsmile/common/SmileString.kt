@@ -7,6 +7,7 @@ data class SmileString(val value: String) {
 val SmileString.isUnicode: Boolean get() = value.length != encoded.size
 val SmileString.isAscii: Boolean get() = value.length == encoded.size
 val SmileString.length: Int get() = encoded.size
+val SmileString.isEmpty: Boolean get() = value.isEmpty()
 
 fun String.toSmile() = SmileString(this)
 

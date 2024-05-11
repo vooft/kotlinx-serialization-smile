@@ -13,6 +13,8 @@ import io.github.vooft.kotlinsmile.encoder.values.ValueLongStringWriter
 import io.github.vooft.kotlinsmile.encoder.values.ValueLongStringWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.ValueShortStringWriter
 import io.github.vooft.kotlinsmile.encoder.values.ValueShortStringWriterSession
+import io.github.vooft.kotlinsmile.encoder.values.ValueSimpleLiteralWriter
+import io.github.vooft.kotlinsmile.encoder.values.ValueSimpleLiteralWriterSession
 
 class SmileEncoderSession(builder: ByteArrayBuilder) :
     HeaderWriter by HeaderWriterSession(builder),
@@ -20,4 +22,5 @@ class SmileEncoderSession(builder: ByteArrayBuilder) :
     StructuralWriter by StructuralWriterSession(builder),
     ValueShortStringWriter by ValueShortStringWriterSession(builder),
     KeyStringWriter by KeyStringWriterSession(builder),
-    ValueLongStringWriter by ValueLongStringWriterSession(builder)
+    ValueLongStringWriter by ValueLongStringWriterSession(builder),
+    ValueSimpleLiteralWriter by ValueSimpleLiteralWriterSession(builder)
