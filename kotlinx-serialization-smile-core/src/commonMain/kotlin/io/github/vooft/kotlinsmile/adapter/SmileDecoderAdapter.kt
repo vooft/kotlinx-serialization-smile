@@ -9,7 +9,9 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
-import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteral
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralBoolean
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralEmptyString
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralNull
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.StartArrayMarker
 import io.github.vooft.kotlinsmile.token.SmileValueToken.StartObjectMarker
@@ -32,11 +34,16 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
 
     override val serializersModule: SerializersModule = EmptySerializersModule()
 
+    init {
+        println(config)
+    }
+
     override fun decodeValue(): Any {
-        val nextToken = session.peekValueToken()
-        return when (nextToken) {
+        return when (session.peekValueToken()) {
             LongAscii -> session.valueLongAscii()
-            SimpleLiteral -> TODO()
+            SimpleLiteralBoolean -> session.valueBoolean()
+            SimpleLiteralEmptyString -> session.valueEmptyString()
+            SimpleLiteralNull -> TODO()
             SmallInteger -> session.smallInteger().castIfNecessary(currentValueDescriptor)
             EndArrayMarker -> TODO()
             EndObjectMarker -> TODO()
@@ -75,6 +82,17 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
         require(nextToken == StartObjectMarker) { "Expected start object token, but got $nextToken" }
         session.skip()
         return this
+    }
+
+    override fun decodeNotNullMark(): Boolean {
+        when (session.peekValueToken()) {
+            SimpleLiteralNull -> {
+                session.skip()
+                return false
+            }
+            else -> return true
+        }
+
     }
 }
 

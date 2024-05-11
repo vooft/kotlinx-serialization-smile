@@ -1,3 +1,9 @@
+complexity:
+  TooManyFunctions:
+    active: false
+  CyclomaticComplexMethod:
+    active: false
+
 style:
   MagicNumber:
     active: false

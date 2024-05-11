@@ -1,7 +1,9 @@
 package io.github.vooft.kotlinsmile.encoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
-import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteral
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralBoolean
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralEmptyString
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralNull
 
 interface ValueSimpleLiteralWriter {
     fun emptyString()
@@ -10,13 +12,13 @@ interface ValueSimpleLiteralWriter {
 }
 
 class ValueSimpleLiteralWriterSession(private val builder: ByteArrayBuilder): ValueSimpleLiteralWriter {
-    override fun emptyString() = builder.append(SimpleLiteral.VALUE_EMPTY_STRING)
+    override fun emptyString() = builder.append(SimpleLiteralEmptyString.value)
 
-    override fun nullValue() = builder.append(SimpleLiteral.VALUE_NULL)
+    override fun nullValue() = builder.append(SimpleLiteralNull.value)
 
     override fun boolean(value: Boolean) = when (value) {
-        true -> SimpleLiteral.VALUE_TRUE
-        false -> SimpleLiteral.VALUE_FALSE
+        true -> SimpleLiteralBoolean.valueTrue
+        false -> SimpleLiteralBoolean.valueFalse
     }.let { builder.append(it) }
 }
 

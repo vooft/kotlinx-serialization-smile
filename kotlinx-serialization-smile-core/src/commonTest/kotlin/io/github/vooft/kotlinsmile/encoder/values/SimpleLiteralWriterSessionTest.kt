@@ -32,7 +32,7 @@ class SimpleLiteralWriterSessionTest {
 
         session.boolean(true)
 
-        builder.toByteArray() shouldBe byteArrayOf(0b001_00010u.toByte())
+        builder.toByteArray() shouldBe byteArrayOf(0b001_00011u.toByte())
     }
 
     @Test
@@ -42,6 +42,6 @@ class SimpleLiteralWriterSessionTest {
 
         session.boolean(false)
 
-        builder.toByteArray() shouldBe byteArrayOf(0b001_00011u.toByte())
+        builder.toByteArray() shouldBe byteArrayOf(0b001_00010u.toByte())
     }
 }

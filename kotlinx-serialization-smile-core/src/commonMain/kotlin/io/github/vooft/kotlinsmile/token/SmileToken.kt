@@ -6,7 +6,9 @@ sealed interface SmileToken {
     companion object {
         val VALUE_TOKENS: List<SmileValueToken> = listOf(
             SmileValueToken.SmallInteger,
-            SmileValueToken.SimpleLiteral,
+            SmileValueToken.SimpleLiteralEmptyString,
+            SmileValueToken.SimpleLiteralNull,
+            SmileValueToken.SimpleLiteralBoolean,
             SmileValueToken.TinyUnicode,
             SmileValueToken.TinyAscii,
             SmileValueToken.ShortAscii,
@@ -47,12 +49,20 @@ sealed interface SmileValueToken : SmileToken {
         val values = -16..15
     }
 
-    data object SimpleLiteral : SmileValueToken {
-        override val tokenRange = 0x20..0x23
-        const val VALUE_EMPTY_STRING = 0x20.toByte()
-        const val VALUE_NULL = 0x21.toByte()
-        const val VALUE_FALSE = 0x22.toByte()
-        const val VALUE_TRUE = 0x23.toByte()
+    data object SimpleLiteralEmptyString : SmileValueToken {
+        override val tokenRange = 0x20..0x20
+        val value = tokenRange.first.toByte()
+    }
+
+    data object SimpleLiteralNull : SmileValueToken {
+        override val tokenRange = 0x21..0x21
+        val value = tokenRange.first.toByte()
+    }
+
+    data object SimpleLiteralBoolean : SmileValueToken {
+        override val tokenRange = 0x22..0x23
+        val valueFalse = tokenRange.first.toByte()
+        val valueTrue = tokenRange.last.toByte()
     }
 
     sealed interface SmileValueShortStringToken : SmileValueToken {
