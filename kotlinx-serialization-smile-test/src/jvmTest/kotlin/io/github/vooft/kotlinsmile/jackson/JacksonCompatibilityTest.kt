@@ -46,7 +46,10 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(intArrayOf(1, 2, 3)),
         ObjWithSerializer(listOf(1, 2, 3)),
         ObjWithSerializer(mapOf("a" to 1, "b" to 2)),
-//        ObjWithSerializer(mapOf(1 to 1, 2 to 2))
+        ObjWithSerializer(mapOf("1" to 1, "2" to 2)),
+        ObjWithSerializer(mapOf(1 to 1, 2 to 2)), // int keys are encoded as strings
+        ObjWithSerializer(mapOf(1L to 1, 2L to 2)), // long keys are encoded as strings
+        ObjWithSerializer(mapOf(true to 1, false to 2)), // boolean keys are encoded as strings
     )
 
     context("should serialize object same as jackson") {
