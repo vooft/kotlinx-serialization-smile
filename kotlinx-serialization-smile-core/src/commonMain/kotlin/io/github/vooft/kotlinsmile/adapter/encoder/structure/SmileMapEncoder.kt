@@ -2,11 +2,11 @@ package io.github.vooft.kotlinsmile.adapter.encoder.structure
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.adapter.encoder.KeyValueSmileEncoder
+import io.github.vooft.kotlinsmile.adapter.encoder.common.AbstractSmileCompositeEncoder
 import io.github.vooft.kotlinsmile.encoder.SmileEncoderSession
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
-import kotlinx.serialization.encoding.AbstractEncoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.SerializersModule
 
@@ -15,7 +15,7 @@ class SmileMapEncoder(
     private val session: SmileEncoderSession,
     override val serializersModule: SerializersModule,
     private val delegate: KeyValueSmileEncoder = KeyValueSmileEncoder(session, serializersModule)
-) : AbstractEncoder(), Encoder by delegate {
+) : AbstractSmileCompositeEncoder(delegate), Encoder by delegate {
 
     private val logger = KotlinLogging.logger { }
 

@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.adapter.decoder.structure
 
-import io.github.vooft.kotlinsmile.adapter.decoder.AbstractSmileDecoder
 import io.github.vooft.kotlinsmile.adapter.decoder.KeyValueSmileDecoder
+import io.github.vooft.kotlinsmile.adapter.decoder.common.AbstractSmileCompositeDecoder
 import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -13,11 +13,11 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 
 @OptIn(ExperimentalSerializationApi::class)
-class SmileMapDecoderAdapter(
+class SmileMapDecoder(
     private val session: SmileDecoderSession,
     override val serializersModule: SerializersModule = EmptySerializersModule(),
     private val delegate: KeyValueSmileDecoder = KeyValueSmileDecoder(session, serializersModule)
-) : AbstractSmileDecoder(session), Decoder by delegate {
+) : AbstractSmileCompositeDecoder(delegate), Decoder by delegate {
 
     private var index = 0
 

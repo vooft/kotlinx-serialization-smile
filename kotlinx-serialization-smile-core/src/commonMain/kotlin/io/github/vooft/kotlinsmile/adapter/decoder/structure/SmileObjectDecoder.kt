@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.adapter.decoder.structure
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.github.vooft.kotlinsmile.adapter.decoder.AbstractSmileDecoder
+import io.github.vooft.kotlinsmile.adapter.decoder.common.AbstractSmileCompositeDecoder
 import io.github.vooft.kotlinsmile.adapter.decoder.common.keyString
 import io.github.vooft.kotlinsmile.adapter.decoder.keyvalue.SmileValueDecoder
 import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
@@ -14,10 +14,11 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.modules.SerializersModule
 
 @OptIn(ExperimentalSerializationApi::class)
-class SmileObjectDecoderAdapter(
+class SmileObjectDecoder(
     private val session: SmileDecoderSession,
-    override val serializersModule: SerializersModule
-) : AbstractSmileDecoder(session), Decoder by SmileValueDecoder(session, serializersModule) {
+    override val serializersModule: SerializersModule,
+    valueDecoder: SmileValueDecoder = SmileValueDecoder(session, serializersModule)
+) : AbstractSmileCompositeDecoder(valueDecoder), Decoder by valueDecoder {
 
     private val logger = KotlinLogging.logger { }
 

@@ -14,6 +14,7 @@ import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.SerializersModule
 
+@OptIn(ExperimentalSerializationApi::class)
 class SmileValueEncoder(
     val session: SmileEncoderSession,
     override val serializersModule: SerializersModule
@@ -67,7 +68,6 @@ class SmileValueEncoder(
         TODO("Not yet implemented")
     }
 
-    @ExperimentalSerializationApi
     override fun encodeNull() = session.nullValue()
 
     override fun encodeShort(value: Short) = session.smallInteger(value.toInt())
