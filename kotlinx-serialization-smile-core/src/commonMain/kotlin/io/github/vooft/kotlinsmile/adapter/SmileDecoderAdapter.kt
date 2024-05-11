@@ -43,10 +43,10 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
             LongUnicode -> TODO()
             StartArrayMarker -> TODO()
             StartObjectMarker -> TODO()
-            ShortAscii -> TODO()
-            ShortUnicode -> TODO()
-            TinyAscii -> TODO()
-            TinyUnicode -> TODO()
+            ShortAscii -> session.valueShortAscii()
+            ShortUnicode -> session.valueShortUnicode()
+            TinyAscii -> session.valueTinyAscii()
+            TinyUnicode -> session.valueTinyUnicode()
         }
     }
 
