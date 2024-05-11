@@ -3,15 +3,18 @@ package io.github.vooft.kotlinsmile.adapter
 import io.github.vooft.kotlinsmile.common.ByteArrayIteratorImpl
 import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken
-import io.github.vooft.kotlinsmile.token.SmileValueToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.EndArrayMarker
 import io.github.vooft.kotlinsmile.token.SmileValueToken.EndObjectMarker
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongUnicode
+import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
+import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteral
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.StartArrayMarker
 import io.github.vooft.kotlinsmile.token.SmileValueToken.StartObjectMarker
+import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
+import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -40,17 +43,17 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
             LongUnicode -> TODO()
             StartArrayMarker -> TODO()
             StartObjectMarker -> TODO()
-            SmileValueToken.ShortAscii -> TODO()
-            SmileValueToken.ShortUnicode -> TODO()
-            SmileValueToken.TinyAscii -> TODO()
-            SmileValueToken.TinyUnicode -> TODO()
+            ShortAscii -> TODO()
+            ShortUnicode -> TODO()
+            TinyAscii -> TODO()
+            TinyUnicode -> TODO()
         }
     }
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
         val nextToken = session.peekKeyToken()
         val propertyName = when (nextToken) {
-            SmileKeyToken.KeyLongUnicode -> TODO()
+            SmileKeyToken.KeyLongUnicode -> session.keyLongUnicode()
             SmileKeyToken.KeyShortAscii -> session.keyShortAscii()
             SmileKeyToken.KeyShortUnicode -> session.keyShortUnicode()
             SmileKeyToken.KeyEndObjectMarker -> return CompositeDecoder.DECODE_DONE

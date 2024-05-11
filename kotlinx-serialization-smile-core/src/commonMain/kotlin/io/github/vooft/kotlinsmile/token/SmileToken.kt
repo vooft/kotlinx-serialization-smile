@@ -135,7 +135,7 @@ sealed interface SmileKeyToken : SmileToken {
     data object KeyLongUnicode : SmileKeyToken {
         override val tokenRange = 0x34..0x34
 
-        val offset = tokenRange.first.toByte()
+        val firstByte = tokenRange.first.toByte()
         val BYTE_LENGTHS = 65..1024
     }
 

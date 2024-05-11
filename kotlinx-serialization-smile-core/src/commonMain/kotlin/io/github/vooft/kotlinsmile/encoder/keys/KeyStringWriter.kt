@@ -37,7 +37,7 @@ class KeyStringWriterSession(private val builder: ByteArrayBuilder) : KeyStringW
     override fun keyLongUnicode(value: SmileString) {
         value.requireLength(KeyLongUnicode.BYTE_LENGTHS)
 
-        builder.append(KeyLongUnicode.offset)
+        builder.append(KeyLongUnicode.firstByte)
         builder.append(value.encoded)
         builder.append(SmileMarkers.STRING_END_MARKER)
     }
