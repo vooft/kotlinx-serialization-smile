@@ -14,6 +14,7 @@ class SmileKeyEncoder(
     private val session: SmileEncoderSession,
     override val serializersModule: SerializersModule
 ) : Encoder {
+
     override fun beginStructure(descriptor: SerialDescriptor): CompositeEncoder {
         error("Can not begin a structure in a key mode")
     }
@@ -36,10 +37,7 @@ class SmileKeyEncoder(
 
     override fun encodeLong(value: Long) = encodeString(value.toString())
 
-    @ExperimentalSerializationApi
-    override fun encodeNull() {
-        error("Null key is not allowed in Smile")
-    }
+    override fun encodeNull(): Unit = error("Null key is not allowed in Smile")
 
     override fun encodeShort(value: Short) = encodeString(value.toString())
 

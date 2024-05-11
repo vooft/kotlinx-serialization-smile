@@ -13,6 +13,7 @@ class SmileKeyDecoder(
     private val session: SmileDecoderSession,
     override val serializersModule: SerializersModule
 ) : Decoder {
+
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
         error("Unable to decode structure in a key mode, structure: ${descriptor.kind}")
     }
@@ -35,10 +36,8 @@ class SmileKeyDecoder(
 
     override fun decodeLong(): Long = decodeString().toLong()
 
-    @ExperimentalSerializationApi
     override fun decodeNotNullMark(): Boolean = error("Null key is not allowed in Smile")
 
-    @ExperimentalSerializationApi
     override fun decodeNull(): Nothing = error("Null key is not allowed in Smile")
 
     override fun decodeShort(): Short = decodeString().toShort()
