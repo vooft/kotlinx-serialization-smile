@@ -44,7 +44,9 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(1),
         ObjWithSerializer("test"),
         ObjWithSerializer(intArrayOf(1, 2, 3)),
-        ObjWithSerializer(listOf(1, 2, 3))
+        ObjWithSerializer(listOf(1, 2, 3)),
+        ObjWithSerializer(mapOf("a" to 1, "b" to 2)),
+//        ObjWithSerializer(mapOf(1 to 1, 2 to 2))
     )
 
     context("should serialize object same as jackson") {
@@ -58,11 +60,11 @@ class JacksonCompatibilityTest : ShouldSpec({
 
             println()
             logger.info { it.obj!!::class.simpleName }
-            logger.info { expected.toBinaryString() }
-            logger.info { actual.toBinaryString() }
+            logger.info { "E: " + expected.toBinaryString() }
+            logger.info { "A: " + actual.toBinaryString() }
 
-            logger.info { expected.toHexString() }
-            logger.info { actual.toHexString() }
+            logger.info { "E: " + expected.toHexString() }
+            logger.info { "A: " + actual.toHexString() }
             println()
 
             actual shouldBe expected
