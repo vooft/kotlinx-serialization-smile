@@ -37,6 +37,8 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(UnicodeLongPropertyValue()),
         ObjWithSerializer(SimpleLiteralObject()),
         ObjWithSerializer(ClassWithObjectsArray()),
+        ObjWithSerializer(ClassWithList()),
+        ObjWithSerializer(ClassWithSet()),
     )
 
     context("should serialize object same as jackson") {
@@ -147,6 +149,12 @@ data class ClassWithObjectsArray(val l: Array<TestObject> = arrayOf(TestObject()
         return l.contentHashCode()
     }
 }
+
+@Serializable
+data class ClassWithList(val l: List<TestObject> = listOf(TestObject(), TestObject()))
+
+@Serializable
+data class ClassWithSet(val l: Set<TestObject> = setOf(TestObject(), TestObject()))
 
 
 private fun printlnUByte(uByte: UByte) {
