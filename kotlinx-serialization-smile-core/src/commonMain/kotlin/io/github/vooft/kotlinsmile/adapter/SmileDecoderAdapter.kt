@@ -4,6 +4,11 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.common.ByteArrayIteratorImpl
 import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken
+import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyEndObjectMarker
+import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
+import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
+import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
+import io.github.vooft.kotlinsmile.token.SmileKeyToken.SmileKeyStringToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.EndArrayMarker
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongUnicode
@@ -13,6 +18,7 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralBoolean
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralEmptyString
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralNull
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
+import io.github.vooft.kotlinsmile.token.SmileValueToken.SmileStringToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.StartArrayMarker
 import io.github.vooft.kotlinsmile.token.SmileValueToken.StartObjectMarker
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
@@ -34,6 +40,7 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
     private val config = session.header()
 
     private var currentListElementIndex = 0
+    private var isMapKey = true
 
     override val serializersModule: SerializersModule = EmptySerializersModule()
 
@@ -54,45 +61,53 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
         return session.smallInteger().toShort()
     }
 
+    override fun decodeString(): String {
+        if (isMapKey) {
+            val token = session.peekStringKeyToken()
+            return when (token) {
+                KeyLongUnicode -> session.keyLongUnicode()
+                KeyShortAscii -> session.keyShortAscii()
+                KeyShortUnicode -> session.keyShortUnicode()
+            }
+        } else {
+            val token = session.peekStringValueToken()
+            return when (token) {
+                LongAscii -> session.valueLongAscii()
+                SimpleLiteralEmptyString -> session.valueEmptyString()
+                LongUnicode -> session.valueLongUnicode()
+                ShortAscii -> session.valueShortAscii()
+                ShortUnicode -> session.valueShortUnicode()
+                TinyAscii -> session.valueTinyAscii()
+                TinyUnicode -> session.valueTinyUnicode()
+            }
+        }
+    }
+
     override fun decodeValue(): Any {
         val token = session.peekValueToken()
         return when (token) {
-            LongAscii -> session.valueLongAscii()
             SimpleLiteralBoolean -> session.valueBoolean()
-            SimpleLiteralEmptyString -> session.valueEmptyString()
             EndArrayMarker -> TODO()
-            LongUnicode -> session.valueLongUnicode()
             StartArrayMarker -> TODO()
-            ShortAscii -> session.valueShortAscii()
-            ShortUnicode -> session.valueShortUnicode()
-            TinyAscii -> session.valueTinyAscii()
-            TinyUnicode -> session.valueTinyUnicode()
-            SimpleLiteralNull, SmallInteger, StartObjectMarker -> error("$token should be handled separately")
+            is SmileStringToken, SimpleLiteralNull, SmallInteger, StartObjectMarker -> error("$token should be handled separately")
         }.also {
             logger.info { "Decoded value $token: $it" }
         }
     }
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
+        logger.info { "decodeElementIndex: $descriptor" }
+
         when (descriptor.kind) {
             StructureKind.CLASS, StructureKind.OBJECT -> {
                 // key decoding
                 val nextToken = session.peekKeyToken()
-                logger.info { "Decoding element $nextToken" }
+                logger.info { "Decoding object key $nextToken" }
 
-                val propertyName = when (nextToken) {
-                    SmileKeyToken.KeyLongUnicode -> session.keyLongUnicode()
-                    SmileKeyToken.KeyShortAscii -> session.keyShortAscii()
-                    SmileKeyToken.KeyShortUnicode -> session.keyShortUnicode()
-                    SmileKeyToken.KeyEndObjectMarker -> {
-                        session.skip()
-                        return CompositeDecoder.DECODE_DONE
-                    }
-
-                }
-
+                val propertyName = session.keyString(nextToken) ?: return CompositeDecoder.DECODE_DONE
                 return descriptor.getElementIndex(propertyName)
             }
+
             StructureKind.LIST -> {
                 // value decoding
                 val nextValue = session.peekValueToken()
@@ -103,6 +118,25 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
                     return currentListElementIndex++
                 }
             }
+
+            StructureKind.MAP -> {
+                if (!isMapKey) {
+                    val nextKey = session.peekKeyToken()
+                    logger.info { "Decoding map key $nextKey" }
+                    if (nextKey == KeyEndObjectMarker) {
+                        session.skip()
+                        return CompositeDecoder.DECODE_DONE
+                    } else {
+                        isMapKey = true
+                        return currentListElementIndex++
+                    }
+                } else {
+                    logger.info { "Decoding map value ${session.peekValueToken()}" }
+                    isMapKey = false
+                    return currentListElementIndex++
+                }
+            }
+
             else -> TODO()
         }
 
@@ -114,6 +148,12 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
             StructureKind.CLASS, StructureKind.OBJECT -> {
                 val nextToken = session.peekValueToken()
                 require(nextToken == StartObjectMarker) { "Expected start object token, but got $nextToken" }
+            }
+
+            StructureKind.MAP -> {
+                val nextToken = session.peekValueToken()
+                require(nextToken == StartObjectMarker) { "Expected start object token, but got $nextToken" }
+                currentListElementIndex = 0
             }
 
             StructureKind.LIST -> {
@@ -149,3 +189,28 @@ class SmileDecoderAdapter(data: ByteArray) : AbstractDecoder() {
     }
 }
 
+private fun SmileDecoderSession.peekStringValueToken(): SmileStringToken {
+    return when (val token = peekValueToken()) {
+        is SmileStringToken -> token
+        else -> error("Unexpected token $token")
+    }
+}
+
+private fun SmileDecoderSession.peekStringKeyToken(): SmileKeyStringToken {
+    return when (val token = peekKeyToken()) {
+        is SmileKeyStringToken -> token
+        else -> error("Unexpected token $token")
+    }
+}
+
+private fun SmileDecoderSession.keyString(token: SmileKeyToken): String? {
+    return when (token) {
+        KeyLongUnicode -> keyLongUnicode()
+        KeyShortAscii -> keyShortAscii()
+        KeyShortUnicode -> keyShortUnicode()
+        KeyEndObjectMarker -> {
+            skip()
+            return null
+        }
+    }
+}

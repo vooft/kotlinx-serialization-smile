@@ -47,7 +47,7 @@ sealed interface SmileValueToken : SmileToken {
         val values = -16..15
     }
 
-    data object SimpleLiteralEmptyString : SmileValueToken {
+    data object SimpleLiteralEmptyString : SmileStringToken {
         override val tokenRange = 0x20..0x20
         val value = tokenRange.first.toByte()
     }
@@ -63,7 +63,9 @@ sealed interface SmileValueToken : SmileToken {
         val valueTrue = tokenRange.last.toByte()
     }
 
-    sealed interface SmileValueShortStringToken : SmileValueToken {
+    sealed interface SmileStringToken : SmileValueToken
+
+    sealed interface SmileValueShortStringToken : SmileStringToken {
         val offset: Byte get() = tokenRange.first.toByte()
         val lengths: IntRange
         val isUnicode: Boolean
@@ -101,12 +103,12 @@ sealed interface SmileValueToken : SmileToken {
         override val isUnicode = true
     }
 
-    data object LongAscii : SmileValueToken {
+    data object LongAscii : SmileStringToken {
         override val tokenRange = 0xE0..0xE0
         val firstByte = tokenRange.first.toByte()
     }
 
-    data object LongUnicode : SmileValueFirstByteToken {
+    data object LongUnicode : SmileStringToken, SmileValueFirstByteToken {
         override val tokenRange = 0xE4..0xE4
     }
 
@@ -130,21 +132,23 @@ sealed interface SmileKeyToken : SmileToken {
         val firstByte: Byte get() = tokenRange.first.toByte()
     }
 
-    data object KeyShortAscii : SmileKeyToken {
+    sealed interface SmileKeyStringToken : SmileKeyToken
+
+    data object KeyShortAscii : SmileKeyStringToken {
         override val tokenRange = 0x80..0xBF
 
         val offset = (tokenRange.first - 1).toByte()
         val BYTE_LENGTHS = 1..64
     }
 
-    data object KeyLongUnicode : SmileKeyToken {
+    data object KeyLongUnicode : SmileKeyStringToken {
         override val tokenRange = 0x34..0x34
 
         val firstByte = tokenRange.first.toByte()
         val BYTE_LENGTHS = 65..1024
     }
 
-    data object KeyShortUnicode : SmileKeyToken {
+    data object KeyShortUnicode : SmileKeyStringToken {
         override val tokenRange = 0xC0..0xF7
 
         val offset = (tokenRange.first - 2).toByte() // length starts with 2, so we subtract 1
