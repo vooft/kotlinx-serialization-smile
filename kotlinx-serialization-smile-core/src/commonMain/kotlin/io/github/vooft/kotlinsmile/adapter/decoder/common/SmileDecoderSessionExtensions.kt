@@ -19,9 +19,9 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 
 fun SmileDecoderSession.valueInt(): Long {
     return when (val token = peekValueToken()) {
-        SmallInteger -> smallInteger().toLong()
-        RegularInteger -> regularInteger().toLong()
-        LongInteger -> longInteger()
+        SmallInteger -> valueSmallInteger().toLong()
+        RegularInteger -> valueRegularInteger().toLong()
+        LongInteger -> valueLongInteger()
         else -> error("Unexpected token $token")
     }
 }

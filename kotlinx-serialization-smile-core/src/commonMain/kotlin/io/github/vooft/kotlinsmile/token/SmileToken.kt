@@ -72,6 +72,16 @@ sealed interface SmileValueToken : SmileToken {
         val values = Long.MIN_VALUE..Long.MAX_VALUE
     }
 
+    data object FloatValue : SmileValueFirstByteToken {
+        override val tokenRange = 0x28..0x28
+        const val SERIALIZED_BYTES = 5
+    }
+
+    data object DoubleValue : SmileValueFirstByteToken {
+        override val tokenRange = 0x29..0x29
+        const val SERIALIZED_BYTES = 10
+    }
+
     data object SimpleLiteralEmptyString : SmileStringToken {
         override val tokenRange = 0x20..0x20
         val value = tokenRange.first.toByte()

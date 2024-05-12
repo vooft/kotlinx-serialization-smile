@@ -18,7 +18,7 @@ class IntegerWriterSessionTest : FunSpec({
             val builder = ByteArrayBuilder()
             val session = IntegerWriterSession(builder)
 
-            session.smallInteger(number)
+            session.valueSmallInteger(number)
 
             val actualArray = builder.toByteArray()
             actualArray shouldHaveSize 1
@@ -39,7 +39,7 @@ class IntegerWriterSessionTest : FunSpec({
             val builder = ByteArrayBuilder()
             val session = IntegerWriterSession(builder)
 
-            session.regularInteger(number)
+            session.valueRegularInteger(number)
 
             val actualArray = builder.toByteArray()
             actualArray shouldBe expected

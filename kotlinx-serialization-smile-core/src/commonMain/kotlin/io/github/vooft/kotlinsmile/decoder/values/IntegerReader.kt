@@ -8,19 +8,19 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
 import kotlin.experimental.xor
 
 interface IntegerReader {
-    fun smallInteger(): Byte
-    fun regularInteger(): Int
-    fun longInteger(): Long
+    fun valueSmallInteger(): Byte
+    fun valueRegularInteger(): Int
+    fun valueLongInteger(): Long
 }
 
 class IntegerReaderSession(private val iterator: ByteArrayIterator) : IntegerReader {
-    override fun smallInteger(): Byte {
+    override fun valueSmallInteger(): Byte {
         val byte = iterator.next()
         val zigzag = byte.toUByte() - SmallInteger.offset.toUByte()
         return ZigzagInteger.decode(zigzag.toInt()).toByte()
     }
 
-    override fun regularInteger(): Int {
+    override fun valueRegularInteger(): Int {
         val firstByte = iterator.next()
         require(firstByte == RegularInteger.firstByte) {
             "Invalid token for regular integer ${RegularInteger.firstByte}, actual: $firstByte"
@@ -37,7 +37,7 @@ class IntegerReaderSession(private val iterator: ByteArrayIterator) : IntegerRea
         return ZigzagInteger.decode(zigzag)
     }
 
-    override fun longInteger(): Long {
+    override fun valueLongInteger(): Long {
         val firstByte = iterator.next()
         require(firstByte == LongInteger.firstByte) {
             "Invalid token for long integer ${LongInteger.firstByte}, actual: $firstByte"

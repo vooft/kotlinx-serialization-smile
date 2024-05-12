@@ -26,35 +26,33 @@ class SmileValueEncoder(
                 session.startObject()
                 SmileObjectEncoder(session, serializersModule)
             }
+
             StructureKind.MAP -> {
                 session.startObject()
                 SmileMapEncoder(session, serializersModule)
             }
+
             StructureKind.LIST -> {
                 session.startArray()
                 SmileListEncoder(session, serializersModule)
             }
+
             else -> TODO("Not implemented yet ${descriptor.kind}")
         }
     }
 
     override fun encodeBoolean(value: Boolean) = session.boolean(value)
 
-    override fun encodeByte(value: Byte) = session.smallInteger(value.toInt())
+    override fun encodeByte(value: Byte) = session.valueSmallInteger(value.toInt())
 
     override fun encodeChar(value: Char) = session.valueString(value.toString().toSmile())
 
-    override fun encodeDouble(value: Double) {
-        TODO("Not yet implemented")
-    }
+    override fun encodeDouble(value: Double) = session.valueDouble(value)
 
-    override fun encodeEnum(enumDescriptor: SerialDescriptor, index: Int) {
-        TODO("Not yet implemented")
-    }
+    override fun encodeEnum(enumDescriptor: SerialDescriptor, index: Int) =
+        session.valueString(enumDescriptor.getElementName(index).toSmile())
 
-    override fun encodeFloat(value: Float) {
-        TODO("Not yet implemented")
-    }
+    override fun encodeFloat(value: Float) = session.valueFloat(value)
 
     override fun encodeInline(descriptor: SerialDescriptor) = this
 

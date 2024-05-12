@@ -18,9 +18,9 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 
 fun SmileEncoderSession.valueInteger(value: Long) = when (value) {
-    in SmallInteger.values -> smallInteger(value.toInt())
-    in RegularInteger.values -> regularInteger(value.toInt())
-    in LongInteger.values -> longInteger(value)
+    in SmallInteger.values -> valueSmallInteger(value.toInt())
+    in RegularInteger.values -> valueRegularInteger(value.toInt())
+    in LongInteger.values -> valueLongInteger(value)
     else -> error("Invalid value $value is too big")
 }
 

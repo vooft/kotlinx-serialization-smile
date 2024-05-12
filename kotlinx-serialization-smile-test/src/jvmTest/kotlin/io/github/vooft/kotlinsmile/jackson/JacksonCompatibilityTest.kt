@@ -6,12 +6,10 @@ import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.ObjWithSerializer
 import io.github.vooft.kotlinsmile.Smile
-import io.github.vooft.kotlinsmile.common.ZigzagInteger
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.Serializable
-import java.nio.ByteBuffer
 
 class JacksonCompatibilityTest : ShouldSpec({
     System.setProperty("kotest.assertions.collection.print.size", "1000")
@@ -34,15 +32,6 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(ClassWithIntArray()),
         ObjWithSerializer(ClassWithIntList()),
         ObjWithSerializer(1, "root level small int"),
-        ObjWithSerializer(100, "root level regular positive int"),
-        ObjWithSerializer(-100, "root level regular negative int"),
-        ObjWithSerializer(Int.MAX_VALUE, "root level max int"),
-        ObjWithSerializer(Int.MIN_VALUE, "root level min int"),
-        ObjWithSerializer(1L, "root level small long"),
-        ObjWithSerializer(100L, "root level regular positive long"),
-        ObjWithSerializer(-100L, "root level regular negative long"),
-        ObjWithSerializer(Long.MAX_VALUE, "root level max long"),
-        ObjWithSerializer(Long.MIN_VALUE, "root level min long"),
         ObjWithSerializer("test", "root level string"),
         ObjWithSerializer(intArrayOf(1, 2, 3), "root level int array"),
         ObjWithSerializer(listOf(1, 2, 3), "root level int list"),
@@ -74,6 +63,18 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(LongUnicodePropertyValueClass()),
         ObjWithSerializer(SimpleLiteralsClass()),
         ObjWithSerializer(CharPropertyClass()),
+        ObjWithSerializer(ClassWithEnumValues()),
+        ObjWithSerializer(ClassWithFloatProperty()),
+        ObjWithSerializer(ClassWithDoubleProperty()),
+        ObjWithSerializer(100, "root level regular positive int"),
+        ObjWithSerializer(-100, "root level regular negative int"),
+        ObjWithSerializer(Int.MAX_VALUE, "root level max int"),
+        ObjWithSerializer(Int.MIN_VALUE, "root level min int"),
+        ObjWithSerializer(1L, "root level small long"),
+        ObjWithSerializer(100L, "root level regular positive long"),
+        ObjWithSerializer(-100L, "root level regular negative long"),
+        ObjWithSerializer(Long.MAX_VALUE, "root level max long"),
+        ObjWithSerializer(Long.MIN_VALUE, "root level min long"),
     )
 
     context("should serialize object same as jackson") {
@@ -116,19 +117,19 @@ class JacksonCompatibilityTest : ShouldSpec({
         }
     }
 
-    should("bla") {
-        val number = 100000
-        val zigzag = ZigzagInteger.encode(number)
-        val zigzagManual = ByteBuffer.allocate(4).putInt(zigzag).array()
-
-        val encoded = smileMapper.writeValueAsBytes(number)
-        println("E: " + encoded.toHexString())
-        println("Z: " + zigzagManual.toHexString())
-
-        println()
-        println("E: " + encoded.toBinaryString())
-        println("Z: " + zigzagManual.toBinaryString())
-    }
+//    should("bla") {
+//        val number = 100000
+//        val zigzag = ZigzagInteger.encode(number)
+//        val zigzagManual = ByteBuffer.allocate(4).putInt(zigzag).array()
+//
+//        val encoded = smileMapper.writeValueAsBytes(number)
+//        println("E: " + encoded.toHexString())
+//        println("Z: " + zigzagManual.toHexString())
+//
+//        println()
+//        println("E: " + encoded.toBinaryString())
+//        println("Z: " + zigzagManual.toBinaryString())
+//    }
 })
 
 @Serializable
@@ -191,6 +192,8 @@ data class ClassWithIntArray(val l: IntArray = intArrayOf(1, 2, 3)) {
 @Serializable
 data class ClassWithIntList(val l: List<Int> = listOf(1, 2, 3))
 
+@Serializable
+data class ClassWithEnumValues(val a: TestEnum = TestEnum.A, val b: TestEnum = TestEnum.B)
 
 @Serializable
 data class ClassWithObjectsArray(val l: Array<SimpleClass> = arrayOf(SimpleClass(), SimpleClass())) {
@@ -213,6 +216,12 @@ data class ClassWithObjectList(val l: List<SimpleClass> = listOf(SimpleClass(), 
 
 @Serializable
 data class ClassWithObjectSet(val l: Set<SimpleClass> = setOf(SimpleClass(), SimpleClass()))
+
+@Serializable
+data class ClassWithFloatProperty(val f: Float = 1.0f)
+
+@Serializable
+data class ClassWithDoubleProperty(val d: Double = 1.0)
 
 enum class TestEnum {
     A, B, C

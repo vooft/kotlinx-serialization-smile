@@ -54,25 +54,17 @@ class SmileValueDecoder(
 
     override fun decodeBoolean(): Boolean = session.valueBoolean()
 
-    override fun decodeByte(): Byte = session.smallInteger()
+    override fun decodeByte(): Byte = session.valueSmallInteger()
 
     override fun decodeChar(): Char = session.valueString().single()
 
-    override fun decodeDouble(): Double {
-        TODO("Not yet implemented")
-    }
+    override fun decodeDouble(): Double = session.valueDouble()
 
-    override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
-        TODO("Not yet implemented")
-    }
+    override fun decodeEnum(enumDescriptor: SerialDescriptor): Int = enumDescriptor.getElementIndex(session.valueString())
 
-    override fun decodeFloat(): Float {
-        TODO("Not yet implemented")
-    }
+    override fun decodeFloat(): Float = session.valueFloat()
 
-    override fun decodeInline(descriptor: SerialDescriptor): Decoder {
-        TODO("Not yet implemented")
-    }
+    override fun decodeInline(descriptor: SerialDescriptor): Decoder = this
 
     override fun decodeInt(): Int = session.valueInt().toInt()
 
@@ -89,7 +81,7 @@ class SmileValueDecoder(
 
     override fun decodeNull(): Nothing? = null
 
-    override fun decodeShort(): Short = session.smallInteger().toShort()
+    override fun decodeShort(): Short = session.valueSmallInteger().toShort()
 
     override fun decodeString(): String = session.valueString()
 }
