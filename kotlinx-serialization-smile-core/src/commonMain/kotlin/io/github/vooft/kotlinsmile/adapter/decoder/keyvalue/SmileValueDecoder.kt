@@ -74,11 +74,9 @@ class SmileValueDecoder(
         TODO("Not yet implemented")
     }
 
-    override fun decodeInt(): Int = session.valueInt()
+    override fun decodeInt(): Int = session.valueInt().toInt()
 
-    override fun decodeLong(): Long {
-        TODO("Not yet implemented")
-    }
+    override fun decodeLong(): Long = session.valueInt()
 
     override fun decodeNotNullMark(): Boolean = when (session.peekValueToken()) {
         SmileValueToken.SimpleLiteralNull -> {

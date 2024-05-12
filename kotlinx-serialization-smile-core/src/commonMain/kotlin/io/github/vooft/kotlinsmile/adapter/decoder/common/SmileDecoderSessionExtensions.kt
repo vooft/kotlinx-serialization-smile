@@ -6,7 +6,9 @@ import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.SmileKeyStringToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
+import io.github.vooft.kotlinsmile.token.SmileValueToken.LongInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongUnicode
+import io.github.vooft.kotlinsmile.token.SmileValueToken.RegularInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralEmptyString
@@ -15,9 +17,11 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.SmileStringToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 
-fun SmileDecoderSession.valueInt(): Int {
+fun SmileDecoderSession.valueInt(): Long {
     return when (val token = peekValueToken()) {
-        SmallInteger -> smallInteger().toInt()
+        SmallInteger -> smallInteger().toLong()
+        RegularInteger -> regularInteger().toLong()
+        LongInteger -> longInteger()
         else -> error("Unexpected token $token")
     }
 }

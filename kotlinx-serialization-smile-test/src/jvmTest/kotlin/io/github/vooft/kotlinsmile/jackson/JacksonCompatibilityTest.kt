@@ -27,25 +27,25 @@ class JacksonCompatibilityTest : ShouldSpec({
     val basicTestCases = listOf(ObjWithSerializer(SimpleClass()))
 
     val structuralTestCases = listOf(
-//        ObjWithSerializer(CompositeObject()),
-//        ObjWithSerializer(ClassWithObjectsArray()),
-//        ObjWithSerializer(ClassWithObjectList()),
-//        ObjWithSerializer(ClassWithObjectSet()),
-//        ObjWithSerializer(ClassWithIntArray()),
-//        ObjWithSerializer(ClassWithIntList()),
-//        ObjWithSerializer(1, "root level small int"),
-//        ObjWithSerializer(100, "root level regular positive int"),
-//        ObjWithSerializer(-100, "root level regular negative int"),
+        ObjWithSerializer(CompositeObject()),
+        ObjWithSerializer(ClassWithObjectsArray()),
+        ObjWithSerializer(ClassWithObjectList()),
+        ObjWithSerializer(ClassWithObjectSet()),
+        ObjWithSerializer(ClassWithIntArray()),
+        ObjWithSerializer(ClassWithIntList()),
+        ObjWithSerializer(1, "root level small int"),
+        ObjWithSerializer(100, "root level regular positive int"),
+        ObjWithSerializer(-100, "root level regular negative int"),
         ObjWithSerializer(Int.MAX_VALUE, "root level max int"),
         ObjWithSerializer(Int.MIN_VALUE, "root level min int"),
-//        ObjWithSerializer(1L, "root level small long"),
-//        ObjWithSerializer(100L, "root level regular positive long"),
-//        ObjWithSerializer(-100L, "root level regular negative long"),
-//        ObjWithSerializer(Long.MAX_VALUE, "root level max long"),
-//        ObjWithSerializer(Long.MIN_VALUE, "root level min long"),
-//        ObjWithSerializer("test", "root level string"),
-//        ObjWithSerializer(intArrayOf(1, 2, 3), "root level int array"),
-//        ObjWithSerializer(listOf(1, 2, 3), "root level int list"),
+        ObjWithSerializer(1L, "root level small long"),
+        ObjWithSerializer(100L, "root level regular positive long"),
+        ObjWithSerializer(-100L, "root level regular negative long"),
+        ObjWithSerializer(Long.MAX_VALUE, "root level max long"),
+        ObjWithSerializer(Long.MIN_VALUE, "root level min long"),
+        ObjWithSerializer("test", "root level string"),
+        ObjWithSerializer(intArrayOf(1, 2, 3), "root level int array"),
+        ObjWithSerializer(listOf(1, 2, 3), "root level int list"),
     )
 
     val keyTestCases = listOf(
@@ -65,7 +65,7 @@ class JacksonCompatibilityTest : ShouldSpec({
     )
 
     val valueTestCases = listOf(
-        ObjWithSerializer(SimpleClass(a = Short.MAX_VALUE.toInt(), bb = Short.MIN_VALUE.toInt())),
+        ObjWithSerializer(SimpleClass(a = Short.MAX_VALUE.toInt(), bb = Short.MIN_VALUE.toInt()), "short edges"),
         ObjWithSerializer(TinyAsciiPropertyValueClass()),
         ObjWithSerializer(TinUnicodeyPropertyValueClass()),
         ObjWithSerializer(ShortAsciiPropertyValueClass()),
@@ -79,11 +79,10 @@ class JacksonCompatibilityTest : ShouldSpec({
     context("should serialize object same as jackson") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts =
-//            basicTestCases +
-                    structuralTestCases + listOf()
-//                    keyTestCases +
-//                    valueTestCases
+            ts = basicTestCases +
+                    structuralTestCases +
+                    keyTestCases +
+                    valueTestCases
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
 
@@ -104,7 +103,7 @@ class JacksonCompatibilityTest : ShouldSpec({
 
     context("should deserialize object from jackson output") {
         withData<ObjWithSerializer<*>>(
-            nameFn = { it.obj!!::class.simpleName!! },
+            nameFn = { it.name ?: it.obj!!::class.simpleName!! },
             ts = basicTestCases +
                     structuralTestCases +
                     keyTestCases +
