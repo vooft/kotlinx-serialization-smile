@@ -2,8 +2,10 @@ package io.github.vooft.kotlinsmile.encoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.common.ZigzagInteger
-import io.github.vooft.kotlinsmile.encoder.values.AppendConfig.IntConfig
-import io.github.vooft.kotlinsmile.encoder.values.AppendConfig.LongConfig
+import io.github.vooft.kotlinsmile.encoder.values.raw.AppendConfig.IntConfig
+import io.github.vooft.kotlinsmile.encoder.values.raw.AppendConfig.LongConfig
+import io.github.vooft.kotlinsmile.encoder.values.raw.appendRawInt
+import io.github.vooft.kotlinsmile.encoder.values.raw.appendRawLong
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.RegularInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger

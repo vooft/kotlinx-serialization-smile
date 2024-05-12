@@ -10,6 +10,7 @@ import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.Serializable
+import java.util.concurrent.ThreadLocalRandom
 
 class JacksonCompatibilityTest : ShouldSpec({
     System.setProperty("kotest.assertions.collection.print.size", "1000")
@@ -31,6 +32,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(ClassWithObjectSet()),
         ObjWithSerializer(ClassWithIntArray()),
         ObjWithSerializer(ClassWithIntList()),
+        ObjWithSerializer(ClassWithByteArray()),
         ObjWithSerializer(1, "root level small int"),
         ObjWithSerializer("test", "root level string"),
         ObjWithSerializer(intArrayOf(1, 2, 3), "root level int array"),
@@ -222,6 +224,44 @@ data class ClassWithFloatProperty(val f: Float = 1.0f)
 
 @Serializable
 data class ClassWithDoubleProperty(val d: Double = 1.0)
+
+@Serializable
+data class ClassWithByteArray(val b: ByteArray = byteArrayOf(3, 2, 1)) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ClassWithByteArray
+
+        return b.contentEquals(other.b)
+    }
+
+    override fun hashCode(): Int {
+        return b.contentHashCode()
+    }
+}
+
+@Serializable
+data class ClassWithRandomByteArray(val b: ByteArray = ByteArray(1000).apply { ThreadLocalRandom.current().nextBytes(this) }) {
+
+    init {
+        println("B: ${b.toHexString()}")
+        println("B: ${b.toBinaryString()}")
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ClassWithByteArray
+
+        return b.contentEquals(other.b)
+    }
+
+    override fun hashCode(): Int {
+        return b.contentHashCode()
+    }
+}
 
 enum class TestEnum {
     A, B, C

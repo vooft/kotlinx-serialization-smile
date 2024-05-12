@@ -2,6 +2,7 @@ package io.github.vooft.kotlinsmile.adapter.encoder.keyvalue
 
 import io.github.vooft.kotlinsmile.adapter.encoder.common.valueInteger
 import io.github.vooft.kotlinsmile.adapter.encoder.common.valueString
+import io.github.vooft.kotlinsmile.adapter.encoder.structure.SmileByteArrayEncoder
 import io.github.vooft.kotlinsmile.adapter.encoder.structure.SmileListEncoder
 import io.github.vooft.kotlinsmile.adapter.encoder.structure.SmileMapEncoder
 import io.github.vooft.kotlinsmile.adapter.encoder.structure.SmileObjectEncoder
@@ -41,6 +42,13 @@ class SmileValueEncoder(
         }
     }
 
+    override fun beginCollection(descriptor: SerialDescriptor, collectionSize: Int): CompositeEncoder {
+        return when {
+            descriptor.isByteArray() -> SmileByteArrayEncoder(session, collectionSize, serializersModule)
+            else -> beginStructure(descriptor)
+        }
+    }
+
     override fun encodeBoolean(value: Boolean) = session.boolean(value)
 
     override fun encodeByte(value: Byte) = session.valueSmallInteger(value.toInt())
@@ -66,3 +74,6 @@ class SmileValueEncoder(
 
     override fun encodeString(value: String) = session.valueString(value.toSmile())
 }
+
+@OptIn(ExperimentalSerializationApi::class)
+private fun SerialDescriptor.isByteArray() = kind == StructureKind.LIST && serialName == ByteArray::class.qualifiedName

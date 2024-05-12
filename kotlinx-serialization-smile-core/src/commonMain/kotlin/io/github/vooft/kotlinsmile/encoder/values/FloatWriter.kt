@@ -1,8 +1,10 @@
 package io.github.vooft.kotlinsmile.encoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
-import io.github.vooft.kotlinsmile.encoder.values.AppendConfig.DoubleConfig
-import io.github.vooft.kotlinsmile.encoder.values.AppendConfig.FloatConfig
+import io.github.vooft.kotlinsmile.encoder.values.raw.AppendConfig.DoubleConfig
+import io.github.vooft.kotlinsmile.encoder.values.raw.AppendConfig.FloatConfig
+import io.github.vooft.kotlinsmile.encoder.values.raw.appendRawInt
+import io.github.vooft.kotlinsmile.encoder.values.raw.appendRawLong
 import io.github.vooft.kotlinsmile.token.SmileValueToken.DoubleValue
 import io.github.vooft.kotlinsmile.token.SmileValueToken.FloatValue
 

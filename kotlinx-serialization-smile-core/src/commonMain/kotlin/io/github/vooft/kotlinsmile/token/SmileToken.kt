@@ -17,6 +17,7 @@ sealed interface SmileToken {
             SmileValueToken.ShortUnicode,
             SmileValueToken.LongAscii,
             SmileValueToken.LongUnicode,
+            SmileValueToken.BinaryValue,
             SmileValueToken.StartArrayMarker,
             SmileValueToken.EndArrayMarker,
             SmileValueToken.StartObjectMarker,
@@ -133,6 +134,10 @@ sealed interface SmileValueToken : SmileToken {
 
     data object LongUnicode : SmileStringToken, SmileValueFirstByteToken {
         override val tokenRange = 0xE4..0xE4
+    }
+
+    data object BinaryValue : SmileValueFirstByteToken {
+        override val tokenRange = 0xE8..0xE8
     }
 
     data object StartArrayMarker : SmileValueFirstByteToken {
