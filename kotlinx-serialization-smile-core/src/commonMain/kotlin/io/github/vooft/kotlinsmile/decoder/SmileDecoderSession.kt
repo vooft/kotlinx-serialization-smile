@@ -1,10 +1,14 @@
 package io.github.vooft.kotlinsmile.decoder
 
+import io.github.vooft.kotlinsmile.adapter.decoder.common.peekKeyToken
+import io.github.vooft.kotlinsmile.adapter.decoder.common.peekValueToken
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
 import io.github.vooft.kotlinsmile.decoder.keys.KeyStringReader
 import io.github.vooft.kotlinsmile.decoder.keys.KeyStringReaderSession
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReader
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReaderSession
+import io.github.vooft.kotlinsmile.decoder.values.BinaryReader
+import io.github.vooft.kotlinsmile.decoder.values.BinaryReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.FloatReader
 import io.github.vooft.kotlinsmile.decoder.values.FloatReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.IntegerReader
@@ -16,7 +20,6 @@ import io.github.vooft.kotlinsmile.decoder.values.ValueShortStringReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.ValueSimpleLiteralReader
 import io.github.vooft.kotlinsmile.decoder.values.ValueSimpleLiteralReaderSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken
-import io.github.vooft.kotlinsmile.token.SmileToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken
 
 class SmileDecoderSession(private val iterator: ByteArrayIterator) :
@@ -26,22 +29,15 @@ class SmileDecoderSession(private val iterator: ByteArrayIterator) :
     FloatReader by FloatReaderSession(iterator),
     ValueShortStringReader by ValueShortStringReaderSession(iterator),
     ValueLongStringReader by ValueLongStringReaderSession(iterator),
-    ValueSimpleLiteralReader by ValueSimpleLiteralReaderSession(iterator) {
+    ValueSimpleLiteralReader by ValueSimpleLiteralReaderSession(iterator),
+    BinaryReader by BinaryReaderSession(iterator) {
 
     fun skip() {
         iterator.next()
     }
 
-    fun peekKeyToken(): SmileKeyToken {
-        val byte = iterator.next()
-        iterator.rollback(1)
-        return SmileToken.keyToken(byte) ?: error("Unknown key token: ${byte.toUByte().toString(16)}")
-    }
+    fun peekKeyToken(): SmileKeyToken = iterator.peekKeyToken()
 
-    fun peekValueToken(): SmileValueToken {
-        val byte = iterator.next()
-        iterator.rollback(1)
-        return SmileToken.valueToken(byte) ?: error("Unknown key token: ${byte.toUByte().toString(16)}")
-    }
+    fun peekValueToken(): SmileValueToken = iterator.peekValueToken()
 }
 

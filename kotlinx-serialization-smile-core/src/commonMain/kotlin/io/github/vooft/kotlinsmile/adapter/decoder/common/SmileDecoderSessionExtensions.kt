@@ -17,6 +17,7 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.SmileStringToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 
+
 fun SmileDecoderSession.valueInt(): Long {
     return when (val token = peekValueToken()) {
         SmallInteger -> valueSmallInteger().toLong()

@@ -9,9 +9,9 @@ class RawBinaryWriterTest {
     fun `should write one bit`() {
         val builder = ByteArrayBuilder()
 
-        builder.appendRawBinary(byteArrayOf(0x01))
+        builder.appendRawBinary(byteArrayOf(0xFF.toByte()))
 
-        builder.toByteArray() shouldBe ubyteArrayOf(0x0u, 0x1u).toByteArray()
+        builder.toByteArray() shouldBe ubyteArrayOf(0b0111_1111u, 0x1u).toByteArray()
     }
 
     @Test
