@@ -74,7 +74,6 @@ class KeyStringWriterSessionTest {
         }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `should encode long unicode`() {
         val repeats = 25
@@ -86,7 +85,6 @@ class KeyStringWriterSessionTest {
                 byteArrayOf(0xFC.toByte())
 
         val actual = builder.toByteArray()
-        println(actual.toHexString())
         actual shouldBe expected
     }
 

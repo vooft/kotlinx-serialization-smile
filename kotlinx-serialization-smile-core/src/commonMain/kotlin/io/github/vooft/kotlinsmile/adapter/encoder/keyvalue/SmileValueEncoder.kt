@@ -49,7 +49,7 @@ class SmileValueEncoder(
         }
     }
 
-    override fun encodeBoolean(value: Boolean) = session.boolean(value)
+    override fun encodeBoolean(value: Boolean) = session.valueBoolean(value)
 
     override fun encodeByte(value: Byte) = session.valueSmallInteger(value.toInt())
 
@@ -68,7 +68,7 @@ class SmileValueEncoder(
 
     override fun encodeLong(value: Long) = session.valueInteger(value.toLong())
 
-    override fun encodeNull() = session.nullValue()
+    override fun encodeNull() = session.valueNull()
 
     override fun encodeShort(value: Short) = session.valueInteger(value.toLong())
 

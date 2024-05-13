@@ -10,7 +10,7 @@ class SimpleLiteralWriterSessionTest {
         val builder = ByteArrayBuilder()
         val session = ValueSimpleLiteralWriterSession(builder)
 
-        session.emptyString()
+        session.valueEmptyString()
 
         builder.toByteArray() shouldBe byteArrayOf(0b001_00000u.toByte())
     }
@@ -20,7 +20,7 @@ class SimpleLiteralWriterSessionTest {
         val builder = ByteArrayBuilder()
         val session = ValueSimpleLiteralWriterSession(builder)
 
-        session.nullValue()
+        session.valueNull()
 
         builder.toByteArray() shouldBe byteArrayOf(0b001_00001u.toByte())
     }
@@ -30,7 +30,7 @@ class SimpleLiteralWriterSessionTest {
         val builder = ByteArrayBuilder()
         val session = ValueSimpleLiteralWriterSession(builder)
 
-        session.boolean(true)
+        session.valueBoolean(true)
 
         builder.toByteArray() shouldBe byteArrayOf(0b001_00011u.toByte())
     }
@@ -40,7 +40,7 @@ class SimpleLiteralWriterSessionTest {
         val builder = ByteArrayBuilder()
         val session = ValueSimpleLiteralWriterSession(builder)
 
-        session.boolean(false)
+        session.valueBoolean(false)
 
         builder.toByteArray() shouldBe byteArrayOf(0b001_00010u.toByte())
     }

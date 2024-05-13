@@ -26,7 +26,7 @@ fun SmileEncoderSession.valueInteger(value: Long) = when (value) {
 
 fun SmileEncoderSession.valueString(value: SmileString) {
     if (value.isEmpty) {
-        emptyString()
+        valueEmptyString()
     } else if (value.isAscii) {
         when (value.length) {
             in TinyAscii.lengths -> valueTinyAscii(value)

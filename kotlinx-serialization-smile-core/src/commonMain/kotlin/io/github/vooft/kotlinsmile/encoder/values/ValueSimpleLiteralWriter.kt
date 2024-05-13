@@ -6,17 +6,17 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralEmptyStrin
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralNull
 
 interface ValueSimpleLiteralWriter {
-    fun emptyString()
-    fun nullValue()
-    fun boolean(value: Boolean)
+    fun valueEmptyString()
+    fun valueNull()
+    fun valueBoolean(value: Boolean)
 }
 
 class ValueSimpleLiteralWriterSession(private val builder: ByteArrayBuilder): ValueSimpleLiteralWriter {
-    override fun emptyString() = builder.append(SimpleLiteralEmptyString.value)
+    override fun valueEmptyString() = builder.append(SimpleLiteralEmptyString.value)
 
-    override fun nullValue() = builder.append(SimpleLiteralNull.value)
+    override fun valueNull() = builder.append(SimpleLiteralNull.value)
 
-    override fun boolean(value: Boolean) = when (value) {
+    override fun valueBoolean(value: Boolean) = when (value) {
         true -> SimpleLiteralBoolean.valueTrue
         false -> SimpleLiteralBoolean.valueFalse
     }.let { builder.append(it) }
