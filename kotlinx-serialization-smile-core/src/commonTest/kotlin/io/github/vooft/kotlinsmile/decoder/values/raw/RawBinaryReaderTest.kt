@@ -11,7 +11,7 @@ class RawBinaryReaderTest {
         val iterator = ByteArrayIteratorImpl(encoded)
         val expected = byteArrayOf(0xFF.toByte())
 
-        val actual = iterator.nextRawBinary(encoded.size)
+        val actual = iterator.nextRawBinary(expected.size)
 
         println("E: ${expected.toBinaryString()}")
         println("A: ${actual.toBinaryString()}")
@@ -25,7 +25,7 @@ class RawBinaryReaderTest {
         val iterator = ByteArrayIteratorImpl(encoded)
         val expected = byteArrayOf(0b1111_1111u.toByte())
 
-        val actual = iterator.nextRawBinary(encoded.size)
+        val actual = iterator.nextRawBinary(expected.size)
 
         println("E: ${expected.toBinaryString()}")
         println("A: ${actual.toBinaryString()}")
@@ -39,7 +39,7 @@ class RawBinaryReaderTest {
         val iterator = ByteArrayIteratorImpl(encoded)
         val expected = byteArrayOf(0b1111_1111u.toByte(), 0b1111_1111u.toByte())
 
-        val actual = iterator.nextRawBinary(encoded.size)
+        val actual = iterator.nextRawBinary(expected.size)
 
         println("E: ${expected.toBinaryString()}")
         println("A: ${actual.toBinaryString()}")
@@ -53,7 +53,7 @@ class RawBinaryReaderTest {
         val iterator = ByteArrayIteratorImpl(encoded)
         val expected = ByteArray(8) { 0xFF.toByte() }
 
-        val actual = iterator.nextRawBinary(encoded.size)
+        val actual = iterator.nextRawBinary(expected.size)
 
         println("E: ${expected.toBinaryString()}")
         println("A: ${actual.toBinaryString()}")
@@ -67,7 +67,7 @@ class RawBinaryReaderTest {
         val iterator = ByteArrayIteratorImpl(encoded)
         val expected = byteArrayOf(0x9c.toByte(), 0xc5.toByte(), 0x09, 0xe4.toByte(), 0x1a, 0x84.toByte(), 0x08, 0xfb.toByte(), 0xbf.toByte(), 0x6f)
 
-        val actual = iterator.nextRawBinary(encoded.size)
+        val actual = iterator.nextRawBinary(expected.size)
 
         println("E: ${expected.toBinaryString()}")
         println("A: ${actual.toBinaryString()}")
@@ -81,7 +81,7 @@ class RawBinaryReaderTest {
         val iterator = ByteArrayIteratorImpl(encoded)
 
         val expected = byteArrayOf(3, 2, 1)
-        val actual = iterator.nextRawBinary(encoded.size)
+        val actual = iterator.nextRawBinary(expected.size)
 
         println("E: ${expected.toBinaryString()}")
         println("A: ${actual.toBinaryString()}")

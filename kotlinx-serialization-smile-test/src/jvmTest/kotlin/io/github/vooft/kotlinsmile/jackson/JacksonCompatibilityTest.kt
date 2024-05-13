@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.ObjWithSerializer
 import io.github.vooft.kotlinsmile.Smile
+import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
@@ -107,11 +108,10 @@ class JacksonCompatibilityTest : ShouldSpec({
     context("should deserialize object from jackson output") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-//            ts = basicTestCases +
-//                    structuralTestCases +
-//                    keyTestCases +
-//                    valueTestCases
-            ts = listOf(ObjWithSerializer(ClassWithByteArray(byteArrayOf(3, 2, 1))))
+            ts = basicTestCases +
+                    structuralTestCases +
+                    keyTestCases +
+                    valueTestCases
         ) {
             val data = smileMapper.writeValueAsBytes(it.obj)
 
@@ -122,19 +122,23 @@ class JacksonCompatibilityTest : ShouldSpec({
         }
     }
 
-//    should("bla") {
-//        val number = 100000
-//        val zigzag = ZigzagInteger.encode(number)
-//        val zigzagManual = ByteBuffer.allocate(4).putInt(zigzag).array()
-//
-//        val encoded = smileMapper.writeValueAsBytes(number)
-//        println("E: " + encoded.toHexString())
-//        println("Z: " + zigzagManual.toHexString())
-//
-//        println()
-//        println("E: " + encoded.toBinaryString())
-//        println("Z: " + zigzagManual.toBinaryString())
-//    }
+    context("should deserialize object with random byte array") {
+        withData<ObjWithSerializer<ClassWithRandomByteArray>>(
+            nameFn = { "random byte array with length ${it.obj.b.size}" },
+            ts = List(1000) {
+                val array = ByteArray(ThreadLocalRandom.current().nextInt(100_000)).apply { ThreadLocalRandom.current().nextBytes(this) }
+                ObjWithSerializer(ClassWithRandomByteArray(b = array))
+            }
+        ) {
+            val expected = smileMapper.writeValueAsBytes(it.obj)
+
+            val actual = Smile.encode(it)
+
+            withClue("E: " + expected.toHexString() + "\n" + "A: " + actual.toHexString()) {
+                actual shouldBe expected
+            }
+        }
+    }
 })
 
 @Serializable
@@ -247,16 +251,11 @@ data class ClassWithByteArray(val b: ByteArray = byteArrayOf(3, 2, 1)) {
 @Serializable
 data class ClassWithRandomByteArray(val b: ByteArray = ByteArray(1000).apply { ThreadLocalRandom.current().nextBytes(this) }) {
 
-    init {
-        println("B: ${b.toHexString()}")
-        println("B: ${b.toBinaryString()}")
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ClassWithByteArray
+        other as ClassWithRandomByteArray
 
         return b.contentEquals(other.b)
     }
