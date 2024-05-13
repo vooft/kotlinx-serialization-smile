@@ -112,8 +112,10 @@ class ValueShortStringWriterSessionTest {
     fun `should write short unicode`() {
         writer.valueShortUnicode(THREE_BYTE_CHAR.repeat(15).toSmile())
 
-        val expected = byteArrayOf(0xAB.toByte()) +
-            List(15 ) { listOf(0xE2.toByte(), 0x82.toByte(), 0xAC.toByte()) }.flatten().toByteArray()
+        val expected = byteArrayOf(
+            0xAB.toByte(),
+            *List(15 ) { listOf(0xE2.toByte(), 0x82.toByte(), 0xAC.toByte()) }.flatten().toByteArray()
+        )
 
         val actual = builder.toByteArray()
 

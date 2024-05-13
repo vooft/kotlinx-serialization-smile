@@ -80,9 +80,11 @@ class KeyStringWriterSessionTest {
         writer.keyLongUnicode(THREE_BYTE_CHAR.repeat(repeats).toSmile())
 
         val encodedUnicode = THREE_BYTE_CHAR.encodeToByteArray().toList()
-        val expected = byteArrayOf(0x34) + // long unicode prefix
-                List(repeats) { encodedUnicode }.flatten().toByteArray() +
-                byteArrayOf(0xFC.toByte())
+        val expected = byteArrayOf(
+            0x34, // long unicode prefix
+            *List(repeats) { encodedUnicode }.flatten().toByteArray(),
+            0xFC.toByte()
+        )
 
         val actual = builder.toByteArray()
         actual shouldBe expected
