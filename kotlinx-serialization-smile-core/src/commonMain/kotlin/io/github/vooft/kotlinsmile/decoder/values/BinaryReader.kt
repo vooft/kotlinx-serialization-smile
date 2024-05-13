@@ -21,7 +21,7 @@ class BinaryReaderSession(private val iterator: ByteArrayIterator): BinaryReader
         }
 
         val decodedLength = iterator.nextRawInt()
-        logger.info { "Decoding byte array with length $decodedLength" }
+        logger.debug { "Decoding byte array with length $decodedLength" }
 
         return iterator.nextRawBinary(decodedLength = decodedLength) // TODO: fix
     }

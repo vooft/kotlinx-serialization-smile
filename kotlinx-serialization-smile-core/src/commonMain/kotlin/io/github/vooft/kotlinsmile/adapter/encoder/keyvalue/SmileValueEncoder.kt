@@ -76,4 +76,4 @@ class SmileValueEncoder(
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-private fun SerialDescriptor.isByteArray() = kind == StructureKind.LIST && serialName == ByteArray::class.qualifiedName
+private fun SerialDescriptor.isByteArray() = kind == StructureKind.LIST && serialName == "kotlin.ByteArray"

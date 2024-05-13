@@ -28,7 +28,7 @@ class SmileObjectDecoder(
         }
 
         val nextToken = session.peekKeyToken()
-        logger.info { "Decoding object key $nextToken" }
+        logger.debug { "Decoding object key $nextToken" }
 
         return when (nextToken) {
             SmileKeyToken.KeyEndObjectMarker -> {

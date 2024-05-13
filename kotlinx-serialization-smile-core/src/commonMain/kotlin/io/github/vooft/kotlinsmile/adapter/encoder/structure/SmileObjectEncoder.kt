@@ -27,7 +27,7 @@ class SmileObjectEncoder(
         }
 
         val name = descriptor.getElementName(index).toSmile()
-        logger.info { "encodeElement: descriptor=${descriptor.kind}, property name=$name" }
+        logger.debug { "encodeElement: descriptor=${descriptor.kind}, property name=$name" }
 
         session.keyString(name)
 
@@ -39,7 +39,7 @@ class SmileObjectEncoder(
             "Can only encode classes or objects, but found $descriptor"
         }
 
-        logger.info { "Ending object" }
+        logger.debug { "Ending object" }
 
         session.endObject()
     }

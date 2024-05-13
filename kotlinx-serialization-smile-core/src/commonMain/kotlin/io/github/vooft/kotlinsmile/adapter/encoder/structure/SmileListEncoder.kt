@@ -21,13 +21,13 @@ class SmileListEncoder(
 
     override fun encodeElement(descriptor: SerialDescriptor, index: Int): Boolean {
         require(descriptor.kind == StructureKind.LIST) { "Can only encode lists, but found $descriptor" }
-        logger.info { "Encoding element $index of an array" }
+        logger.debug { "Encoding element $index of an array" }
         return true
     }
 
     override fun endStructure(descriptor: SerialDescriptor) {
         require(descriptor.kind == StructureKind.LIST) { "Can only encode lists, but found $descriptor" }
-        logger.info { "Ending array" }
+        logger.debug { "Ending array" }
         session.endArray()
     }
 }

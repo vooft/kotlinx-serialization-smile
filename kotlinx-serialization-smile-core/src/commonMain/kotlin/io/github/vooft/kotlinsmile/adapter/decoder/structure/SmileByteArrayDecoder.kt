@@ -37,7 +37,7 @@ class SmileByteArrayDecoder(
     override fun decodeByte(): Byte = data[index]
 
     override fun endStructure(descriptor: SerialDescriptor) {
-        logger.info { "end structure" }
+        logger.debug { "end structure" }
         super.endStructure(descriptor)
     }
 }

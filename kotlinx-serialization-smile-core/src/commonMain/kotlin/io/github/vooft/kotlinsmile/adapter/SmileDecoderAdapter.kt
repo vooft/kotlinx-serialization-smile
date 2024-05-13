@@ -18,8 +18,4 @@ class SmileDecoderAdapter(
     )
 
     private val config = session.header()
-
-    init {
-        println(config)
-    }
 }

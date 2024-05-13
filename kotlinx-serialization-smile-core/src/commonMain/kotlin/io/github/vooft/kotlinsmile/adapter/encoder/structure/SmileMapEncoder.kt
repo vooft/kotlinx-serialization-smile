@@ -34,7 +34,7 @@ class SmileMapEncoder(
     override fun endStructure(descriptor: SerialDescriptor) {
         require(descriptor.kind == StructureKind.MAP) { "Can only encode lists, but found $descriptor" }
 
-        logger.info { "Ending map" }
+        logger.debug { "Ending map" }
 
         session.endObject()
     }
