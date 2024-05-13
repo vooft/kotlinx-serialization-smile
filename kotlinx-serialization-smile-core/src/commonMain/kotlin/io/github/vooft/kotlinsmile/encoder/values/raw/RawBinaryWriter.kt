@@ -17,7 +17,6 @@ fun ByteArrayBuilder.appendRawBinary(data: ByteArray) {
 
             // smallest byte should be zero, just copy from the just read one
             buffer = buffer or byte
-            println("B: ${buffer.toString(2).padStart(16, '0')}")
 
             // shift right to make sure all carryover MSB are written
             append((buffer shr carryoverBits and BYTE_7_BIT).toByte())

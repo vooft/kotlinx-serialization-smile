@@ -3,11 +3,14 @@ package io.github.vooft.kotlinsmile.adapter.decoder.keyvalue
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.adapter.decoder.common.valueInt
 import io.github.vooft.kotlinsmile.adapter.decoder.common.valueString
+import io.github.vooft.kotlinsmile.adapter.decoder.structure.SmileByteArrayDecoder
 import io.github.vooft.kotlinsmile.adapter.decoder.structure.SmileListDecoder
 import io.github.vooft.kotlinsmile.adapter.decoder.structure.SmileMapDecoder
 import io.github.vooft.kotlinsmile.adapter.decoder.structure.SmileObjectDecoder
 import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
 import io.github.vooft.kotlinsmile.token.SmileValueToken
+import io.github.vooft.kotlinsmile.token.SmileValueToken.BinaryValue
+import io.github.vooft.kotlinsmile.token.SmileValueToken.StartArrayMarker
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -28,27 +31,35 @@ class SmileValueDecoder(
             StructureKind.CLASS, StructureKind.OBJECT -> {
                 val nextToken = session.peekValueToken()
                 require(nextToken == SmileValueToken.StartObjectMarker) { "Expected start object token, but got $nextToken" }
+                session.skip()
                 SmileObjectDecoder(session, serializersModule)
             }
 
             StructureKind.MAP -> {
                 val nextToken = session.peekValueToken()
                 require(nextToken == SmileValueToken.StartObjectMarker) { "Expected start object token, but got $nextToken" }
+                session.skip()
                 SmileMapDecoder(session, serializersModule)
             }
 
             StructureKind.LIST -> {
-                val nextToken = session.peekValueToken()
-                require(nextToken == SmileValueToken.StartArrayMarker) { "Expected start array token, but got $nextToken" }
-                SmileListDecoder(session, serializersModule)
+
+                when (val token = session.peekValueToken()) {
+                    StartArrayMarker -> {
+                        session.skip()
+                        SmileListDecoder(session, serializersModule)
+                    }
+
+                    BinaryValue -> SmileByteArrayDecoder(session, serializersModule)
+                    else -> error("Invalid token for a list: $token")
+                }
             }
 
             else -> TODO("Not implemented yet ${descriptor.kind}")
         }
 
-        logger.info { "Begin ${descriptor.kind}" }
+        logger.info { "Begin ${descriptor.kind} with ${nested::class}" }
 
-        session.skip()
         return nested
     }
 

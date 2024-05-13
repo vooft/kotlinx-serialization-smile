@@ -74,6 +74,20 @@ class RawBinaryReaderTest {
 
         actual shouldBe expected
     }
+
+    @Test
+    fun `should deserialize 3 bytes`() {
+        val encoded = byteArrayOf(0x01, 0x40, 0x40, 0x01)
+        val iterator = ByteArrayIteratorImpl(encoded)
+
+        val expected = byteArrayOf(3, 2, 1)
+        val actual = iterator.nextRawBinary(encoded.size)
+
+        println("E: ${expected.toBinaryString()}")
+        println("A: ${actual.toBinaryString()}")
+
+        actual shouldBe expected
+    }
 }
 
 private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"

@@ -75,6 +75,13 @@ class RawBinaryWriterTest {
 
         actual shouldBe expected
     }
+
+    @Test
+    fun test() {
+        val builder = ByteArrayBuilder()
+        builder.appendRawBinary(byteArrayOf(3, 2, 1))
+        println(builder.toByteArray().toHexString())
+    }
 }
 
 private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"

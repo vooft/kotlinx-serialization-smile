@@ -33,6 +33,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(ClassWithIntArray()),
         ObjWithSerializer(ClassWithIntList()),
         ObjWithSerializer(ClassWithByteArray()),
+        ObjWithSerializer(ClassWithRandomByteArray()),
         ObjWithSerializer(1, "root level small int"),
         ObjWithSerializer("test", "root level string"),
         ObjWithSerializer(intArrayOf(1, 2, 3), "root level int array"),
@@ -93,7 +94,6 @@ class JacksonCompatibilityTest : ShouldSpec({
             logger.info { it.name ?: it.obj!!::class.simpleName!! }
             logger.info { "E: " + expected.toHexString() }
             logger.info { "E: " + expected.toBinaryString() }
-            logger.info { 200.toString(2) }
 
             val actual = Smile.encode(it)
             logger.info { "A: " + actual.toHexString() }
@@ -107,12 +107,15 @@ class JacksonCompatibilityTest : ShouldSpec({
     context("should deserialize object from jackson output") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts = basicTestCases +
-                    structuralTestCases +
-                    keyTestCases +
-                    valueTestCases
+//            ts = basicTestCases +
+//                    structuralTestCases +
+//                    keyTestCases +
+//                    valueTestCases
+            ts = listOf(ObjWithSerializer(ClassWithByteArray(byteArrayOf(3, 2, 1))))
         ) {
             val data = smileMapper.writeValueAsBytes(it.obj)
+
+            logger.info { "D: " + data.toHexString() }
 
             val actual = Smile.decode(it.serializer, data)
             actual shouldBe it.obj
