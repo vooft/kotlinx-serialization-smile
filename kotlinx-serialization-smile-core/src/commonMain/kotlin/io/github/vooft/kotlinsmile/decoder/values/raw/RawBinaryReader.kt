@@ -43,5 +43,4 @@ fun ByteArrayIterator.nextRawBinary(decodedLength: Int): ByteArray {
     return result
 }
 
-private val BYTE_FF = 0xFFu
-private val BYTE_7_BIT = 0b0111_1111u
+private const val BYTE_FF = 0xFFu

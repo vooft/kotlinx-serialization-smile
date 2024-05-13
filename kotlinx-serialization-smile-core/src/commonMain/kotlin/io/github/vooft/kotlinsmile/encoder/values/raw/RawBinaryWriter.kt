@@ -41,8 +41,5 @@ fun ByteArrayBuilder.appendRawBinary(data: ByteArray) {
     }
 }
 
-private val BYTE_FF = 0xFFu
-private val BYTE_7_BIT = 0b0111_1111u
-
-private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"
-private fun ByteArray.toBinaryString() = joinToString(", ", "[", "]") { it.toUByte().toString(2).padStart(8, '0') }
+private const val BYTE_FF = 0xFFu
+private const val BYTE_7_BIT = 0b0111_1111u

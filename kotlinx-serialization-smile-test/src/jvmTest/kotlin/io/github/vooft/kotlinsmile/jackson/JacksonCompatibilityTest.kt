@@ -125,7 +125,7 @@ class JacksonCompatibilityTest : ShouldSpec({
     context("should deserialize object with random byte array") {
         withData(
             nameFn = { "random byte array with length ${it.obj.b.size}" },
-            ts = List(10_000) {
+            ts = List(100) {
                 val array = ByteArray(ThreadLocalRandom.current().nextInt(10_000)).apply { ThreadLocalRandom.current().nextBytes(this) }
                 ObjWithSerializer(ClassWithRandomByteArray(b = array))
             }

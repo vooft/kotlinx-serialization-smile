@@ -11,7 +11,7 @@ class RawBinaryWriterTest {
 
         builder.appendRawBinary(byteArrayOf(0xFF.toByte()))
 
-        builder.toByteArray() shouldBe ubyteArrayOf(0b0111_1111u, 0x1u).toByteArray()
+        builder.toByteArray() shouldBe byteArrayOf(0b111_1111, 0x1)
     }
 
     @Test
@@ -62,7 +62,9 @@ class RawBinaryWriterTest {
     
     @Test
     fun `should serialize random bytes`() {
-        val data = byteArrayOf(0x9c.toByte(), 0xc5.toByte(), 0x09, 0xe4.toByte(), 0x1a, 0x84.toByte(), 0x08, 0xfb.toByte(), 0xbf.toByte(), 0x6f)
+        val data = byteArrayOf(
+            0x9c.toByte(), 0xc5.toByte(), 0x09, 0xe4.toByte(), 0x1a, 0x84.toByte(), 0x08, 0xfb.toByte(), 0xbf.toByte(), 0x6f
+        )
 
         val builder = ByteArrayBuilder()
         builder.appendRawBinary(data)

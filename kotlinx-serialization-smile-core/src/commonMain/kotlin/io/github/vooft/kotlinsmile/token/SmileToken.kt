@@ -8,6 +8,8 @@ sealed interface SmileToken {
             SmileValueToken.SmallInteger,
             SmileValueToken.RegularInteger,
             SmileValueToken.LongInteger,
+            SmileValueToken.FloatValue,
+            SmileValueToken.DoubleValue,
             SmileValueToken.SimpleLiteralEmptyString,
             SmileValueToken.SimpleLiteralNull,
             SmileValueToken.SimpleLiteralBoolean,

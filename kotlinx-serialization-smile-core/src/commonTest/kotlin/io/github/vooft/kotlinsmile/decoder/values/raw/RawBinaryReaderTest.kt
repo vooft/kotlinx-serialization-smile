@@ -7,7 +7,7 @@ import kotlin.test.Test
 class RawBinaryReaderTest {
     @Test
     fun `should read one bit`() {
-        val encoded =  ubyteArrayOf(0b0111_1111u, 0x1u).toByteArray()
+        val encoded =  byteArrayOf(0b111_1111, 0x1)
         val iterator = ByteArrayIteratorImpl(encoded)
         val expected = byteArrayOf(0xFF.toByte())
 
@@ -65,7 +65,9 @@ class RawBinaryReaderTest {
     fun `should deserialize random bytes`() {
         val encoded = byteArrayOf(0x4e, 0x31, 0x21, 0x1e, 0x20, 0x6a, 0x08, 0x08, 0x7d, 0x6f, 0x6d, 0x07)
         val iterator = ByteArrayIteratorImpl(encoded)
-        val expected = byteArrayOf(0x9c.toByte(), 0xc5.toByte(), 0x09, 0xe4.toByte(), 0x1a, 0x84.toByte(), 0x08, 0xfb.toByte(), 0xbf.toByte(), 0x6f)
+        val expected = byteArrayOf(
+            0x9c.toByte(), 0xc5.toByte(), 0x09, 0xe4.toByte(), 0x1a, 0x84.toByte(), 0x08, 0xfb.toByte(), 0xbf.toByte(), 0x6f
+        )
 
         val actual = iterator.nextRawBinary(expected.size)
 
@@ -90,5 +92,4 @@ class RawBinaryReaderTest {
     }
 }
 
-private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"
 private fun ByteArray.toBinaryString() = joinToString(", ", "[", "]") { it.toUByte().toString(2).padStart(8, '0') }
