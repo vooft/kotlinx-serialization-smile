@@ -17,8 +17,6 @@ class SmileMapEncoder(
     private val delegate: KeyValueSmileEncoder = KeyValueSmileEncoder(session, serializersModule)
 ) : AbstractSmileCompositeEncoder(delegate), Encoder by delegate {
 
-    private val logger = KotlinLogging.logger { }
-
     override fun encodeElement(descriptor: SerialDescriptor, index: Int): Boolean {
         require(descriptor.kind == StructureKind.MAP) { "Can only encode lists, but found $descriptor" }
 
@@ -37,5 +35,9 @@ class SmileMapEncoder(
         logger.debug { "Ending map" }
 
         session.endObject()
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }

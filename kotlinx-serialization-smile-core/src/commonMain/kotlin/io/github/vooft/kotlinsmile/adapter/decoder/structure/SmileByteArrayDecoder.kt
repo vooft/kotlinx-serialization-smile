@@ -15,8 +15,6 @@ class SmileByteArrayDecoder(
     override val serializersModule: SerializersModule
 ) : AbstractDecoder() {
 
-    private val logger = KotlinLogging.logger {  }
-
     private val data = session.valueBinary()
     private var index = -1
 
@@ -39,5 +37,9 @@ class SmileByteArrayDecoder(
     override fun endStructure(descriptor: SerialDescriptor) {
         logger.debug { "end structure" }
         super.endStructure(descriptor)
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }

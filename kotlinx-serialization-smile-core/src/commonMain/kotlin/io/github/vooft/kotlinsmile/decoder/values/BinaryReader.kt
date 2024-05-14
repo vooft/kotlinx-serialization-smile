@@ -10,10 +10,7 @@ interface BinaryReader {
     fun valueBinary(): ByteArray
 }
 
-class BinaryReaderSession(private val iterator: ByteArrayIterator): BinaryReader {
-
-    private val logger = KotlinLogging.logger {  }
-
+class BinaryReaderSession(private val iterator: ByteArrayIterator) : BinaryReader {
     override fun valueBinary(): ByteArray {
         val firstByte = iterator.next()
         require(firstByte == BinaryValue.firstByte) {
@@ -24,5 +21,9 @@ class BinaryReaderSession(private val iterator: ByteArrayIterator): BinaryReader
         logger.debug { "Decoding byte array with length $decodedLength" }
 
         return iterator.nextRawBinary(decodedLength = decodedLength) // TODO: fix
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }

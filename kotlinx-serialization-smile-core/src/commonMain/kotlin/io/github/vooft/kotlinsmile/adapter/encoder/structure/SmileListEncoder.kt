@@ -17,8 +17,6 @@ class SmileListEncoder(
     valueEncoder: SmileValueEncoder = SmileValueEncoder(session, serializersModule)
 ) : AbstractSmileCompositeEncoder(valueEncoder), Encoder by valueEncoder {
 
-    private val logger = KotlinLogging.logger { }
-
     override fun encodeElement(descriptor: SerialDescriptor, index: Int): Boolean {
         require(descriptor.kind == StructureKind.LIST) { "Can only encode lists, but found $descriptor" }
         logger.debug { "Encoding element $index of an array" }
@@ -29,5 +27,9 @@ class SmileListEncoder(
         require(descriptor.kind == StructureKind.LIST) { "Can only encode lists, but found $descriptor" }
         logger.debug { "Ending array" }
         session.endArray()
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }

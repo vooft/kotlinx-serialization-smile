@@ -20,8 +20,6 @@ class SmileObjectDecoder(
     valueDecoder: SmileValueDecoder = SmileValueDecoder(session, serializersModule)
 ) : AbstractSmileCompositeDecoder(valueDecoder), Decoder by valueDecoder {
 
-    private val logger = KotlinLogging.logger { }
-
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
         require(descriptor.kind == StructureKind.CLASS || descriptor.kind == StructureKind.OBJECT) {
             "Only class or object descriptor is supported"
@@ -43,4 +41,7 @@ class SmileObjectDecoder(
         }
     }
 
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
 }

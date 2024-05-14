@@ -24,8 +24,6 @@ class SmileValueDecoder(
     override val serializersModule: SerializersModule
 ) : Decoder {
 
-    private val logger = KotlinLogging.logger { }
-
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
         val nested = when (descriptor.kind) {
             StructureKind.CLASS, StructureKind.OBJECT -> {
@@ -95,4 +93,8 @@ class SmileValueDecoder(
     override fun decodeShort(): Short = session.valueSmallInteger().toShort()
 
     override fun decodeString(): String = session.valueString()
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
 }

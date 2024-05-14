@@ -19,8 +19,6 @@ class SmileObjectEncoder(
     valueEncoder: SmileValueEncoder = SmileValueEncoder(session, serializersModule)
 ) : AbstractSmileCompositeEncoder(valueEncoder), Encoder by valueEncoder {
 
-    private val logger = KotlinLogging.logger { }
-
     override fun encodeElement(descriptor: SerialDescriptor, index: Int): Boolean {
         require(descriptor.kind is StructureKind.CLASS || descriptor.kind is StructureKind.OBJECT) {
             "Can only encode classes or objects, but found $descriptor"
@@ -42,5 +40,9 @@ class SmileObjectEncoder(
         logger.debug { "Ending object" }
 
         session.endObject()
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }
