@@ -13,7 +13,7 @@ interface HeaderReader {
 
 class HeaderReaderSession(private val iterator: ByteArrayIterator) : HeaderReader {
     override fun header(): SmileConfig {
-        val fixedHeader = iterator.next(3)
+        val fixedHeader = iterator.nextByteArray(3)
         require(fixedHeader.contentEquals(FIXED_HEADER)) { "Invalid header" }
 
         val configByte = iterator.next()

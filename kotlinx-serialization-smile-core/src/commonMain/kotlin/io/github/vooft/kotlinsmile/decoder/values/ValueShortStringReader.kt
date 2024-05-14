@@ -23,7 +23,7 @@ class ValueShortStringReaderSession(private val iterator: ByteArrayIterator): Va
     private fun SmileValueShortStringToken.readString(): String {
         val writtenLength = iterator.next().toUByte() - offset.toUByte()
         val length = writtenLength.toInt() + lengths.first
-        val encoded = iterator.next(length)
-        return encoded.decodeToString()
+        val decoded = iterator.nextString(length)
+        return decoded
     }
 }

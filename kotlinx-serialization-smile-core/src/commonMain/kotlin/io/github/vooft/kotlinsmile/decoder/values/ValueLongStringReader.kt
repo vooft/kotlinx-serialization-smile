@@ -33,9 +33,9 @@ class ValueLongStringReaderSession(private val iterator: ByteArrayIterator): Val
 
         iterator.rollback(counter + 1)
 
-        val encoded = iterator.next(counter)
+        val decoded = iterator.nextString(counter)
         require(iterator.next() == SmileMarkers.STRING_END_MARKER) { "Invalid end marker for long unicode key" }
 
-        return encoded.decodeToString()
+        return decoded
     }
 }

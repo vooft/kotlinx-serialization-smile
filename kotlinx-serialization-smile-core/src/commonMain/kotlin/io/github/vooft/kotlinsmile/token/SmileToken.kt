@@ -32,14 +32,49 @@ sealed interface SmileToken {
             SmileKeyToken.KeyEndObjectMarker,
         )
 
+//        private val sortedValueTokens = VALUE_TOKENS.sortedBy { it.tokenRange.first }
+//        private val sortedKeyTokens = KEY_TOKENS.sortedBy { it.tokenRange.first }
+
+        private val VALUE_TOKENS_ARRAY = VALUE_TOKENS.buildArray()
+        private val KEY_TOKENS_ARRAY = KEY_TOKENS.buildArray()
+
         fun valueToken(byte: Byte): SmileValueToken? {
             // TODO: improve performance?
-            return VALUE_TOKENS.firstOrNull { byte in it }
+//            return VALUE_TOKENS.firstOrNull { byte in it }
+//            return sortedValueTokens.binarySearch(byte)
+            return VALUE_TOKENS_ARRAY[byte.toInt() and 0xFF]
         }
 
         fun keyToken(byte: Byte): SmileKeyToken? {
             // TODO: improve performance?
-            return KEY_TOKENS.firstOrNull { byte in it }
+//            return KEY_TOKENS.firstOrNull { byte in it }
+//            return sortedKeyTokens.binarySearch(byte)
+            return KEY_TOKENS_ARRAY[byte.toInt() and 0xFF]
+        }
+
+        private inline fun <reified T: SmileToken> List<T>.buildArray(): Array<T?> {
+            val array = arrayOfNulls<T>(0xFF)
+            for (t in this) {
+                for (i in t.tokenRange) {
+                    array[i] = t
+                }
+            }
+            return array
+        }
+
+        private fun <T: SmileToken> List<T>.binarySearch(byte: Byte): T? {
+            val b = byte.toInt() and 0xFF
+            return binarySearch {
+                val result = when (b) {
+                    in it.tokenRange -> 0
+                    else -> {
+                        if (b < it.tokenRange.first) 1 else -1
+                    }
+                }
+                result
+            }.let { index ->
+                if (index >= 0) this[index] else null
+            }
         }
     }
 }
