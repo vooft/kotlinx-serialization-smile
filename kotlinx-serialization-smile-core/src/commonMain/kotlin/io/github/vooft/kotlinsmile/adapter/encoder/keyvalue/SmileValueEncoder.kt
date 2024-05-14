@@ -38,7 +38,7 @@ class SmileValueEncoder(
                 SmileListEncoder(session, serializersModule)
             }
 
-            else -> TODO("Not implemented yet ${descriptor.kind}")
+            else -> error("Not supported ${descriptor.kind}")
         }
     }
 

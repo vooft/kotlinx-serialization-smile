@@ -53,7 +53,7 @@ class SmileValueDecoder(
                 }
             }
 
-            else -> TODO("Not implemented yet ${descriptor.kind}")
+            else -> error("Not supported ${descriptor.kind}")
         }
 
         logger.debug { "Begin ${descriptor.kind} with ${nested::class}" }

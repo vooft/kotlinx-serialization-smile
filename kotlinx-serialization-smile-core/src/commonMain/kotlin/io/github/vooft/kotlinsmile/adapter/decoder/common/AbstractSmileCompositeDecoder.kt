@@ -6,7 +6,6 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 
-// TODO: replace with basic CompositeDecoder implementation
 @OptIn(ExperimentalSerializationApi::class)
 abstract class AbstractSmileCompositeDecoder(private val delegate: Decoder) : CompositeDecoder {
 

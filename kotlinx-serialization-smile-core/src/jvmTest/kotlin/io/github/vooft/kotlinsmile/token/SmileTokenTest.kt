@@ -43,7 +43,7 @@ class SmileTokenTest {
         for (subclass in sealedSubclasses) {
             val subclassObject = subclass.objectInstance
             if (subclassObject != null) {
-                add(subclassObject as T)
+                add(subclassObject)
             } else {
                 require(subclass.isSealed) { "Class $subclass is not sealed" }
                 addAll(subclass.findSubclassesObjects())

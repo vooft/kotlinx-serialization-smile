@@ -51,19 +51,8 @@ kotlin {
 }
 
 benchmark {
-    benchmark {
-        targets.register("jvm")
-        targets.register("macosArm64")
+    targets.register("jvm")
 
-//  TODO: enable Kotlin/Native benchmark once the issue
-//   with kotlinx.benchmarks 0.3.1 and Kotlin 1.5.21+ compatibility is resolved
-//    targets.register("macosX64")
-//    targets.register("linuxX64")
-//    targets.register("mingwX64")
-
-//        configurations["main"].apply {
-//            warmups = 5
-//            iterations = 10
-//        }
-    }
+    // not working for some reason
+//    targets.register("macosArm64")
 }

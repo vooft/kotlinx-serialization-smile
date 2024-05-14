@@ -44,16 +44,10 @@ object SmileTokensHolder {
     private val KEY_TOKENS_ARRAY = KEY_TOKENS.buildArray()
 
     fun valueToken(byte: Byte): SmileValueToken? {
-        // TODO: improve performance?
-//            return VALUE_TOKENS.firstOrNull { byte in it }
-//            return sortedValueTokens.binarySearch(byte)
         return VALUE_TOKENS_ARRAY[byte.toInt() and 0xFF]
     }
 
     fun keyToken(byte: Byte): SmileKeyToken? {
-        // TODO: improve performance?
-//            return KEY_TOKENS.firstOrNull { byte in it }
-//            return sortedKeyTokens.binarySearch(byte)
         return KEY_TOKENS_ARRAY[byte.toInt() and 0xFF]
     }
 

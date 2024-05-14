@@ -20,7 +20,7 @@ class BinaryReaderSession(private val iterator: ByteArrayIterator) : BinaryReade
         val decodedLength = iterator.nextRawInt()
         logger.debug { "Decoding byte array with length $decodedLength" }
 
-        return iterator.nextRawBinary(decodedLength = decodedLength) // TODO: fix
+        return iterator.nextRawBinary(decodedLength = decodedLength)
     }
 
     companion object {
