@@ -1,6 +1,9 @@
 package io.github.vooft.kotlinsmile
 
-/*import kotlinx.benchmark.Benchmark
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.smile.SmileFactory
+import com.fasterxml.jackson.dataformat.smile.SmileGenerator
+import kotlinx.benchmark.Benchmark
 import kotlinx.benchmark.BenchmarkMode
 import kotlinx.benchmark.BenchmarkTimeUnit
 import kotlinx.benchmark.Measurement
@@ -17,9 +20,18 @@ import kotlin.random.Random
 @Warmup(iterations = 2, time = 5, timeUnit = BenchmarkTimeUnit.SECONDS)
 @OutputTimeUnit(BenchmarkTimeUnit.MILLISECONDS)
 @BenchmarkMode(Mode.Throughput)
-class KotlinSmileBenchmark {
+class JacksonSmileBenchmark {
+
     private lateinit var logMessage: LogMessage
     private lateinit var serialized: ByteArray
+
+    private val smileMapper = ObjectMapper(
+        SmileFactory.builder()
+//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
+            .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, false)
+            .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, false)
+            .build()
+    ).findAndRegisterModules()
 
     @Setup
     fun setUp() {
@@ -42,13 +54,23 @@ class KotlinSmileBenchmark {
     }
 
     @Benchmark
-    fun serialize(): ByteArray {
+    fun kotlinSerialize(): ByteArray {
         return Smile.encode(logMessage)
     }
 
     @Benchmark
-    fun deserialize(): LogMessage {
+    fun kotlinDeserialize(): LogMessage {
         return Smile.decode(serialized)
     }
+
+    @Benchmark
+    fun jacksonSerialize(): ByteArray {
+        return smileMapper.writeValueAsBytes(logMessage)
+    }
+
+    @Benchmark
+    fun jacksonDeserialize(): LogMessage {
+        return smileMapper.readValue(serialized, LogMessage::class.java)
+    }
 }
-*/
+
