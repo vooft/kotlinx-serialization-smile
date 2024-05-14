@@ -12,7 +12,7 @@ class KeyStringWriterSessionTest {
     private val writer = KeyStringWriterSession(builder)
 
     @Test
-    fun `should write key short ascii`() {
+    fun should_write_key_short_ascii() {
         writer.keyShortAscii("test123".toSmile())
 
         val expected = byteArrayOf(
@@ -26,28 +26,28 @@ class KeyStringWriterSessionTest {
     }
 
     @Test
-    fun `should fail key short ascii for too long string`() {
+    fun should_fail_key_short_ascii_for_too_long_string() {
         shouldThrow<IllegalArgumentException> {
             writer.keyShortAscii("1".repeat(65).toSmile())
         }
     }
 
     @Test
-    fun `should fail key short ascii for too short string`() {
+    fun should_fail_key_short_ascii_for_too_short_string() {
         shouldThrow<IllegalArgumentException> {
             writer.keyShortAscii("".toSmile())
         }
     }
 
     @Test
-    fun `should fail key short ascii for non-ascii string`() {
+    fun should_fail_key_short_ascii_for_non_ascii_string() {
         shouldThrow<IllegalArgumentException> {
             writer.keyShortAscii(THREE_BYTE_CHAR.toSmile())
         }
     }
 
     @Test
-    fun `should write key short unicode`() {
+    fun should_write_key_short_unicode() {
         writer.keyShortUnicode("hello $THREE_BYTE_CHAR".toSmile())
 
         val expected = byteArrayOf(
@@ -61,21 +61,21 @@ class KeyStringWriterSessionTest {
     }
 
     @Test
-    fun `should fail key short unicode for too long string`() {
+    fun should_fail_key_short_unicode_for_too_long_string() {
         shouldThrow<IllegalArgumentException> {
             writer.keyShortUnicode(THREE_BYTE_CHAR.repeat(29).toSmile())
         }
     }
 
     @Test
-    fun `should fail key short unicode for non-unicode string`() {
+    fun should_fail_key_short_unicode_for_non_unicode_string() {
         shouldThrow<IllegalArgumentException> {
             writer.keyShortUnicode("abcd".toSmile())
         }
     }
 
     @Test
-    fun `should encode long unicode`() {
+    fun should_encode_long_unicode() {
         val repeats = 25
         writer.keyLongUnicode(THREE_BYTE_CHAR.repeat(repeats).toSmile())
 
@@ -91,7 +91,7 @@ class KeyStringWriterSessionTest {
     }
 
     @Test
-    fun `should fail key long unicode for too short string`() {
+    fun should_fail_key_long_unicode_for_too_short_string() {
         shouldThrow<IllegalArgumentException> {
             writer.keyLongUnicode(THREE_BYTE_CHAR.repeat(21).toSmile())
         }

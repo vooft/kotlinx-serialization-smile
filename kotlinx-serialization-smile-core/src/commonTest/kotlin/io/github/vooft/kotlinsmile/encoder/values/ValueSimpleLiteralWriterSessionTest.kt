@@ -10,25 +10,25 @@ class ValueSimpleLiteralWriterSessionTest {
     private val session = ValueSimpleLiteralWriterSession(builder)
 
     @Test
-    fun `should write empty string`() {
+    fun should_write_empty_string() {
         session.valueEmptyString()
         builder.toByteArray() shouldBe byteArrayOf(0x20)
     }
 
     @Test
-    fun `should write null value`() {
+    fun should_write_null_value() {
         session.valueNull()
         builder.toByteArray() shouldBe byteArrayOf(0x21)
     }
 
     @Test
-    fun `should write false`() {
+    fun should_write_false() {
         session.valueBoolean(false)
         builder.toByteArray() shouldBe byteArrayOf(0x22)
     }
 
     @Test
-    fun `should write true`() {
+    fun should_write_true() {
         session.valueBoolean(true)
         builder.toByteArray() shouldBe byteArrayOf(0x23)
     }

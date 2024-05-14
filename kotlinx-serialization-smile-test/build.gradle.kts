@@ -8,6 +8,11 @@ kotlin {
     jvm()
     macosArm64()
 
+    js(IR) {
+        browser()
+        nodejs()
+    }
+
     applyDefaultHierarchyTemplate()
 
     sourceSets {

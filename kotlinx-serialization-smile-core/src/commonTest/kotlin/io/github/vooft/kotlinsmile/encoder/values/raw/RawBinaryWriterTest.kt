@@ -6,7 +6,7 @@ import kotlin.test.Test
 
 class RawBinaryWriterTest {
     @Test
-    fun `should write one bit`() {
+    fun should_write_one_bit() {
         val builder = ByteArrayBuilder()
 
         builder.appendRawBinary(byteArrayOf(0xFF.toByte()))
@@ -15,7 +15,7 @@ class RawBinaryWriterTest {
     }
 
     @Test
-    fun `should write 8 bits`() {
+    fun should_write_8_bits() {
         val builder = ByteArrayBuilder()
 
         builder.appendRawBinary(byteArrayOf(0b1111_1111u.toByte()))
@@ -30,7 +30,7 @@ class RawBinaryWriterTest {
     }
 
     @Test
-    fun `should write 16 bits`() {
+    fun should_write_16_bits() {
         val builder = ByteArrayBuilder()
 
         builder.appendRawBinary(byteArrayOf(0b1111_1111u.toByte(), 0b1111_1111u.toByte()))
@@ -45,7 +45,7 @@ class RawBinaryWriterTest {
     }
 
     @Test
-    fun `should serialize 64 bits`() {
+    fun should_serialize_64_bits() {
         val builder = ByteArrayBuilder()
 
         builder.appendRawBinary(ByteArray(8) { 0xFF.toByte() })
@@ -61,7 +61,7 @@ class RawBinaryWriterTest {
     }
     
     @Test
-    fun `should serialize random bytes`() {
+    fun should_serialize_random_bytes() {
         val data = byteArrayOf(
             0x9c.toByte(), 0xc5.toByte(), 0x09, 0xe4.toByte(), 0x1a, 0x84.toByte(), 0x08, 0xfb.toByte(), 0xbf.toByte(), 0x6f
         )
@@ -77,14 +77,6 @@ class RawBinaryWriterTest {
 
         actual shouldBe expected
     }
-
-    @Test
-    fun test() {
-        val builder = ByteArrayBuilder()
-        builder.appendRawBinary(byteArrayOf(3, 2, 1))
-        println(builder.toByteArray().toHexString())
-    }
 }
 
-private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"
 private fun ByteArray.toBinaryString() = joinToString(", ", "[", "]") { it.toUByte().toString(2).padStart(8, '0') }

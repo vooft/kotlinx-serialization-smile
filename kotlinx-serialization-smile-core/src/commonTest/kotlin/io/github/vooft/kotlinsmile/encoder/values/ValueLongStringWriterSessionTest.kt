@@ -12,7 +12,7 @@ class ValueLongStringWriterSessionTest {
     private val session = ValueLongStringWriterSession(builder)
 
     @Test
-    fun `should write long ascii`() {
+    fun should_write_long_ascii() {
         val value = "a".repeat(1000)
         session.valueLongAscii(value.toSmile())
 
@@ -24,14 +24,14 @@ class ValueLongStringWriterSessionTest {
     }
 
     @Test
-    fun `should fail to write long ascii for unicode string`() {
+    fun should_fail_to_write_long_ascii_for_unicode_string() {
         shouldThrow<IllegalArgumentException> {
             session.valueLongAscii(THREE_BYTE_CHAR.repeat(100).toSmile())
         }
     }
 
     @Test
-    fun `should write long unicode`() {
+    fun should_write_long_unicode() {
         val value = THREE_BYTE_CHAR.repeat(1000)
         session.valueLongUnicode(value.toSmile())
 
@@ -43,7 +43,7 @@ class ValueLongStringWriterSessionTest {
     }
 
     @Test
-    fun `should fail to write long unicode for ascii string`() {
+    fun should_fail_to_write_long_unicode_for_ascii_string() {
         shouldThrow<IllegalArgumentException> {
             session.valueLongUnicode("a".repeat(1000).toSmile())
         }

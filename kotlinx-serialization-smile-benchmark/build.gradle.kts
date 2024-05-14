@@ -14,6 +14,11 @@ kotlin {
     jvm()
     macosArm64()
 
+    js(IR) {
+        browser()
+        nodejs()
+    }
+
     applyDefaultHierarchyTemplate()
 
     targets.configureEach {
@@ -29,21 +34,21 @@ kotlin {
     }
 
     sourceSets {
-        commonMain {
-            dependencies {
-                implementation(libs.kotlinx.benchmark.runtime)
-                implementation(project(":kotlinx-serialization-smile-core"))
-                implementation(project(":kotlinx-serialization-smile-test"))
-            }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.benchmark.runtime)
+            implementation(project(":kotlinx-serialization-smile-core"))
+            implementation(project(":kotlinx-serialization-smile-test"))
         }
 
-        jvmMain {
-            dependencies {
-                implementation(libs.jackson.dataformat.smile)
-                implementation(libs.jackson.module.kotlin)
-                implementation(libs.kotlin.reflect)
-                implementation(libs.bundles.logging.jvm)
-            }
+        jvmMain.dependencies {
+            implementation(libs.jackson.dataformat.smile)
+            implementation(libs.jackson.module.kotlin)
+            implementation(libs.kotlin.reflect)
+            implementation(libs.bundles.logging.jvm)
+        }
+
+        jsMain.dependencies {
+            implementation(libs.kotlin.logging.js)
         }
 
         nativeMain { }
@@ -52,7 +57,8 @@ kotlin {
 
 benchmark {
     targets.register("jvm")
+    targets.register("js")
 
     // not working for some reason
-//    targets.register("macosArm64")
+    targets.register("macosArm64")
 }

@@ -12,7 +12,7 @@ class ValueShortStringWriterSessionTest {
     private val writer = ValueShortStringWriterSession(builder)
 
     @Test
-    fun `should write tiny ascii`() {
+    fun should_write_tiny_ascii() {
         writer.valueTinyAscii("test123".toSmile())
 
         val expected = byteArrayOf(
@@ -26,28 +26,28 @@ class ValueShortStringWriterSessionTest {
     }
 
     @Test
-    fun `should fail tiny ascii for too long string`() {
+    fun should_fail_tiny_ascii_for_too_long_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueShortAscii("1".repeat(65).toSmile())
         }
     }
 
     @Test
-    fun `should fail tiny ascii for too short string`() {
+    fun should_fail_tiny_ascii_for_too_short_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueShortAscii("".toSmile())
         }
     }
 
     @Test
-    fun `should fail tiny ascii for non-ascii string`() {
+    fun should_fail_tiny_ascii_for_non_ascii_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueTinyAscii(THREE_BYTE_CHAR.toSmile())
         }
     }
 
     @Test
-    fun `should write short ascii`() {
+    fun should_write_short_ascii() {
         val value = "t".repeat(36)
         writer.valueShortAscii(value.toSmile())
 
@@ -60,28 +60,28 @@ class ValueShortStringWriterSessionTest {
     }
 
     @Test
-    fun `should fail short ascii for too long string`() {
+    fun should_fail_short_ascii_for_too_long_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueShortAscii("1".repeat(65).toSmile())
         }
     }
 
     @Test
-    fun `should fail short ascii for too short string`() {
+    fun should_fail_short_ascii_for_too_short_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueShortAscii("1".repeat(32).toSmile())
         }
     }
 
     @Test
-    fun `should fail short ascii for non-ascii string`() {
+    fun should_fail_short_ascii_for_non_ascii_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueShortAscii(THREE_BYTE_CHAR.repeat(12).toSmile())
         }
     }
 
     @Test
-    fun `should write tiny unicode`() {
+    fun should_write_tiny_unicode() {
         writer.valueTinyUnicode("hello $THREE_BYTE_CHAR".toSmile())
 
         val expected = byteArrayOf(
@@ -95,21 +95,21 @@ class ValueShortStringWriterSessionTest {
     }
 
     @Test
-    fun `should fail tiny unicode for too long string`() {
+    fun should_fail_tiny_unicode_for_too_long_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueTinyUnicode(THREE_BYTE_CHAR.repeat(29).toSmile())
         }
     }
 
     @Test
-    fun `should fail tiny unicode for non-unicode string`() {
+    fun should_fail_tiny_unicode_for_non_unicode_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueTinyUnicode("abcd".toSmile())
         }
     }
 
     @Test
-    fun `should write short unicode`() {
+    fun should_write_short_unicode() {
         writer.valueShortUnicode(THREE_BYTE_CHAR.repeat(15).toSmile())
 
         val expected = byteArrayOf(
@@ -123,14 +123,14 @@ class ValueShortStringWriterSessionTest {
     }
 
     @Test
-    fun `should fail short unicode for too long string`() {
+    fun should_fail_short_unicode_for_too_long_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueShortUnicode(THREE_BYTE_CHAR.repeat(29).toSmile())
         }
     }
 
     @Test
-    fun `should fail short unicode for too short string`() {
+    fun should_fail_short_unicode_for_too_short_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueShortUnicode(THREE_BYTE_CHAR.toSmile())
         }
@@ -138,7 +138,7 @@ class ValueShortStringWriterSessionTest {
 
 
     @Test
-    fun `should fail short unicode for non-unicode string`() {
+    fun should_fail_short_unicode_for_non_unicode_string() {
         shouldThrow<IllegalArgumentException> {
             writer.valueShortUnicode("abcd".toSmile())
         }

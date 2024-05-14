@@ -6,7 +6,7 @@ import kotlin.test.Test
 
 class SimpleLiteralWriterSessionTest {
     @Test
-    fun `should write empty string`() {
+    fun should_write_empty_string() {
         val builder = ByteArrayBuilder()
         val session = ValueSimpleLiteralWriterSession(builder)
 
@@ -16,7 +16,7 @@ class SimpleLiteralWriterSessionTest {
     }
 
     @Test
-    fun `should write null`() {
+    fun should_write_null() {
         val builder = ByteArrayBuilder()
         val session = ValueSimpleLiteralWriterSession(builder)
 
@@ -26,7 +26,7 @@ class SimpleLiteralWriterSessionTest {
     }
 
     @Test
-    fun `should write true`() {
+    fun should_write_true() {
         val builder = ByteArrayBuilder()
         val session = ValueSimpleLiteralWriterSession(builder)
 
@@ -36,7 +36,7 @@ class SimpleLiteralWriterSessionTest {
     }
 
     @Test
-    fun `should write false`() {
+    fun should_write_false() {
         val builder = ByteArrayBuilder()
         val session = ValueSimpleLiteralWriterSession(builder)
 

@@ -13,6 +13,7 @@ kotlinx-io-bytestring = { module = "org.jetbrains.kotlinx:kotlinx-io-bytestring"
 # logging
 kotlin-logging-core = { module = "io.github.oshai:kotlin-logging", version.ref = "kotlin-logging" }
 kotlin-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+kotlin-logging-js = { module = "io.github.oshai:kotlin-logging-js", version.ref = "kotlin-logging" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version = "2.0.13" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version = "1.5.6" }
 

@@ -1,10 +1,9 @@
 package io.github.vooft.kotlinsmile.common
 
-import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.datatest.withData
+import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-class ZigzagIntegerTest : ShouldSpec({
+class ZigzagIntegerTest : FunSpec({
 
     val data = listOf(
         Zigzag(0, 0),
@@ -16,17 +15,28 @@ class ZigzagIntegerTest : ShouldSpec({
         Zigzag(Int.MAX_VALUE, Int.MIN_VALUE / 2),
     )
 
-    context("should encode integer") {
-        withData(data) {
-            ZigzagInteger.encode(it.decoded) shouldBe it.encoded
+    // there is an issue with kotest js and withData https://github.com/kotest/kotest/pull/3913
+    for (datum in data) {
+        test("should encode ${datum.decoded} to ${datum.encoded}") {
+            ZigzagInteger.encode(datum.decoded) shouldBe datum.encoded
+        }
+
+        test("should decode ${datum.encoded} to ${datum.decoded}") {
+            ZigzagInteger.decode(datum.encoded) shouldBe datum.decoded
         }
     }
 
-    context("should decode integer") {
-        withData(data) {
-            ZigzagInteger.decode(it.encoded) shouldBe it.decoded
-        }
-    }
+//    context("should encode integer") {
+//        withData(data) {
+//            ZigzagInteger.encode(it.decoded) shouldBe it.encoded
+//        }
+//    }
+//
+//    context("should decode integer") {
+//        withData(data) {
+//            ZigzagInteger.decode(it.encoded) shouldBe it.decoded
+//        }
+//    }
 })
 
 private data class Zigzag(val encoded: Int, val decoded: Int)

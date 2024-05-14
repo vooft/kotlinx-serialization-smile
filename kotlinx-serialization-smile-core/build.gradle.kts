@@ -6,7 +6,13 @@ plugins {
 
 kotlin {
     jvm()
+
     macosArm64()
+
+    js(IR) {
+        browser()
+        nodejs()
+    }
 
     applyDefaultHierarchyTemplate()
 
@@ -15,6 +21,14 @@ kotlin {
             api(libs.kotlinx.serialization.core)
             api(libs.kotlinx.io.bytestring)
             implementation(libs.kotlin.logging.core)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.kotlin.logging.jvm)
+        }
+
+        jsMain.dependencies {
+            implementation(libs.kotlin.logging.js)
         }
 
         commonTest.dependencies {

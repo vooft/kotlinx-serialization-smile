@@ -10,7 +10,7 @@ class IntegerWriterSessionTest {
     private val session = IntegerWriterSession(builder)
 
     @Test
-    fun `should encode small integer`() {
+    fun should_encode_small_integer() {
         session.valueSmallInteger(10)
         builder.toByteArray() shouldBe byteArrayOf(
             0b11010100.toByte()
@@ -18,7 +18,7 @@ class IntegerWriterSessionTest {
     }
 
     @Test
-    fun `should encode regular integer`() {
+    fun should_encode_regular_integer() {
         session.valueRegularInteger(100)
         builder.toByteArray() shouldBe byteArrayOf(
             0x24, // prefix
@@ -27,7 +27,7 @@ class IntegerWriterSessionTest {
     }
 
     @Test
-    fun `should encode long integer`() {
+    fun should_encode_long_integer() {
         session.valueLongInteger(Int.MAX_VALUE.toLong() + 100)
         builder.toByteArray() shouldBe byteArrayOf(
             0x25, // prefix

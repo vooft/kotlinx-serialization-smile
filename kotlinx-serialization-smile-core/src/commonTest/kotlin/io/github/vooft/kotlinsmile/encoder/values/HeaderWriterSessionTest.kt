@@ -7,7 +7,7 @@ import io.kotest.matchers.shouldBe
 
 class HeaderWriterSessionTest {
 //    @Test
-    fun `should write header`() {
+    fun should_write_header() {
         val builder = ByteArrayBuilder()
         val session = HeaderWriterSession(builder)
 
