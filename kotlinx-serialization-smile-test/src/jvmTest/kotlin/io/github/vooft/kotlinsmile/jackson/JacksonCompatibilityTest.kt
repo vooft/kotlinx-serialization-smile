@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.ObjWithSerializer
 import io.github.vooft.kotlinsmile.Smile
+import io.github.vooft.kotlinsmile.SmileMessage
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
@@ -81,13 +82,16 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(Long.MIN_VALUE, "root level min long"),
     )
 
+    val hugeObject = listOf(ObjWithSerializer(SmileMessage.next(), "huge object"))
+
     context("should serialize object same as jackson") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
             ts = basicTestCases +
                     structuralTestCases +
                     keyTestCases +
-                    valueTestCases
+                    valueTestCases +
+                    hugeObject
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
 
@@ -111,9 +115,11 @@ class JacksonCompatibilityTest : ShouldSpec({
             ts = basicTestCases +
                     structuralTestCases +
                     keyTestCases +
-                    valueTestCases
+                    valueTestCases +
+                    hugeObject
         ) {
             val data = smileMapper.writeValueAsBytes(it.obj)
+//            smileMapper.readValue(data, it.obj!!::class.java) shouldBe it.obj
 
             logger.info { "D: " + data.toHexString() }
 

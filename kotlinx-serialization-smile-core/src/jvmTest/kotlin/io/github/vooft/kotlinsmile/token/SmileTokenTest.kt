@@ -7,14 +7,14 @@ import kotlin.test.Test
 class SmileTokenTest {
     @Test
     fun `should have all value tokens in a list`() {
-        val allSubclasses = SmileValueToken::class.findSubclassesDataObjects()
-        SmileToken.VALUE_TOKENS shouldContainExactlyInAnyOrder allSubclasses
+        val allSubclasses = SmileValueToken::class.findSubclassesObjects()
+        SmileTokensHolder.VALUE_TOKENS shouldContainExactlyInAnyOrder allSubclasses
     }
 
     @Test
     fun `should have all key tokens in a list`() {
-        val allSubclasses = SmileKeyToken::class.findSubclassesDataObjects()
-        SmileToken.KEY_TOKENS shouldContainExactlyInAnyOrder allSubclasses
+        val allSubclasses = SmileKeyToken::class.findSubclassesObjects()
+        SmileTokensHolder.KEY_TOKENS shouldContainExactlyInAnyOrder allSubclasses
     }
 
     @Test
@@ -28,7 +28,7 @@ class SmileTokenTest {
     }
 
     private fun <T: SmileToken> KClass<T>.requireNoIntersection() {
-        val allSubclasses = findSubclassesDataObjects()
+        val allSubclasses = findSubclassesObjects()
         val seenRanges = mutableMapOf<Int, SmileToken>()
 
         for (subclass in allSubclasses) {
@@ -39,15 +39,14 @@ class SmileTokenTest {
         }
     }
 
-    private fun <T: SmileToken> KClass<T>.findSubclassesDataObjects(): Set<T> = buildSet {
+    private fun <T: SmileToken> KClass<T>.findSubclassesObjects(): Set<T> = buildSet {
         for (subclass in sealedSubclasses) {
             val subclassObject = subclass.objectInstance
             if (subclassObject != null) {
                 add(subclassObject as T)
             } else {
-                require(subclass.java.isInterface) { "Class $subclass is not interface" }
-                require(subclass.isSealed) { "Interface $subclass is not sealed" }
-                addAll(subclass.findSubclassesDataObjects())
+                require(subclass.isSealed) { "Class $subclass is not sealed" }
+                addAll(subclass.findSubclassesObjects())
             }
         }
     }

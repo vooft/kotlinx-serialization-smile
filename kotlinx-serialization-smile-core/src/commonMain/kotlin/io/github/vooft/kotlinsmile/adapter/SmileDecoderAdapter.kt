@@ -17,5 +17,6 @@ class SmileDecoderAdapter(
         serializersModule = serializersModule
     )
 
+    @Suppress("UnusedPrivateProperty")
     private val config = session.header()
 }

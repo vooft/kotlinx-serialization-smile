@@ -10,7 +10,7 @@ import kotlinx.serialization.modules.SerializersModule
 
 class SmileEncoderAdapter(
     private val config: SmileConfig,
-    private val session: SmileEncoderSession = SmileEncoderSession(ByteArrayBuilder()),
+    private val session: SmileEncoderSession = SmileEncoderSession(ByteArrayBuilder(10240)),
     override val serializersModule: SerializersModule = EmptySerializersModule()
 ) : Encoder by SmileValueEncoder(session, serializersModule) {
 

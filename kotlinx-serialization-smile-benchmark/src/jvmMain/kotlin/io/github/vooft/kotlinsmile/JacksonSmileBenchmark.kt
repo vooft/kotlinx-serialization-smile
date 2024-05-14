@@ -13,16 +13,15 @@ import kotlinx.benchmark.Scope
 import kotlinx.benchmark.Setup
 import kotlinx.benchmark.State
 import kotlinx.benchmark.Warmup
-import kotlin.random.Random
 
 @State(Scope.Benchmark)
-@Measurement(iterations = 3, time = 7, timeUnit = BenchmarkTimeUnit.SECONDS)
-@Warmup(iterations = 2, time = 5, timeUnit = BenchmarkTimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 7, timeUnit = BenchmarkTimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 5, timeUnit = BenchmarkTimeUnit.SECONDS)
 @OutputTimeUnit(BenchmarkTimeUnit.MILLISECONDS)
 @BenchmarkMode(Mode.Throughput)
 class JacksonSmileBenchmark {
 
-    private lateinit var logMessage: LogMessage
+    private lateinit var message: SmileMessage
     private lateinit var serialized: ByteArray
 
     private val smileMapper = ObjectMapper(
@@ -35,42 +34,27 @@ class JacksonSmileBenchmark {
 
     @Setup
     fun setUp() {
-        logMessage = LogMessage(
-            timestampEpoch = Random.nextLong(),
-            level = "INFO",
-            message = "Hello, world!",
-            threadName = "main",
-            loggerName = "io.github.vooft.kotlinsmile.KotlinSmileBenchmark",
-            traceId = "1234567890",
-            spanId = "1234567890",
-            context = LogMessageContext(
-                username = "admin",
-                url = "http://localhost:8080",
-                userAgent = "Mozilla/5.0"
-            )
-        )
-
-        serialized = Smile.encode(logMessage)
+        message = SmileMessage.next()
+        serialized = Smile.encode(message)
     }
 
     @Benchmark
     fun kotlinSerialize(): ByteArray {
-        return Smile.encode(logMessage)
+        return Smile.encode(message)
     }
 
     @Benchmark
-    fun kotlinDeserialize(): LogMessage {
+    fun kotlinDeserialize(): SmileMessage {
         return Smile.decode(serialized)
     }
 
     @Benchmark
     fun jacksonSerialize(): ByteArray {
-        return smileMapper.writeValueAsBytes(logMessage)
+        return smileMapper.writeValueAsBytes(message)
     }
 
     @Benchmark
-    fun jacksonDeserialize(): LogMessage {
-        return smileMapper.readValue(serialized, LogMessage::class.java)
+    fun jacksonDeserialize(): SmileMessage {
+        return smileMapper.readValue(serialized, SmileMessage::class.java)
     }
 }
-

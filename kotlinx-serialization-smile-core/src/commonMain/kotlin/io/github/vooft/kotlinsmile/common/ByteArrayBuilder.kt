@@ -9,7 +9,7 @@ interface ByteArrayBuilder {
     fun toByteArray(): ByteArray
 }
 
-fun ByteArrayBuilder(): ByteArrayBuilder = ByteStringByteArrayBuilder()
+fun ByteArrayBuilder(initialCapacity: Int = 1024): ByteArrayBuilder = ByteStringByteArrayBuilder(initialCapacity)
 
 fun buildByteArray(block: ByteArrayBuilder.() -> Unit): ByteArray {
     val builder = ByteStringByteArrayBuilder()
@@ -17,8 +17,8 @@ fun buildByteArray(block: ByteArrayBuilder.() -> Unit): ByteArray {
     return builder.toByteArray()
 }
 
-class ByteStringByteArrayBuilder: ByteArrayBuilder {
-    private val builder = ByteStringBuilder()
+class ByteStringByteArrayBuilder(initialCapacity: Int = 1024): ByteArrayBuilder {
+    private val builder = ByteStringBuilder(initialCapacity) // 1 kb default size
 
     override fun append(byte: Byte, offset: Byte) {
         val sum = byte.toUByte() + offset.toUByte()

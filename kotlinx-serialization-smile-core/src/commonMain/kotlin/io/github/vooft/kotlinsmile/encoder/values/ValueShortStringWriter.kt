@@ -26,7 +26,7 @@ class ValueShortStringWriterSession(private val builder: ByteArrayBuilder) : Val
     override fun valueTinyUnicode(value: SmileString) = TinyUnicode.append(value)
     override fun valueShortUnicode(value: SmileString) = ShortUnicode.append(value)
 
-    private fun SmileValueShortStringToken.append(value: SmileString) {
+    private inline fun SmileValueShortStringToken.append(value: SmileString) {
         value.requireLength(lengths)
         if (isUnicode) {
             value.requireUnicode()

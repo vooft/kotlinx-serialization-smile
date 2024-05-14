@@ -33,6 +33,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.benchmark.runtime)
                 implementation(project(":kotlinx-serialization-smile-core"))
+                implementation(project(":kotlinx-serialization-smile-test"))
             }
         }
 

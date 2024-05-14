@@ -6,12 +6,15 @@ plugins {
 
 kotlin {
     jvm()
+    macosArm64()
 
     applyDefaultHierarchyTemplate()
 
     sourceSets {
-        jvmTest.dependencies {
+        commonMain.dependencies {
             implementation(project(":kotlinx-serialization-smile-core"))
+        }
+        jvmTest.dependencies {
             implementation(libs.jackson.dataformat.smile)
             implementation(libs.jackson.module.kotlin)
             implementation(libs.kotest.runner.junit5)
