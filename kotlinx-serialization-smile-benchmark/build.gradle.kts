@@ -21,18 +21,6 @@ kotlin {
 
     applyDefaultHierarchyTemplate()
 
-    targets.configureEach {
-        compilations.configureEach {
-            kotlinOptions.allWarningsAsErrors = true
-        }
-    }
-
-    sourceSets.configureEach {
-        languageSettings {
-            progressiveMode = true
-        }
-    }
-
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.benchmark.runtime)
