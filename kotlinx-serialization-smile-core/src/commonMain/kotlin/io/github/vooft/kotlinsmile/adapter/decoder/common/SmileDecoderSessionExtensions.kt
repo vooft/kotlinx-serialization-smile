@@ -4,6 +4,7 @@ import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
+import io.github.vooft.kotlinsmile.token.SmileKeyToken.LongSharedKey
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.ShortSharedKey
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.SmileKeyStringToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
@@ -56,11 +57,13 @@ fun SmileDecoderSession.peekStringKeyToken(): SmileKeyStringToken {
 }
 
 fun SmileDecoderSession.keyString(): String {
-    return when (val token = peekKeyToken()) {
+    val token = peekKeyToken()
+    require(token is SmileKeyStringToken) { "Unexpected token $token" }
+    return when (token) {
         KeyLongUnicode -> keyLongUnicode()
         KeyShortAscii -> keyShortAscii()
         KeyShortUnicode -> keyShortUnicode()
         ShortSharedKey -> shortSharedKey()
-        else -> error("Unexpected token $token")
+        LongSharedKey -> longSharedKey()
     }
 }

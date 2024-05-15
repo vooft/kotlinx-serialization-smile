@@ -56,7 +56,7 @@ class SmileValueDecoder(
             else -> error("Not supported ${descriptor.kind}")
         }
 
-        logger.debug { "Begin ${descriptor.kind} with ${nested::class}" }
+        logger.debug { "Begin ${descriptor.kind} ${descriptor.serialName} with ${nested::class}" }
 
         return nested
     }

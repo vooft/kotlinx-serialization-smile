@@ -23,7 +23,8 @@ class KeyStringReaderSession(
         require(byte in KeyShortAscii) { "Invalid token for short ascii key: ${byte.toUByte().toString(16)}" }
 
         val length = byte.toUByte() - KeyShortAscii.offset.toUByte()
-        return iterator.nextString(length.toInt()).also { sharedStorage.storeKey(it) }
+        val result = iterator.nextString(length.toInt())
+        return result.also { sharedStorage.storeKey(it) }
     }
 
     override fun keyShortUnicode(): String {
@@ -31,7 +32,8 @@ class KeyStringReaderSession(
         require(byte in KeyShortUnicode) { "Invalid token for short unicode key: ${byte.toUByte().toString(16)}" }
 
         val length = byte.toUByte() - KeyShortUnicode.offset.toUByte()
-        return iterator.nextString(length.toInt()).also { sharedStorage.storeKey(it) }
+        val result = iterator.nextString(length.toInt())
+        return result.also { sharedStorage.storeKey(it) }
     }
 
     override fun keyLongUnicode(): String {
@@ -49,6 +51,6 @@ class KeyStringReaderSession(
         val decoded = iterator.nextString(counter)
         require(iterator.next() == SmileMarkers.STRING_END_MARKER) { "Invalid end marker for long unicode key" }
 
-        return decoded
+        return decoded.also { sharedStorage.storeKey(it) }
     }
 }

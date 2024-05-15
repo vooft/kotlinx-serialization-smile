@@ -38,6 +38,7 @@ object SmileTokensHolder {
         SmileKeyToken.KeyLongUnicode,
         SmileKeyToken.KeyShortUnicode,
         SmileKeyToken.ShortSharedKey,
+        SmileKeyToken.LongSharedKey,
         SmileKeyToken.KeyEndObjectMarker,
     )
 
@@ -159,6 +160,11 @@ sealed class SmileKeyToken(tokenRange: IntRange) : SmileToken(tokenRange) {
 
     object ShortSharedKey : SmileKeyStringToken, SmileKeyToken(0x40..0x7F) {
         val offset = tokenRange.first.toByte()
+    }
+
+    object LongSharedKey : SmileKeyStringToken, SmileKeyToken(0x30..0x33) {
+        val firstByte = tokenRange.first.toByte()
+        val VALUES_RANGE = 65..1024
     }
 
     // EndObject is more of a key marker, rather than value marker

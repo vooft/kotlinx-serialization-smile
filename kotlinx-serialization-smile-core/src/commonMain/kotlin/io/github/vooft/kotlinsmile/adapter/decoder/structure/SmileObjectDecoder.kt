@@ -36,7 +36,9 @@ class SmileObjectDecoder(
 
             else -> {
                 val propertyName = session.keyString()
+                logger.debug { "Decoding property $propertyName" }
                 descriptor.getElementIndex(propertyName)
+                    .also { logger.info { "Found index $it for property name $propertyName" } }
             }
         }
     }

@@ -44,4 +44,21 @@ class SharedStringReaderSessionTest {
 
         verify(VerifyMode.exhaustive) { mockStorage.getKey(5) }
     }
+
+    @Test
+    fun should_read_long_shared_key() {
+        // encoding 0b1_0000_0001
+        val data = byteArrayOf(
+            0x31, // 0x30 offset + 1
+            0b00000001.toByte(), // 0x01
+        )
+
+        val key = Random.nextLong().toString()
+        every { mockStorage.getKey(257) } returns key
+
+        val reader = SharedStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
+        reader.longSharedKey() shouldBe key
+
+        verify(VerifyMode.exhaustive) { mockStorage.getKey(257) }
+    }
 }

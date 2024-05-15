@@ -180,7 +180,11 @@ class JacksonCompatibilityTest : ShouldSpec({
 
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts = listOf(ObjWithSerializer(ObjectWithTwoNestedFields()))
+            ts = listOf(
+//                ObjWithSerializer(ObjectWithTwoNestedFields()),
+                ObjWithSerializer(ObjectWithTwoNestedLongAsciiFields()),
+                ObjWithSerializer(ObjectWithTwoNestedLongUnicodeFields())
+            )
         ) {
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
@@ -199,6 +203,18 @@ data class CompositeObject(val a: Int = 1, val b: SimpleClass = SimpleClass())
 
 @Serializable
 data class ObjectWithTwoNestedFields(val a: SimpleClass = SimpleClass(), val b: SimpleClass = SimpleClass())
+
+@Serializable
+data class ObjectWithTwoNestedLongAsciiFields(
+    val a: LongAsciiPropertyNameClass = LongAsciiPropertyNameClass(),
+    val b: LongAsciiPropertyNameClass = LongAsciiPropertyNameClass()
+)
+
+@Serializable
+data class ObjectWithTwoNestedLongUnicodeFields(
+    val a: LongUnicodePropertyNameClass = LongUnicodePropertyNameClass(),
+    val b: LongUnicodePropertyNameClass = LongUnicodePropertyNameClass()
+)
 
 @Serializable
 data class TinyAsciiPropertyValueClass(val a: String = "test123")
