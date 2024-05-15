@@ -1,5 +1,6 @@
 [versions]
-kotlin = "2.0.0-RC3"
+#kotlin = "2.0.0-RC3"
+kotlin = "1.9.24" # downgrade to make it work with mokkery
 kotest = "5.9.0"
 kotlin-logging = "6.0.9"
 kotlinx-benchmark = "0.4.10"
@@ -35,6 +36,7 @@ kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "ko
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.6" }
 kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
+mokkery = { id = "dev.mokkery", version = "1.9.24-1.7.0" }
 
 [bundles]
 logging-jvm = ["kotlin-logging-jvm", "slf4j-api", "logback-classic"]

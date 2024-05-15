@@ -7,6 +7,7 @@ import io.github.vooft.kotlinsmile.decoder.values.raw.nextRawLong
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.RegularInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
+import io.github.vooft.kotlinsmile.token.contains
 
 interface IntegerReader {
     fun valueSmallInteger(): Byte
@@ -17,6 +18,10 @@ interface IntegerReader {
 class IntegerReaderSession(private val iterator: ByteArrayIterator) : IntegerReader {
     override fun valueSmallInteger(): Byte {
         val byte = iterator.next()
+        require(byte in SmallInteger) {
+            "Invalid token for small integer ${SmallInteger.tokenRange}, actual: $byte"
+        }
+
         val zigzag = byte.toUByte() - SmallInteger.offset.toUByte()
         return ZigzagInteger.decode(zigzag.toInt()).toByte()
     }

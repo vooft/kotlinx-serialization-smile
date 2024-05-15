@@ -145,6 +145,50 @@ class JacksonCompatibilityTest : ShouldSpec({
             }
         }
     }
+
+    xcontext("should serialize object with shared names") {
+        val smileMapperWithSharedNames = ObjectMapper(
+            SmileFactory.builder()
+//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, false)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, true)
+                .build()
+        ).findAndRegisterModules()
+
+        withData<ObjWithSerializer<*>>(
+            nameFn = { it.name ?: it.obj!!::class.simpleName!! },
+            ts = listOf(ObjWithSerializer(ObjectWithTwoNestedFields()))
+        ) {
+            val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
+            println(encoded.toHexString())
+
+            val actual = Smile.encode(it)
+            println(actual.toHexString())
+
+            actual shouldBe encoded
+        }
+    }
+
+    context("should deserialize object with shared names") {
+        val smileMapperWithSharedNames = ObjectMapper(
+            SmileFactory.builder()
+//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, false)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, true)
+                .build()
+        ).findAndRegisterModules()
+
+        withData<ObjWithSerializer<*>>(
+            nameFn = { it.name ?: it.obj!!::class.simpleName!! },
+            ts = listOf(ObjWithSerializer(ObjectWithTwoNestedFields()))
+        ) {
+            val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
+            println(encoded.toHexString())
+
+            val actual = Smile.decode(it.serializer, encoded)
+            actual shouldBe it.obj
+        }
+    }
 })
 
 @Serializable
@@ -152,6 +196,9 @@ data class SimpleClass(val a: Int = 1, val bb: Int = 2)
 
 @Serializable
 data class CompositeObject(val a: Int = 1, val b: SimpleClass = SimpleClass())
+
+@Serializable
+data class ObjectWithTwoNestedFields(val a: SimpleClass = SimpleClass(), val b: SimpleClass = SimpleClass())
 
 @Serializable
 data class TinyAsciiPropertyValueClass(val a: String = "test123")

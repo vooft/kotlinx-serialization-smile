@@ -5,6 +5,7 @@ import io.github.vooft.kotlinsmile.adapter.decoder.common.peekValueToken
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
 import io.github.vooft.kotlinsmile.decoder.keys.KeyStringReader
 import io.github.vooft.kotlinsmile.decoder.keys.KeyStringReaderSession
+import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReader
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.BinaryReader
@@ -13,6 +14,8 @@ import io.github.vooft.kotlinsmile.decoder.values.FloatReader
 import io.github.vooft.kotlinsmile.decoder.values.FloatReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.IntegerReader
 import io.github.vooft.kotlinsmile.decoder.values.IntegerReaderSession
+import io.github.vooft.kotlinsmile.decoder.values.SharedStringReader
+import io.github.vooft.kotlinsmile.decoder.values.SharedStringReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.ValueLongStringReader
 import io.github.vooft.kotlinsmile.decoder.values.ValueLongStringReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.ValueShortStringReader
@@ -22,15 +25,16 @@ import io.github.vooft.kotlinsmile.decoder.values.ValueSimpleLiteralReaderSessio
 import io.github.vooft.kotlinsmile.token.SmileKeyToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken
 
-class SmileDecoderSession(private val iterator: ByteArrayIterator) :
+class SmileDecoderSession(private val iterator: ByteArrayIterator, private val sharedStorage: DecodingSmileSharedStorage) :
     HeaderReader by HeaderReaderSession(iterator),
-    KeyStringReader by KeyStringReaderSession(iterator),
+    KeyStringReader by KeyStringReaderSession(iterator, sharedStorage),
     IntegerReader by IntegerReaderSession(iterator),
     FloatReader by FloatReaderSession(iterator),
-    ValueShortStringReader by ValueShortStringReaderSession(iterator),
+    ValueShortStringReader by ValueShortStringReaderSession(iterator, sharedStorage),
     ValueLongStringReader by ValueLongStringReaderSession(iterator),
     ValueSimpleLiteralReader by ValueSimpleLiteralReaderSession(iterator),
-    BinaryReader by BinaryReaderSession(iterator) {
+    BinaryReader by BinaryReaderSession(iterator),
+    SharedStringReader by SharedStringReaderSession(iterator, sharedStorage) {
 
     fun skip() {
         iterator.next()
