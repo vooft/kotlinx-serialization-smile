@@ -5,14 +5,20 @@ interface DecodingValueHolder {
     fun get(id: Int): String
 }
 
-class DecodingValueHolderImpl : DecodingValueHolder {
-    private val valueToId = mutableMapOf<String, Int>()
-    private val valuesList = mutableListOf<String>()
+class DecodingValueHolderImpl(private val indexOffset: Int = 0) : DecodingValueHolder {
+    private val valueToId = mutableMapOf<String, Int>().apply { repeat(indexOffset) { put("INVALID_STRING", it) } }
+    private val valuesList = mutableListOf<String>().apply { repeat(indexOffset) { add("INVALID_STRING") } }
 
     override fun store(key: String): Int {
         if (valuesList.size >= MAX_STORAGE_SIZE) {
-            valuesList.clear()
-            valueToId.clear()
+            valuesList.apply {
+                clear()
+                repeat(indexOffset) { add("INVALID_STRING") }
+            }
+            valueToId.apply {
+                clear()
+                repeat(indexOffset) { put("INVALID_STRING", it) }
+            }
         }
 
         val existingIndex = valueToId[key]

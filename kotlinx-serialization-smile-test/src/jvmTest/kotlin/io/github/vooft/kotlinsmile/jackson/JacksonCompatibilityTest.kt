@@ -84,14 +84,28 @@ class JacksonCompatibilityTest : ShouldSpec({
 
     val hugeObject = listOf(ObjWithSerializer(SmileMessage.next(), "huge object"))
 
+    val objectsWithLotFieldsValues = listOf(
+        ObjWithSerializer(ObjectWithTwoNestedFields()),
+        ObjWithSerializer(ObjectWithTwoNestedLongAsciiFields()),
+        ObjWithSerializer(ObjectWithTwoNestedLongUnicodeFields()),
+        ObjWithSerializer(ObjectWithTwoNestedObjectsWithSameShortStringValues()),
+        ObjWithSerializer(ObjectWithLargeNestedObjects()),
+        ObjWithSerializer(ObjectWithMoreThan1024Fields()),
+        ObjWithSerializer(ObjectWithRepeatedKeys()),
+        ObjWithSerializer(ObjectWithRepeatedKeysAndValues())
+    )
+
+    val allTestCases = basicTestCases +
+            structuralTestCases +
+            keyTestCases +
+            valueTestCases +
+            hugeObject +
+            objectsWithLotFieldsValues
+
     context("should serialize object same as jackson") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts = basicTestCases +
-                    structuralTestCases +
-                    keyTestCases +
-                    valueTestCases +
-                    hugeObject
+            ts = allTestCases
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
 
@@ -112,11 +126,7 @@ class JacksonCompatibilityTest : ShouldSpec({
     context("should deserialize object from jackson output") {
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts = basicTestCases +
-                    structuralTestCases +
-                    keyTestCases +
-                    valueTestCases +
-                    hugeObject
+            ts = allTestCases
         ) {
             val data = smileMapper.writeValueAsBytes(it.obj)
 //            smileMapper.readValue(data, it.obj!!::class.java) shouldBe it.obj
@@ -157,7 +167,7 @@ class JacksonCompatibilityTest : ShouldSpec({
 
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts = listOf(ObjWithSerializer(ObjectWithTwoNestedFields()))
+            ts = allTestCases
         ) {
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
@@ -180,11 +190,49 @@ class JacksonCompatibilityTest : ShouldSpec({
 
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts = listOf(
-//                ObjWithSerializer(ObjectWithTwoNestedFields()),
-                ObjWithSerializer(ObjectWithTwoNestedLongAsciiFields()),
-                ObjWithSerializer(ObjectWithTwoNestedLongUnicodeFields())
-            )
+            ts = allTestCases
+        ) {
+            val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
+            println(encoded.toHexString())
+
+            val actual = Smile.decode(it.serializer, encoded)
+            actual shouldBe it.obj
+        }
+    }
+
+    context("should deserialize object with shared values") {
+        val smileMapperWithSharedNames = ObjectMapper(
+            SmileFactory.builder()
+//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, true)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, false)
+                .build()
+        ).findAndRegisterModules()
+
+        withData<ObjWithSerializer<*>>(
+            nameFn = { it.name ?: it.obj!!::class.simpleName!! },
+            ts = allTestCases
+        ) {
+            val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
+            println(encoded.toHexString())
+
+            val actual = Smile.decode(it.serializer, encoded)
+            actual shouldBe it.obj
+        }
+    }
+
+    context("should deserialize object with shared names and values") {
+        val smileMapperWithSharedNames = ObjectMapper(
+            SmileFactory.builder()
+//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, true)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, true)
+                .build()
+        ).findAndRegisterModules()
+
+        withData<ObjWithSerializer<*>>(
+            nameFn = { it.name ?: it.obj!!::class.simpleName!! },
+            ts = allTestCases
         ) {
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
@@ -215,6 +263,144 @@ data class ObjectWithTwoNestedLongUnicodeFields(
     val a: LongUnicodePropertyNameClass = LongUnicodePropertyNameClass(),
     val b: LongUnicodePropertyNameClass = LongUnicodePropertyNameClass()
 )
+
+@Serializable
+data class ObjectWithTwoNestedObjectsWithSameShortStringValues(
+    val field1: ObjectWithSameShortStringValues = ObjectWithSameShortStringValues(),
+    val field2: ObjectWithSameShortStringValues = ObjectWithSameShortStringValues()
+)
+
+@Serializable
+data class ObjectWithRepeatedKeys(
+    val list: List<SimpleClass> = List(10) { SimpleClass() }
+)
+
+@Serializable
+data class ObjectWithRepeatedKeysAndValues(
+    val list: List<ObjectWithSameShortStringValues> = List(10) { ObjectWithSameShortStringValues() }
+)
+
+@Serializable
+data class ObjectWithLargeNestedObjects(
+    val obj1: ObjectWith100Fields = ObjectWith100Fields(),
+    val obj2: ObjectWith100Fields = ObjectWith100Fields(),
+)
+
+@Serializable
+data class ObjectWithMoreThan1024Fields(
+    val list1: List<ObjectWith100Fields> = List(10) { ObjectWith100Fields("suffix1") },
+    val list2: List<ObjectWith100Fields> = List(10) { ObjectWith100Fields("suffix2") },
+    val list3: List<ObjectWith100Fields> = List(10) { ObjectWith100Fields("suffix3") },
+)
+
+@Serializable
+data class ObjectWith100Fields(
+    val suffix: String = "suffix",
+    val field0: String = "field0-$suffix",
+    val field1: String = "field1-$suffix",
+    val field2: String = "field2-$suffix",
+    val field3: String = "field3-$suffix",
+    val field4: String = "field4-$suffix",
+    val field5: String = "field5-$suffix",
+    val field6: String = "field6-$suffix",
+    val field7: String = "field7-$suffix",
+    val field8: String = "field8-$suffix",
+    val field9: String = "field9-$suffix",
+    val field10: String = "field10-$suffix",
+    val field11: String = "field11-$suffix",
+    val field12: String = "field12-$suffix",
+    val field13: String = "field13-$suffix",
+    val field14: String = "field14-$suffix",
+    val field15: String = "field15-$suffix",
+    val field16: String = "field16-$suffix",
+    val field17: String = "field17-$suffix",
+    val field18: String = "field18-$suffix",
+    val field19: String = "field19-$suffix",
+    val field20: String = "field20-$suffix",
+    val field21: String = "field21-$suffix",
+    val field22: String = "field22-$suffix",
+    val field23: String = "field23-$suffix",
+    val field24: String = "field24-$suffix",
+    val field25: String = "field25-$suffix",
+    val field26: String = "field26-$suffix",
+    val field27: String = "field27-$suffix",
+    val field28: String = "field28-$suffix",
+    val field29: String = "field29-$suffix",
+    val field30: String = "field30-$suffix",
+    val field31: String = "field31-$suffix",
+    val field32: String = "field32-$suffix",
+    val field33: String = "field33-$suffix",
+    val field34: String = "field34-$suffix",
+    val field35: String = "field35-$suffix",
+    val field36: String = "field36-$suffix",
+    val field37: String = "field37-$suffix",
+    val field38: String = "field38-$suffix",
+    val field39: String = "field39-$suffix",
+    val field40: String = "field40-$suffix",
+    val field41: String = "field41-$suffix",
+    val field42: String = "field42-$suffix",
+    val field43: String = "field43-$suffix",
+    val field44: String = "field44-$suffix",
+    val field45: String = "field45-$suffix",
+    val field46: String = "field46-$suffix",
+    val field47: String = "field47-$suffix",
+    val field48: String = "field48-$suffix",
+    val field49: String = "field49-$suffix",
+    val field50: String = "field50-$suffix",
+    val field51: String = "field51-$suffix",
+    val field52: String = "field52-$suffix",
+    val field53: String = "field53-$suffix",
+    val field54: String = "field54-$suffix",
+    val field55: String = "field55-$suffix",
+    val field56: String = "field56-$suffix",
+    val field57: String = "field57-$suffix",
+    val field58: String = "field58-$suffix",
+    val field59: String = "field59-$suffix",
+    val field60: String = "field60-$suffix",
+    val field61: String = "field61-$suffix",
+    val field62: String = "field62-$suffix",
+    val field63: String = "field63-$suffix",
+    val field64: String = "field64-$suffix",
+    val field65: String = "field65-$suffix",
+    val field66: String = "field66-$suffix",
+    val field67: String = "field67-$suffix",
+    val field68: String = "field68-$suffix",
+    val field69: String = "field69-$suffix",
+    val field70: String = "field70-$suffix",
+    val field71: String = "field71-$suffix",
+    val field72: String = "field72-$suffix",
+    val field73: String = "field73-$suffix",
+    val field74: String = "field74-$suffix",
+    val field75: String = "field75-$suffix",
+    val field76: String = "field76-$suffix",
+    val field77: String = "field77-$suffix",
+    val field78: String = "field78-$suffix",
+    val field79: String = "field79-$suffix",
+    val field80: String = "field80-$suffix",
+    val field81: String = "field81-$suffix",
+    val field82: String = "field82-$suffix",
+    val field83: String = "field83-$suffix",
+    val field84: String = "field84-$suffix",
+    val field85: String = "field85-$suffix",
+    val field86: String = "field86-$suffix",
+    val field87: String = "field87-$suffix",
+    val field88: String = "field88-$suffix",
+    val field89: String = "field89-$suffix",
+    val field90: String = "field90-$suffix",
+    val field91: String = "field91-$suffix",
+    val field92: String = "field92-$suffix",
+    val field93: String = "field93-$suffix",
+    val field94: String = "field94-$suffix",
+    val field95: String = "field95-$suffix",
+    val field96: String = "field96-$suffix",
+    val field97: String = "field97-$suffix",
+    val field98: String = "field98-$suffix",
+    val field99: String = "field99-$suffix",
+    val field100: String = "field100-$suffix"
+)
+
+@Serializable
+data class ObjectWithSameShortStringValues(val field1: String = "test123", val field2: String = "👨‍💼")
 
 @Serializable
 data class TinyAsciiPropertyValueClass(val a: String = "test123")

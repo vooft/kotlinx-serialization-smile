@@ -1,17 +1,19 @@
-package io.github.vooft.kotlinsmile.decoder.values
+package io.github.vooft.kotlinsmile.decoder.keys
 
 import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.mock
 import dev.mokkery.verify
 import dev.mokkery.verify.VerifyMode
+import dev.mokkery.verifyNoMoreCalls
 import io.github.vooft.kotlinsmile.common.ByteArrayIteratorImpl
 import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlin.random.Random
 import kotlin.test.Test
 
-class SharedStringReaderSessionTest {
+class SharedKeyStringReaderSessionTest {
 
     private val mockStorage = mock<DecodingSmileSharedStorage>()
 
@@ -24,7 +26,7 @@ class SharedStringReaderSessionTest {
         val key = Random.nextLong().toString()
         every { mockStorage.getKey(0) } returns key
 
-        val reader = SharedStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
+        val reader = SharedKeyStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
         reader.shortSharedKey() shouldBe key
 
         verify(VerifyMode.exhaustive) { mockStorage.getKey(0) }
@@ -39,7 +41,7 @@ class SharedStringReaderSessionTest {
         val key = Random.nextLong().toString()
         every { mockStorage.getKey(5) } returns key
 
-        val reader = SharedStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
+        val reader = SharedKeyStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
         reader.shortSharedKey() shouldBe key
 
         verify(VerifyMode.exhaustive) { mockStorage.getKey(5) }
@@ -56,9 +58,22 @@ class SharedStringReaderSessionTest {
         val key = Random.nextLong().toString()
         every { mockStorage.getKey(257) } returns key
 
-        val reader = SharedStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
+        val reader = SharedKeyStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
         reader.longSharedKey() shouldBe key
 
         verify(VerifyMode.exhaustive) { mockStorage.getKey(257) }
+    }
+
+    @Test
+    fun should_fail_long_shared_key_when_too_small() {
+        val data = byteArrayOf(
+            0x30,
+            0b00000001.toByte(), // 0x01
+        )
+
+        val reader = SharedKeyStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
+        shouldThrow<IllegalArgumentException> { reader.longSharedKey() }
+
+        verifyNoMoreCalls(mockStorage)
     }
 }

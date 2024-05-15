@@ -9,9 +9,11 @@ import io.github.vooft.kotlinsmile.token.SmileKeyToken.ShortSharedKey
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.SmileKeyStringToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongInteger
+import io.github.vooft.kotlinsmile.token.SmileValueToken.LongSharedValue
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.RegularInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
+import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortSharedValue
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralEmptyString
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
@@ -30,7 +32,8 @@ fun SmileDecoderSession.valueInt(): Long {
 }
 
 fun SmileDecoderSession.valueString(): String {
-    return when (val token = peekValueToken()) {
+    val token = peekValueToken()
+    return when (token) {
         LongAscii -> valueLongAscii()
         SimpleLiteralEmptyString -> valueEmptyString()
         LongUnicode -> valueLongUnicode()
@@ -38,6 +41,8 @@ fun SmileDecoderSession.valueString(): String {
         ShortUnicode -> valueShortUnicode()
         TinyAscii -> valueTinyAscii()
         TinyUnicode -> valueTinyUnicode()
+        ShortSharedValue -> shortSharedValue()
+        LongSharedValue -> longSharedValue()
         else -> error("Unexpected token $token")
     }
 }

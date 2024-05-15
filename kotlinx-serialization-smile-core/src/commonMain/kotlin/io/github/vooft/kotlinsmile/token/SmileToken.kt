@@ -31,6 +31,8 @@ object SmileTokensHolder {
         SmileValueToken.StartArrayMarker,
         SmileValueToken.EndArrayMarker,
         SmileValueToken.StartObjectMarker,
+        SmileValueToken.ShortSharedValue,
+        SmileValueToken.LongSharedValue,
     )
 
     val KEY_TOKENS: List<SmileKeyToken> = listOf(
@@ -133,6 +135,15 @@ sealed class SmileValueToken(tokenRange: IntRange) : SmileToken(tokenRange) {
 
     // StartObject is a value, EndObject is a key
     object StartObjectMarker : SmileValueFirstByteToken(0xFA..0xFA)
+
+    object ShortSharedValue : SmileValueToken(0x00..0x1F) {
+        val offset = tokenRange.first.toByte()
+    }
+
+    object LongSharedValue : SmileValueToken(0xEC..0xEF) {
+        val VALUES_RANGE = 31..1024
+        val idOffset = 1 // shared value index starts from 32, but the value is 31
+    }
 }
 
 sealed class SmileKeyToken(tokenRange: IntRange) : SmileToken(tokenRange) {
@@ -164,7 +175,7 @@ sealed class SmileKeyToken(tokenRange: IntRange) : SmileToken(tokenRange) {
 
     object LongSharedKey : SmileKeyStringToken, SmileKeyToken(0x30..0x33) {
         val firstByte = tokenRange.first.toByte()
-        val VALUES_RANGE = 65..1024
+        val VALUES_RANGE = 64..<1024
     }
 
     // EndObject is more of a key marker, rather than value marker

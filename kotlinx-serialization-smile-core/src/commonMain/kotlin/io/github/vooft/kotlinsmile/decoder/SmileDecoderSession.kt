@@ -5,6 +5,8 @@ import io.github.vooft.kotlinsmile.adapter.decoder.common.peekValueToken
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
 import io.github.vooft.kotlinsmile.decoder.keys.KeyStringReader
 import io.github.vooft.kotlinsmile.decoder.keys.KeyStringReaderSession
+import io.github.vooft.kotlinsmile.decoder.keys.SharedKeyStringReader
+import io.github.vooft.kotlinsmile.decoder.keys.SharedKeyStringReaderSession
 import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReader
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReaderSession
@@ -14,8 +16,8 @@ import io.github.vooft.kotlinsmile.decoder.values.FloatReader
 import io.github.vooft.kotlinsmile.decoder.values.FloatReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.IntegerReader
 import io.github.vooft.kotlinsmile.decoder.values.IntegerReaderSession
-import io.github.vooft.kotlinsmile.decoder.values.SharedStringReader
-import io.github.vooft.kotlinsmile.decoder.values.SharedStringReaderSession
+import io.github.vooft.kotlinsmile.decoder.values.SharedValueStringReader
+import io.github.vooft.kotlinsmile.decoder.values.SharedValueStringReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.ValueLongStringReader
 import io.github.vooft.kotlinsmile.decoder.values.ValueLongStringReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.ValueShortStringReader
@@ -34,7 +36,8 @@ class SmileDecoderSession(private val iterator: ByteArrayIterator, private val s
     ValueLongStringReader by ValueLongStringReaderSession(iterator),
     ValueSimpleLiteralReader by ValueSimpleLiteralReaderSession(iterator),
     BinaryReader by BinaryReaderSession(iterator),
-    SharedStringReader by SharedStringReaderSession(iterator, sharedStorage) {
+    SharedKeyStringReader by SharedKeyStringReaderSession(iterator, sharedStorage),
+    SharedValueStringReader by SharedValueStringReaderSession(iterator, sharedStorage) {
 
     fun skip() {
         iterator.next()
