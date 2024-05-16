@@ -21,12 +21,11 @@ class DecodingValueHolderImpl : DecodingValueHolder {
         }
 
         val newIndex = valuesList.size
-//        if (!isJacksonValidIndex(newIndex)) {
-//            val invalidString = nextInvalidString()
-//            valueToId[invalidString] = valuesList.size
-//            valuesList.add(invalidString)
-//            return newIndex
-//        }
+        if (!isJacksonValidIndex(newIndex)) {
+            valueToId[INVALID_STRING] = valuesList.size
+            valuesList.add(INVALID_STRING)
+            return newIndex
+        }
 
         valueToId[value] = newIndex
         valuesList.add(value)
@@ -35,9 +34,6 @@ class DecodingValueHolderImpl : DecodingValueHolder {
     }
 
     override fun get(id: Int): String {
-//        if (!isJacksonValidIndex(id)) {
-//            return nextInvalidString()
-//        }
         return valuesList[id]
     }
 }
@@ -47,9 +43,7 @@ private fun isJacksonValidIndex(index: Int): Boolean {
     return (index and 0xFF) < 0xFE
 }
 
-private var invalidStringCounter = 0
-private val invalidStringPrefix = "a".repeat(65)
-private fun nextInvalidString() = invalidStringPrefix + invalidStringCounter++
+private val INVALID_STRING = "a".repeat(65) // 64 is the maximum length for a stored string
 
 class DisabledDecodingValueHolder(private val storageType: StorageType) : DecodingValueHolder {
     override fun store(value: String): Int = -1

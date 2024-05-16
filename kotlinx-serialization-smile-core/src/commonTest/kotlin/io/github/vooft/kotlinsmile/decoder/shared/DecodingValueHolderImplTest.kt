@@ -2,6 +2,8 @@ package io.github.vooft.kotlinsmile.decoder.shared
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldHaveLength
 import kotlin.random.Random
 import kotlin.test.Test
 
@@ -44,8 +46,46 @@ class DecodingValueHolderImplTest {
     }
 
     @Test
+    fun should_fake_insert_on_254_255() {
+        var counter = 0
+        repeat(254) { holder.store((counter++).toString()) }
+
+        val value254 = "254"
+        holder.store(value254) shouldBe 254
+        holder.get(254) shouldNotBe value254 shouldHaveLength 65
+
+        val value255 = "255"
+        holder.store(value255) shouldBe 255
+        holder.get(255) shouldNotBe value255 shouldHaveLength 65
+
+        val value256 = "256"
+        holder.store(value256) shouldBe 256
+        holder.get(256) shouldBe value256
+    }
+
+    @Test
+    fun should_insert_again_after_fake_insert() {
+        var counter = 0
+        repeat(254) { holder.store((counter++).toString()) }
+
+        val value254 = "254"
+        holder.store(value254) shouldBe 254
+
+        val value255 = "255"
+        holder.store(value255) shouldBe 255
+
+        holder.store(value254) shouldBe 256
+        holder.get(256) shouldBe value254
+
+        holder.store(value255) shouldBe 257
+        holder.get(257) shouldBe value255
+    }
+
+    @Test
     fun should_reset_on_1024_items() {
         val maxStorageSize = 1024
+
+        val ignoredIndexes = listOf(254, 255, 510, 511, 766, 767, 1022)
 
         // fill storage up to 1023
         for (i in 0..<(maxStorageSize - 1)) {
@@ -54,7 +94,10 @@ class DecodingValueHolderImplTest {
             val id = holder.store(value)
 
             id shouldBe i
-            holder.get(id) shouldBe value
+            when (id) {
+                in ignoredIndexes -> holder.get(id) shouldNotBe value shouldHaveLength 65
+                else -> holder.get(id) shouldBe value
+            }
         }
 
         // verify that can insert one more

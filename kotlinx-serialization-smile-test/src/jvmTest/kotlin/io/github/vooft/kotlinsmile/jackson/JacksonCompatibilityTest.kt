@@ -93,7 +93,10 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(ObjectWithLargeNestedObjects()),
         ObjWithSerializer(ObjectWithMoreThan1024Fields()),
         ObjWithSerializer(ObjectWithRepeatedKeys()),
-        ObjWithSerializer(ObjectWithRepeatedKeysAndValues())
+        ObjWithSerializer(ObjectWithRepeatedKeysAndValues()),
+        ObjWithSerializer(ObjectWithFieldsFrom1To1000()),
+        ObjWithSerializer(List(10) { ObjectWithFieldsFrom1To1000() }, "list with 10 objects with 1000 fields"),
+        ObjWithSerializer(ObjectWithFieldsFrom1To2000())
     )
 
     val allTestCases = basicTestCases +
@@ -201,7 +204,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         }
     }
 
-    context("should deserialize object with shared values") {
+    context("should deserialize object with list with shared values") {
         val smileMapperWithSharedNames = ObjectMapper(
             SmileFactory.builder()
 //            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
@@ -213,9 +216,11 @@ class JacksonCompatibilityTest : ShouldSpec({
         withData(
             nameFn = { it.name ?: it.obj::class.simpleName!! },
             ts = listOf(
-//                ObjWithSerializer(ObjectWithList(32), "one long index"),
-//                ObjWithSerializer(ObjectWithList(100), "many long indexes"),
-                ObjWithSerializer(ObjectWithList(255), "many long indexes"),
+                ObjWithSerializer(ObjectWithList(32), "one long index"),
+                ObjWithSerializer(ObjectWithList(100), "many long indexes"),
+                ObjWithSerializer(ObjectWithList(255), "right on ignored value"),
+                ObjWithSerializer(ObjectWithList(1000), "almost at overflow"),
+                ObjWithSerializer(ObjectWithList(2000), "after overflow"),
             )
         ) {
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
