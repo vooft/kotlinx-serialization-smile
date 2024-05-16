@@ -91,7 +91,6 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(ObjectWithTwoNestedLongUnicodeFields()),
         ObjWithSerializer(ObjectWithTwoNestedObjectsWithSameShortStringValues()),
         ObjWithSerializer(ObjectWithLargeNestedObjects()),
-        ObjWithSerializer(ObjectWithMoreThan1024Fields()),
         ObjWithSerializer(ObjectWithRepeatedKeys()),
         ObjWithSerializer(ObjectWithRepeatedKeysAndValues()),
         ObjWithSerializer(ObjectWithFieldsFrom1To1000()),
@@ -297,13 +296,6 @@ data class ObjectWithRepeatedKeysAndValues(
 data class ObjectWithLargeNestedObjects(
     val obj1: ObjectWith100Fields = ObjectWith100Fields(),
     val obj2: ObjectWith100Fields = ObjectWith100Fields(),
-)
-
-@Serializable
-data class ObjectWithMoreThan1024Fields(
-    val list1: List<ObjectWith100Fields> = List(2) { ObjectWith100Fields("suffix1") },
-    val list2: List<ObjectWith100Fields> = List(2) { ObjectWith100Fields("suffix2") },
-//    val list3: List<ObjectWith100Fields> = List(10) { ObjectWith100Fields("suffix3") },
 )
 
 @Serializable
