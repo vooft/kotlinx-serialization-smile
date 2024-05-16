@@ -15,7 +15,7 @@ class DecodingSmileSharedStorageImpl(shareKeys: Boolean, shareValues: Boolean) :
     }
 
     private val values: DecodingValueHolder = when (shareValues) {
-        true -> DecodingValueHolderImpl(indexOffset = 1) // index 0 is not used currently
+        true -> DecodingValueHolderImpl()
         false -> DisabledDecodingValueHolder(StorageType.VALUES)
     }
 

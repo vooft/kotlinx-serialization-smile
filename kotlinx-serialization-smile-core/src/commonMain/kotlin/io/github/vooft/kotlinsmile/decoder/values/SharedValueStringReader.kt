@@ -18,14 +18,15 @@ class SharedValueStringReaderSession(
 
     override fun shortSharedValue(): String {
         val byte = iterator.next()
-        require(byte in ShortSharedValue) { "Invalid token for short shared value: ${byte.toUByte().toString(16)}" }
 
         if (byte == 0.toByte()) {
             throw InvalidSmileSpecImplementationException("Current Smile spec doesn't allow shared string index 0")
         }
 
-        val id = byte.toUByte() - ShortSharedValue.offset.toUByte()
-        return sharedStorage.getValue(id.toInt())
+        require(byte in ShortSharedValue) { "Invalid token for short shared value: ${byte.toUByte().toString(16)}" }
+
+        val id = (byte.toInt() and 0xFF) - ShortSharedValue.offset
+        return sharedStorage.getValue(id)
     }
 
     override fun longSharedValue(): String {
@@ -39,7 +40,7 @@ class SharedValueStringReaderSession(
 
         require(id in LongSharedValue.VALUES_RANGE) { "Invalid value for long shared value: $id, allowed: ${LongSharedValue.VALUES_RANGE}" }
 
-        return sharedStorage.getValue(id + LongSharedValue.idOffset)
+        return sharedStorage.getValue(id)
     }
 }
 

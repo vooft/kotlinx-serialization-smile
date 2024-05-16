@@ -10,6 +10,7 @@ import io.github.vooft.kotlinsmile.SmileMessage
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ThreadLocalRandom
@@ -90,9 +91,11 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(ObjectWithTwoNestedLongUnicodeFields()),
         ObjWithSerializer(ObjectWithTwoNestedObjectsWithSameShortStringValues()),
         ObjWithSerializer(ObjectWithLargeNestedObjects()),
-        ObjWithSerializer(ObjectWithMoreThan1024Fields()),
         ObjWithSerializer(ObjectWithRepeatedKeys()),
-        ObjWithSerializer(ObjectWithRepeatedKeysAndValues())
+        ObjWithSerializer(ObjectWithRepeatedKeysAndValues()),
+        ObjWithSerializer(ObjectWithFieldsFrom1To1000()),
+        ObjWithSerializer(List(10) { ObjectWithFieldsFrom1To1000() }, "list with 10 objects with 1000 fields"),
+        ObjWithSerializer(ObjectWithFieldsFrom1To2000())
     )
 
     val allTestCases = basicTestCases +
@@ -200,7 +203,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         }
     }
 
-    context("should deserialize object with shared values") {
+    context("should deserialize object with list with shared values") {
         val smileMapperWithSharedNames = ObjectMapper(
             SmileFactory.builder()
 //            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
@@ -209,15 +212,24 @@ class JacksonCompatibilityTest : ShouldSpec({
                 .build()
         ).findAndRegisterModules()
 
-        withData<ObjWithSerializer<*>>(
-            nameFn = { it.name ?: it.obj!!::class.simpleName!! },
-            ts = allTestCases
+        withData(
+            nameFn = { it.name ?: it.obj::class.simpleName!! },
+            ts = listOf(
+                ObjWithSerializer(ObjectWithList(32), "one long index"),
+                ObjWithSerializer(ObjectWithList(100), "many long indexes"),
+                ObjWithSerializer(ObjectWithList(255), "right on ignored value"),
+                ObjWithSerializer(ObjectWithList(1000), "almost at overflow"),
+                ObjWithSerializer(ObjectWithList(2000), "after overflow"),
+            )
         ) {
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
 
             val actual = Smile.decode(it.serializer, encoded)
-            actual shouldBe it.obj
+            withClue("list1") { actual.list1 shouldContainExactly it.obj.list1 }
+            withClue("list2") { actual.list2 shouldContainExactly it.obj.list2 }
+            withClue("list3") { actual.list3 shouldContainExactly it.obj.list3 }
+            withClue("list4") { actual.list4 shouldContainExactly it.obj.list4 }
         }
     }
 
@@ -287,10 +299,12 @@ data class ObjectWithLargeNestedObjects(
 )
 
 @Serializable
-data class ObjectWithMoreThan1024Fields(
-    val list1: List<ObjectWith100Fields> = List(10) { ObjectWith100Fields("suffix1") },
-    val list2: List<ObjectWith100Fields> = List(10) { ObjectWith100Fields("suffix2") },
-    val list3: List<ObjectWith100Fields> = List(10) { ObjectWith100Fields("suffix3") },
+data class ObjectWithList(
+    val size: Int,
+    val list1: List<String> = List(size) { "string-$it" },
+    val list2: List<String> = list1,
+    val list3: List<String> = list1,
+    val list4: List<String> = list1
 )
 
 @Serializable
