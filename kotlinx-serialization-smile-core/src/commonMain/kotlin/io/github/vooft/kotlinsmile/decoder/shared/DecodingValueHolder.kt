@@ -1,44 +1,58 @@
 package io.github.vooft.kotlinsmile.decoder.shared
 
 interface DecodingValueHolder {
-    fun store(key: String): Int
+    fun store(value: String): Int
     fun get(id: Int): String
 }
 
-class DecodingValueHolderImpl(private val indexOffset: Int = 0) : DecodingValueHolder {
-    private val valueToId = mutableMapOf<String, Int>().apply { repeat(indexOffset) { put("INVALID_STRING", it) } }
-    private val valuesList = mutableListOf<String>().apply { repeat(indexOffset) { add("INVALID_STRING") } }
+class DecodingValueHolderImpl : DecodingValueHolder {
+    private val valueToId = mutableMapOf<String, Int>()
+    private val valuesList = mutableListOf<String>()
 
-    override fun store(key: String): Int {
+    override fun store(value: String): Int {
         if (valuesList.size >= MAX_STORAGE_SIZE) {
-            valuesList.apply {
-                clear()
-                repeat(indexOffset) { add("INVALID_STRING") }
-            }
-            valueToId.apply {
-                clear()
-                repeat(indexOffset) { put("INVALID_STRING", it) }
-            }
+            valuesList.clear()
+            valueToId.clear()
         }
 
-        val existingIndex = valueToId[key]
+        val existingIndex = valueToId[value]
         if (existingIndex != null) {
             return existingIndex
         }
 
         val newIndex = valuesList.size
+//        if (!isJacksonValidIndex(newIndex)) {
+//            val invalidString = nextInvalidString()
+//            valueToId[invalidString] = valuesList.size
+//            valuesList.add(invalidString)
+//            return newIndex
+//        }
 
-        valueToId[key] = newIndex
-        valuesList.add(key)
+        valueToId[value] = newIndex
+        valuesList.add(value)
 
         return newIndex
     }
 
-    override fun get(id: Int): String = valuesList[id]
+    override fun get(id: Int): String {
+//        if (!isJacksonValidIndex(id)) {
+//            return nextInvalidString()
+//        }
+        return valuesList[id]
+    }
 }
 
+// logic copied from Jackson in order to be compatible https://github.com/FasterXML/jackson-dataformats-binary/issues/495
+private fun isJacksonValidIndex(index: Int): Boolean {
+    return (index and 0xFF) < 0xFE
+}
+
+private var invalidStringCounter = 0
+private val invalidStringPrefix = "a".repeat(65)
+private fun nextInvalidString() = invalidStringPrefix + invalidStringCounter++
+
 class DisabledDecodingValueHolder(private val storageType: StorageType) : DecodingValueHolder {
-    override fun store(key: String): Int = -1
+    override fun store(value: String): Int = -1
     override fun get(id: Int): String = throw StorageDisabledException(storageType)
 }
 

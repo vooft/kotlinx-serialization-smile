@@ -24,8 +24,8 @@ class SharedValueStringReaderSession(
             throw InvalidSmileSpecImplementationException("Current Smile spec doesn't allow shared string index 0")
         }
 
-        val id = byte.toUByte() - ShortSharedValue.offset.toUByte()
-        return sharedStorage.getValue(id.toInt())
+        val id = byte.toInt() and 0xFF // - ShortSharedValue.offset.toUByte()
+        return sharedStorage.getValue(id)
     }
 
     override fun longSharedValue(): String {
@@ -39,7 +39,8 @@ class SharedValueStringReaderSession(
 
         require(id in LongSharedValue.VALUES_RANGE) { "Invalid value for long shared value: $id, allowed: ${LongSharedValue.VALUES_RANGE}" }
 
-        return sharedStorage.getValue(id + LongSharedValue.idOffset)
+        // + 1 because short starts with 1
+        return runCatching { sharedStorage.getValue(id + 1) }.getOrNull() ?: "FAILED_STRING_LOOKUP"
     }
 }
 

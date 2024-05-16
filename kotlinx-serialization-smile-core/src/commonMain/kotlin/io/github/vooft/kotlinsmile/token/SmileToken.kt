@@ -136,7 +136,7 @@ sealed class SmileValueToken(tokenRange: IntRange) : SmileToken(tokenRange) {
     // StartObject is a value, EndObject is a key
     object StartObjectMarker : SmileValueFirstByteToken(0xFA..0xFA)
 
-    object ShortSharedValue : SmileValueToken(0x00..0x1F) {
+    object ShortSharedValue : SmileValueToken(0x01..0x1F) {
         val offset = tokenRange.first.toByte()
     }
 

@@ -33,6 +33,7 @@ fun SmileDecoderSession.valueInt(): Long {
 
 fun SmileDecoderSession.valueString(): String {
     val token = peekValueToken()
+    println("decoding $token")
     return when (token) {
         LongAscii -> valueLongAscii()
         SimpleLiteralEmptyString -> valueEmptyString()
