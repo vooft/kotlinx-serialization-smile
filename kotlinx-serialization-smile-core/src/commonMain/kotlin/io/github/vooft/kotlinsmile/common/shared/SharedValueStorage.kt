@@ -1,11 +1,12 @@
-package io.github.vooft.kotlinsmile.decoder.shared
+package io.github.vooft.kotlinsmile.common.shared
 
-interface DecodingValueHolder {
+interface SharedValueStorage {
     fun store(value: String): Int
-    fun get(id: Int): String
+    fun lookup(value: String): Int?
+    fun getById(id: Int): String
 }
 
-class DecodingValueHolderImpl : DecodingValueHolder {
+class SharedValueStorageImpl : SharedValueStorage {
     private val valueToId = mutableMapOf<String, Int>()
     private val valuesList = mutableListOf<String>()
 
@@ -23,16 +24,17 @@ class DecodingValueHolderImpl : DecodingValueHolder {
         val newIndex = valuesList.size
         if (!isJacksonValidIndex(newIndex)) {
             valuesList.add("") // put an empty string to avoid this index
-            return newIndex
+        } else {
+            valueToId[value] = newIndex
+            valuesList.add(value)
         }
-
-        valueToId[value] = newIndex
-        valuesList.add(value)
 
         return newIndex
     }
 
-    override fun get(id: Int): String {
+    override fun lookup(value: String): Int? = valueToId[value]
+
+    override fun getById(id: Int): String {
         return valuesList[id]
     }
 }
@@ -42,9 +44,10 @@ private fun isJacksonValidIndex(index: Int): Boolean {
     return (index and 0xFF) < 0xFE
 }
 
-class DisabledDecodingValueHolder(private val storageType: StorageType) : DecodingValueHolder {
+class DisabledSharedValueStorage(private val storageType: StorageType) : SharedValueStorage {
     override fun store(value: String): Int = -1
-    override fun get(id: Int): String = throw StorageDisabledException(storageType)
+    override fun lookup(value: String): Int? = null
+    override fun getById(id: Int): String = throw StorageDisabledException(storageType)
 }
 
 class StorageDisabledException(storageType: StorageType) : IllegalStateException("Shared storage for $storageType is disabled")

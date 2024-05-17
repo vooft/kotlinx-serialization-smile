@@ -1,8 +1,8 @@
 package io.github.vooft.kotlinsmile.encoder.keys
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorageImpl
 import io.github.vooft.kotlinsmile.common.toSmile
-import io.github.vooft.kotlinsmile.encoder.shared.EncodingSmileSharedStorageImpl
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
@@ -10,7 +10,7 @@ import kotlin.test.Test
 class KeyStringWriterSessionTest {
 
     private val builder = ByteArrayBuilder()
-    private val sharedStorage = EncodingSmileSharedStorageImpl(shareKeys = true, shareValues = true)
+    private val sharedStorage = SmileSharedStorageImpl(shareKeys = true, shareValues = true)
     private val writer = KeyStringWriterSession(builder, sharedStorage)
 
     @Test

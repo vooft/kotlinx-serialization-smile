@@ -6,7 +6,7 @@ import io.github.vooft.kotlinsmile.common.length
 import io.github.vooft.kotlinsmile.common.requireAscii
 import io.github.vooft.kotlinsmile.common.requireLength
 import io.github.vooft.kotlinsmile.common.requireUnicode
-import io.github.vooft.kotlinsmile.encoder.shared.EncodingSmileSharedStorage
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
@@ -20,7 +20,7 @@ interface KeyStringWriter {
 
 class KeyStringWriterSession(
     private val builder: ByteArrayBuilder,
-    private val sharedStorage: EncodingSmileSharedStorage
+    private val sharedStorage: SmileSharedStorage
 ) : KeyStringWriter {
     override fun keyShortAscii(value: SmileString) {
         value.requireLength(KeyShortAscii.BYTE_LENGTHS)

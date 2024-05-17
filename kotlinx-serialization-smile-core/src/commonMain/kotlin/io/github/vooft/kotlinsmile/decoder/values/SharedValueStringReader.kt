@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.decoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
-import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongSharedValue
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortSharedValue
 import io.github.vooft.kotlinsmile.token.contains
@@ -13,7 +13,7 @@ interface SharedValueStringReader {
 
 class SharedValueStringReaderSession(
     private val iterator: ByteArrayIterator,
-    private val sharedStorage: DecodingSmileSharedStorage
+    private val sharedStorage: SmileSharedStorage
 ) : SharedValueStringReader {
 
     override fun shortSharedValue(): String {
@@ -26,7 +26,7 @@ class SharedValueStringReaderSession(
         require(byte in ShortSharedValue) { "Invalid token for short shared value: ${byte.toUByte().toString(16)}" }
 
         val id = (byte.toInt() and 0xFF) - ShortSharedValue.offset
-        return sharedStorage.getValue(id)
+        return sharedStorage.getValueById(id)
     }
 
     override fun longSharedValue(): String {
@@ -40,7 +40,7 @@ class SharedValueStringReaderSession(
 
         require(id in LongSharedValue.VALUES_RANGE) { "Invalid value for long shared value: $id, allowed: ${LongSharedValue.VALUES_RANGE}" }
 
-        return sharedStorage.getValue(id)
+        return sharedStorage.getValueById(id)
     }
 }
 

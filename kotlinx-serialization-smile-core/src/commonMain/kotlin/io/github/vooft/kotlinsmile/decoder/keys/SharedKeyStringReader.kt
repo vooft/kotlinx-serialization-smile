@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.decoder.keys
 
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
-import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.LongSharedKey
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.ShortSharedKey
 import io.github.vooft.kotlinsmile.token.contains
@@ -13,14 +13,14 @@ interface SharedKeyStringReader {
 
 class SharedKeyStringReaderSession(
     private val iterator: ByteArrayIterator,
-    private val sharedStorage: DecodingSmileSharedStorage
+    private val sharedStorage: SmileSharedStorage
 ) : SharedKeyStringReader {
     override fun shortSharedKey(): String {
         val byte = iterator.next()
         require(byte in ShortSharedKey) { "Invalid token for short shared key: ${byte.toUByte().toString(16)}" }
 
         val id = byte.toUByte() - ShortSharedKey.offset.toUByte()
-        return sharedStorage.getKey(id.toInt())
+        return sharedStorage.getKeyById(id.toInt())
     }
 
     override fun longSharedKey(): String {
@@ -34,7 +34,7 @@ class SharedKeyStringReaderSession(
 
         require(id in LongSharedKey.VALUES_RANGE) { "Invalid value for long shared key: $id, allowed: ${LongSharedKey.VALUES_RANGE}" }
 
-        return sharedStorage.getKey(id)
+        return sharedStorage.getKeyById(id)
     }
 }
 

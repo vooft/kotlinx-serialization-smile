@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.encoder.keys
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
-import io.github.vooft.kotlinsmile.encoder.shared.EncodingSmileSharedStorage
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.LongSharedKey
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.ShortSharedKey
 import kotlin.experimental.or
@@ -13,7 +13,7 @@ interface SharedKeyStringWriter {
 
 class SharedKeyStringWriterSession(
     private val builder: ByteArrayBuilder,
-    private val sharedStorage: EncodingSmileSharedStorage
+    private val sharedStorage: SmileSharedStorage
 ) : SharedKeyStringWriter {
 
     override fun keyShared(key: String) {

@@ -1,12 +1,12 @@
 package io.github.vooft.kotlinsmile.encoder
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.github.vooft.kotlinsmile.encoder.keys.DecidingSharedKeyStringWriter
 import io.github.vooft.kotlinsmile.encoder.keys.KeyStringWriter
 import io.github.vooft.kotlinsmile.encoder.keys.KeyStringWriterSession
 import io.github.vooft.kotlinsmile.encoder.keys.SharedKeyStringWriter
 import io.github.vooft.kotlinsmile.encoder.keys.SharedKeyStringWriterSession
-import io.github.vooft.kotlinsmile.encoder.shared.EncodingSmileSharedStorage
 import io.github.vooft.kotlinsmile.encoder.structure.HeaderWriter
 import io.github.vooft.kotlinsmile.encoder.structure.HeaderWriterSession
 import io.github.vooft.kotlinsmile.encoder.structure.StructuralWriter
@@ -24,7 +24,7 @@ import io.github.vooft.kotlinsmile.encoder.values.ValueShortStringWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.ValueSimpleLiteralWriter
 import io.github.vooft.kotlinsmile.encoder.values.ValueSimpleLiteralWriterSession
 
-class SmileEncoderSession(private val builder: ByteArrayBuilder, private val sharedStorage: EncodingSmileSharedStorage) :
+class SmileEncoderSession(private val builder: ByteArrayBuilder, private val sharedStorage: SmileSharedStorage) :
     HeaderWriter by HeaderWriterSession(builder),
     IntegerWriter by IntegerWriterSession(builder),
     FloatWriter by FloatWriterSession(builder),

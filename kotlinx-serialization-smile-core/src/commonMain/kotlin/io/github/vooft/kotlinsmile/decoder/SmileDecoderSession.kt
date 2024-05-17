@@ -3,11 +3,11 @@ package io.github.vooft.kotlinsmile.decoder
 import io.github.vooft.kotlinsmile.adapter.decoder.common.peekKeyToken
 import io.github.vooft.kotlinsmile.adapter.decoder.common.peekValueToken
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.github.vooft.kotlinsmile.decoder.keys.KeyStringReader
 import io.github.vooft.kotlinsmile.decoder.keys.KeyStringReaderSession
 import io.github.vooft.kotlinsmile.decoder.keys.SharedKeyStringReader
 import io.github.vooft.kotlinsmile.decoder.keys.SharedKeyStringReaderSession
-import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReader
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReaderSession
 import io.github.vooft.kotlinsmile.decoder.values.BinaryReader
@@ -27,7 +27,7 @@ import io.github.vooft.kotlinsmile.decoder.values.ValueSimpleLiteralReaderSessio
 import io.github.vooft.kotlinsmile.token.SmileKeyToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken
 
-class SmileDecoderSession(private val iterator: ByteArrayIterator, private val sharedStorage: DecodingSmileSharedStorage) :
+class SmileDecoderSession(private val iterator: ByteArrayIterator, private val sharedStorage: SmileSharedStorage) :
     HeaderReader by HeaderReaderSession(iterator),
     KeyStringReader by KeyStringReaderSession(iterator, sharedStorage),
     IntegerReader by IntegerReaderSession(iterator),
