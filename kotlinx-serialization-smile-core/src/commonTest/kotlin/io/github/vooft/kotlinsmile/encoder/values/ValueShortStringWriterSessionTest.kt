@@ -1,19 +1,23 @@
 package io.github.vooft.kotlinsmile.encoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorageImpl
 import io.github.vooft.kotlinsmile.common.toSmile
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import kotlin.test.Test
 
 class ValueShortStringWriterSessionTest {
     
     private val builder = ByteArrayBuilder()
-    private val writer = ValueShortStringWriterSession(builder)
+    private val sharedStorage = SmileSharedStorageImpl(shareKeys = false, shareValues = true)
+    private val writer = ValueShortStringWriterSession(builder, sharedStorage)
 
     @Test
     fun should_write_tiny_ascii() {
-        writer.valueTinyAscii("test123".toSmile())
+        val value = "test123"
+        writer.valueTinyAscii(value.toSmile())
 
         val expected = byteArrayOf(
             0x46.toByte(), // 0x40 offset + 6 length (starting from 1)
@@ -23,6 +27,7 @@ class ValueShortStringWriterSessionTest {
         val actual = builder.toByteArray()
 
         actual shouldBe expected
+        sharedStorage.lookupValue(value) shouldNotBe null
     }
 
     @Test
@@ -57,6 +62,7 @@ class ValueShortStringWriterSessionTest {
         val actual = builder.toByteArray()
 
         actual shouldBe expected
+        sharedStorage.lookupValue(value) shouldNotBe null
     }
 
     @Test
@@ -82,7 +88,8 @@ class ValueShortStringWriterSessionTest {
 
     @Test
     fun should_write_tiny_unicode() {
-        writer.valueTinyUnicode("hello $THREE_BYTE_CHAR".toSmile())
+        val value = "hello $THREE_BYTE_CHAR"
+        writer.valueTinyUnicode(value.toSmile())
 
         val expected = byteArrayOf(
             0x87.toByte(),
@@ -92,6 +99,7 @@ class ValueShortStringWriterSessionTest {
         val actual = builder.toByteArray()
 
         actual shouldBe expected
+        sharedStorage.lookupValue(value) shouldNotBe null
     }
 
     @Test
@@ -110,7 +118,8 @@ class ValueShortStringWriterSessionTest {
 
     @Test
     fun should_write_short_unicode() {
-        writer.valueShortUnicode(THREE_BYTE_CHAR.repeat(15).toSmile())
+        val value = THREE_BYTE_CHAR.repeat(15)
+        writer.valueShortUnicode(value.toSmile())
 
         val expected = byteArrayOf(
             0xAB.toByte(),
@@ -120,6 +129,7 @@ class ValueShortStringWriterSessionTest {
         val actual = builder.toByteArray()
 
         actual shouldBe expected
+        sharedStorage.lookupValue(value) shouldNotBe null
     }
 
     @Test

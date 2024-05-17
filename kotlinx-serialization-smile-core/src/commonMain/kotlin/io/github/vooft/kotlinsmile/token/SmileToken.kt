@@ -141,6 +141,7 @@ sealed class SmileValueToken(tokenRange: IntRange) : SmileToken(tokenRange) {
     }
 
     object LongSharedValue : SmileValueToken(0xEC..0xEF) {
+        val firstByte = tokenRange.first.toByte()
         val VALUES_RANGE = 31..1024
     }
 }

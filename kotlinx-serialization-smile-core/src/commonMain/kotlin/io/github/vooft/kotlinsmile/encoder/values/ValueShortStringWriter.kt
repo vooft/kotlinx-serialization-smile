@@ -6,6 +6,7 @@ import io.github.vooft.kotlinsmile.common.length
 import io.github.vooft.kotlinsmile.common.requireAscii
 import io.github.vooft.kotlinsmile.common.requireLength
 import io.github.vooft.kotlinsmile.common.requireUnicode
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmileValueShortStringToken
@@ -19,7 +20,10 @@ interface ValueShortStringWriter {
     fun valueShortUnicode(value: SmileString)
 }
 
-class ValueShortStringWriterSession(private val builder: ByteArrayBuilder) : ValueShortStringWriter {
+class ValueShortStringWriterSession(
+    private val builder: ByteArrayBuilder,
+    private val sharedStorage: SmileSharedStorage
+) : ValueShortStringWriter {
 
     override fun valueTinyAscii(value: SmileString) = TinyAscii.append(value)
     override fun valueShortAscii(value: SmileString) = ShortAscii.append(value)
@@ -34,8 +38,35 @@ class ValueShortStringWriterSession(private val builder: ByteArrayBuilder) : Val
             value.requireAscii()
         }
 
+        sharedStorage.storeValue(value.value)
+
         val writtenLength = value.length - lengths.first
         builder.append(byte = writtenLength.toByte(), offset = offset)
         builder.append(value.encoded)
+    }
+}
+
+class DecidingValueShortStringWriter(
+    private val delegate: ValueShortStringWriter,
+    private val sharedValueShortStringWriter: SharedValueShortStringWriter
+) : ValueShortStringWriter {
+    override fun valueTinyAscii(value: SmileString) = when (sharedValueShortStringWriter.hasValue(value.value)) {
+        true -> sharedValueShortStringWriter.valueShared(value.value)
+        false -> delegate.valueTinyAscii(value)
+    }
+
+    override fun valueShortAscii(value: SmileString) = when (sharedValueShortStringWriter.hasValue(value.value)) {
+        true -> sharedValueShortStringWriter.valueShared(value.value)
+        false -> delegate.valueShortAscii(value)
+    }
+
+    override fun valueTinyUnicode(value: SmileString) = when (sharedValueShortStringWriter.hasValue(value.value)) {
+        true -> sharedValueShortStringWriter.valueShared(value.value)
+        false -> delegate.valueTinyUnicode(value)
+    }
+
+    override fun valueShortUnicode(value: SmileString) = when (sharedValueShortStringWriter.hasValue(value.value)) {
+        true -> sharedValueShortStringWriter.valueShared(value.value)
+        false -> delegate.valueShortUnicode(value)
     }
 }

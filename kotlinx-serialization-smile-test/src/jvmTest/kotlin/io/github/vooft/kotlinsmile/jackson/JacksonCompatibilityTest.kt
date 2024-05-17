@@ -16,6 +16,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ThreadLocalRandom
 
+// TODO: reorganize
 class JacksonCompatibilityTest : ShouldSpec({
     System.setProperty("kotest.assertions.collection.print.size", "10000")
 
@@ -185,6 +186,31 @@ class JacksonCompatibilityTest : ShouldSpec({
         }
     }
 
+    context("should serialize object with shared values") {
+        val smileMapperWithSharedNames = ObjectMapper(
+            SmileFactory.builder()
+//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, true)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, false)
+                .build()
+        ).findAndRegisterModules()
+
+        val smile = Smile(SmileConfig(shareStringValue = true, sharePropertyName = false))
+
+        withData<ObjWithSerializer<*>>(
+            nameFn = { it.name ?: it.obj!!::class.simpleName!! },
+            ts = allTestCases
+        ) {
+            val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
+            println(encoded.toHexString())
+
+            val actual = smile.encode(it)
+            println(actual.toHexString())
+
+            actual.toHexString().replace(',', '\n') shouldBe encoded.toHexString().replace(',', '\n')
+        }
+    }
+
     context("should deserialize object with shared names") {
         val smileMapperWithSharedNames = ObjectMapper(
             SmileFactory.builder()
@@ -233,6 +259,31 @@ class JacksonCompatibilityTest : ShouldSpec({
             withClue("list2") { actual.list2 shouldContainExactly it.obj.list2 }
             withClue("list3") { actual.list3 shouldContainExactly it.obj.list3 }
             withClue("list4") { actual.list4 shouldContainExactly it.obj.list4 }
+        }
+    }
+
+    context("should serialize object with shared names and values") {
+        val smileMapperWithSharedNames = ObjectMapper(
+            SmileFactory.builder()
+//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, true)
+                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, true)
+                .build()
+        ).findAndRegisterModules()
+
+        val smile = Smile(SmileConfig(shareStringValue = true, sharePropertyName = true))
+
+        withData<ObjWithSerializer<*>>(
+            nameFn = { it.name ?: it.obj!!::class.simpleName!! },
+            ts = allTestCases
+        ) {
+            val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
+            println(encoded.toHexString())
+
+            val actual = smile.encode(it)
+            println(actual.toHexString())
+
+            actual.toHexString().replace(',', '\n') shouldBe encoded.toHexString().replace(',', '\n')
         }
     }
 

@@ -13,10 +13,12 @@ import io.github.vooft.kotlinsmile.encoder.structure.StructuralWriter
 import io.github.vooft.kotlinsmile.encoder.structure.StructuralWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.BinaryWriter
 import io.github.vooft.kotlinsmile.encoder.values.BinaryWriterSession
+import io.github.vooft.kotlinsmile.encoder.values.DecidingValueShortStringWriter
 import io.github.vooft.kotlinsmile.encoder.values.FloatWriter
 import io.github.vooft.kotlinsmile.encoder.values.FloatWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.IntegerWriter
 import io.github.vooft.kotlinsmile.encoder.values.IntegerWriterSession
+import io.github.vooft.kotlinsmile.encoder.values.SharedValueShortStringWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.ValueLongStringWriter
 import io.github.vooft.kotlinsmile.encoder.values.ValueLongStringWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.ValueShortStringWriter
@@ -29,10 +31,13 @@ class SmileEncoderSession(private val builder: ByteArrayBuilder, private val sha
     IntegerWriter by IntegerWriterSession(builder),
     FloatWriter by FloatWriterSession(builder),
     StructuralWriter by StructuralWriterSession(builder),
-    ValueShortStringWriter by ValueShortStringWriterSession(builder),
     KeyStringWriter by DecidingSharedKeyStringWriter(
         delegate = KeyStringWriterSession(builder = builder, sharedStorage = sharedStorage),
         sharedKeyStringWriter = SharedKeyStringWriterSession(builder = builder, sharedStorage = sharedStorage)
+    ),
+    ValueShortStringWriter by DecidingValueShortStringWriter(
+        delegate = ValueShortStringWriterSession(builder, sharedStorage),
+        sharedValueShortStringWriter = SharedValueShortStringWriterSession(builder = builder, sharedStorage = sharedStorage)
     ),
     ValueLongStringWriter by ValueLongStringWriterSession(builder),
     ValueSimpleLiteralWriter by ValueSimpleLiteralWriterSession(builder),

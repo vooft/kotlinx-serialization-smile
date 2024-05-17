@@ -5,17 +5,19 @@ import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorageImpl
 import io.github.vooft.kotlinsmile.common.toSmile
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import kotlin.test.Test
 
 class KeyStringWriterSessionTest {
 
     private val builder = ByteArrayBuilder()
-    private val sharedStorage = SmileSharedStorageImpl(shareKeys = true, shareValues = true)
+    private val sharedStorage = SmileSharedStorageImpl(shareKeys = true, shareValues = false)
     private val writer = KeyStringWriterSession(builder, sharedStorage)
 
     @Test
     fun should_write_key_short_ascii() {
-        writer.keyShortAscii("test123".toSmile())
+        val key = "test123"
+        writer.keyShortAscii(key.toSmile())
 
         val expected = byteArrayOf(
             0x86.toByte(), // 0x80 offset + 6 length (starting from 1)
@@ -25,6 +27,7 @@ class KeyStringWriterSessionTest {
         val actual = builder.toByteArray()
 
         actual shouldBe expected
+        sharedStorage.lookupKey(key) shouldNotBe null
     }
 
     @Test
@@ -50,7 +53,8 @@ class KeyStringWriterSessionTest {
 
     @Test
     fun should_write_key_short_unicode() {
-        writer.keyShortUnicode("hello $THREE_BYTE_CHAR".toSmile())
+        val key = "hello $THREE_BYTE_CHAR"
+        writer.keyShortUnicode(key.toSmile())
 
         val expected = byteArrayOf(
             0xC7.toByte(), // 0x90 offset + 6 length (starting from 1)
@@ -60,6 +64,7 @@ class KeyStringWriterSessionTest {
         val actual = builder.toByteArray()
 
         actual shouldBe expected
+        sharedStorage.lookupKey(key) shouldNotBe null
     }
 
     @Test
@@ -79,7 +84,8 @@ class KeyStringWriterSessionTest {
     @Test
     fun should_encode_long_unicode() {
         val repeats = 25
-        writer.keyLongUnicode(THREE_BYTE_CHAR.repeat(repeats).toSmile())
+        val key = THREE_BYTE_CHAR.repeat(repeats)
+        writer.keyLongUnicode(key.toSmile())
 
         val encodedUnicode = THREE_BYTE_CHAR.encodeToByteArray().toList()
         val expected = byteArrayOf(
@@ -90,6 +96,7 @@ class KeyStringWriterSessionTest {
 
         val actual = builder.toByteArray()
         actual shouldBe expected
+        sharedStorage.lookupKey(key) shouldNotBe null
     }
 
     @Test
