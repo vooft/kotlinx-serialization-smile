@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.decoder.keys
 
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
-import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
@@ -16,7 +16,7 @@ interface KeyStringReader {
 
 class KeyStringReaderSession(
     private val iterator: ByteArrayIterator,
-    private val sharedStorage: DecodingSmileSharedStorage
+    private val sharedStorage: SmileSharedStorage
 ) : KeyStringReader {
     override fun keyShortAscii(): String {
         val byte = iterator.next()

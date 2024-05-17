@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.decoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
-import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmileValueShortStringToken
@@ -18,7 +18,7 @@ interface ValueShortStringReader {
 
 class ValueShortStringReaderSession(
     private val iterator: ByteArrayIterator,
-    private val sharedStorage: DecodingSmileSharedStorage
+    private val sharedStorage: SmileSharedStorage
 ) : ValueShortStringReader {
 
     override fun valueTinyAscii() = TinyAscii.readString()

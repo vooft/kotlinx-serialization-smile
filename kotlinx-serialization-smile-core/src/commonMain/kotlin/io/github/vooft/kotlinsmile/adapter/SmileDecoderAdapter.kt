@@ -2,8 +2,8 @@ package io.github.vooft.kotlinsmile.adapter
 
 import io.github.vooft.kotlinsmile.adapter.decoder.keyvalue.SmileValueDecoder
 import io.github.vooft.kotlinsmile.common.ByteArrayIteratorImpl
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorageImpl
 import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
-import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorageImpl
 import io.github.vooft.kotlinsmile.decoder.structure.HeaderReaderSession
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.modules.EmptySerializersModule
@@ -21,7 +21,7 @@ class SmileDecoderAdapter(
             println(header)
             SmileDecoderSession(
                 iterator = iterator,
-                sharedStorage = DecodingSmileSharedStorageImpl(shareKeys = header.sharePropertyName, shareValues = header.shareStringValue)
+                sharedStorage = SmileSharedStorageImpl(shareKeys = header.sharePropertyName, shareValues = header.shareStringValue)
             )
         },
         serializersModule = serializersModule

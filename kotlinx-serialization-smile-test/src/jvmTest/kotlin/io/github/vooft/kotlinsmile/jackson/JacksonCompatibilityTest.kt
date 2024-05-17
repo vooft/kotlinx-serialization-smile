@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.ObjWithSerializer
 import io.github.vooft.kotlinsmile.Smile
+import io.github.vooft.kotlinsmile.SmileConfig
 import io.github.vooft.kotlinsmile.SmileMessage
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.ShouldSpec
@@ -16,7 +17,7 @@ import kotlinx.serialization.Serializable
 import java.util.concurrent.ThreadLocalRandom
 
 class JacksonCompatibilityTest : ShouldSpec({
-    System.setProperty("kotest.assertions.collection.print.size", "1000")
+    System.setProperty("kotest.assertions.collection.print.size", "10000")
 
     val smileMapper = ObjectMapper(
         SmileFactory.builder()
@@ -159,7 +160,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         }
     }
 
-    xcontext("should serialize object with shared names") {
+    context("should serialize object with shared names") {
         val smileMapperWithSharedNames = ObjectMapper(
             SmileFactory.builder()
 //            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
@@ -168,6 +169,8 @@ class JacksonCompatibilityTest : ShouldSpec({
                 .build()
         ).findAndRegisterModules()
 
+        val smile = Smile(SmileConfig(shareStringValue = false, sharePropertyName = true))
+
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
             ts = allTestCases
@@ -175,10 +178,10 @@ class JacksonCompatibilityTest : ShouldSpec({
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
 
-            val actual = Smile.encode(it)
+            val actual = smile.encode(it)
             println(actual.toHexString())
 
-            actual shouldBe encoded
+            actual.toHexString().replace(',', '\n') shouldBe encoded.toHexString().replace(',', '\n')
         }
     }
 

@@ -7,7 +7,7 @@ import dev.mokkery.verify
 import dev.mokkery.verify.VerifyMode
 import dev.mokkery.verifyNoMoreCalls
 import io.github.vooft.kotlinsmile.common.ByteArrayIteratorImpl
-import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlin.random.Random
@@ -15,7 +15,7 @@ import kotlin.test.Test
 
 class SharedKeyStringReaderSessionTest {
 
-    private val mockStorage = mock<DecodingSmileSharedStorage>()
+    private val mockStorage = mock<SmileSharedStorage>()
 
     @Test
     fun should_read_shared_key_0() {
@@ -24,12 +24,12 @@ class SharedKeyStringReaderSessionTest {
         )
 
         val key = Random.nextLong().toString()
-        every { mockStorage.getKey(0) } returns key
+        every { mockStorage.getKeyById(0) } returns key
 
         val reader = SharedKeyStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
         reader.shortSharedKey() shouldBe key
 
-        verify(VerifyMode.exhaustive) { mockStorage.getKey(0) }
+        verify(VerifyMode.exhaustive) { mockStorage.getKeyById(0) }
     }
 
     @Test
@@ -39,12 +39,12 @@ class SharedKeyStringReaderSessionTest {
         )
 
         val key = Random.nextLong().toString()
-        every { mockStorage.getKey(5) } returns key
+        every { mockStorage.getKeyById(5) } returns key
 
         val reader = SharedKeyStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
         reader.shortSharedKey() shouldBe key
 
-        verify(VerifyMode.exhaustive) { mockStorage.getKey(5) }
+        verify(VerifyMode.exhaustive) { mockStorage.getKeyById(5) }
     }
 
     @Test
@@ -56,12 +56,12 @@ class SharedKeyStringReaderSessionTest {
         )
 
         val key = Random.nextLong().toString()
-        every { mockStorage.getKey(257) } returns key
+        every { mockStorage.getKeyById(257) } returns key
 
         val reader = SharedKeyStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
         reader.longSharedKey() shouldBe key
 
-        verify(VerifyMode.exhaustive) { mockStorage.getKey(257) }
+        verify(VerifyMode.exhaustive) { mockStorage.getKeyById(257) }
     }
 
     @Test

@@ -6,14 +6,14 @@ import dev.mokkery.mock
 import dev.mokkery.verify
 import dev.mokkery.verify.VerifyMode
 import io.github.vooft.kotlinsmile.common.ByteArrayIteratorImpl
-import io.github.vooft.kotlinsmile.decoder.shared.DecodingSmileSharedStorage
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlin.random.Random
 import kotlin.test.Test
 
 class SharedValueStringReaderSessionTest {
-    private val mockStorage = mock<DecodingSmileSharedStorage>()
+    private val mockStorage = mock<SmileSharedStorage>()
 
     @Test
     fun should_fail_to_read_shared_value_0() {
@@ -29,13 +29,13 @@ class SharedValueStringReaderSessionTest {
             0x01,
         )
 
-        val key = Random.nextLong().toString()
-        every { mockStorage.getValue(0) } returns key // because index starts with 1
+        val value = Random.nextLong().toString()
+        every { mockStorage.getValueById(0) } returns value // because index starts with 1
 
         val reader = SharedValueStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
-        reader.shortSharedValue() shouldBe key
+        reader.shortSharedValue() shouldBe value
 
-        verify(VerifyMode.exhaustive) { mockStorage.getValue(0) }
+        verify(VerifyMode.exhaustive) { mockStorage.getValueById(0) }
     }
 
     @Test
@@ -44,13 +44,13 @@ class SharedValueStringReaderSessionTest {
             0x05,
         )
 
-        val key = Random.nextLong().toString()
-        every { mockStorage.getValue(4) } returns key  // because index starts with 1
+        val value = Random.nextLong().toString()
+        every { mockStorage.getValueById(4) } returns value  // because index starts with 1
 
         val reader = SharedValueStringReaderSession(ByteArrayIteratorImpl(data), mockStorage)
-        reader.shortSharedValue() shouldBe key
+        reader.shortSharedValue() shouldBe value
 
-        verify(VerifyMode.exhaustive) { mockStorage.getValue(4) }
+        verify(VerifyMode.exhaustive) { mockStorage.getValueById(4) }
     }
 
 //    @Test

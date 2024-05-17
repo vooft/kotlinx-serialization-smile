@@ -1,8 +1,12 @@
 package io.github.vooft.kotlinsmile.encoder
 
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
+import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
+import io.github.vooft.kotlinsmile.encoder.keys.DecidingSharedKeyStringWriter
 import io.github.vooft.kotlinsmile.encoder.keys.KeyStringWriter
 import io.github.vooft.kotlinsmile.encoder.keys.KeyStringWriterSession
+import io.github.vooft.kotlinsmile.encoder.keys.SharedKeyStringWriter
+import io.github.vooft.kotlinsmile.encoder.keys.SharedKeyStringWriterSession
 import io.github.vooft.kotlinsmile.encoder.structure.HeaderWriter
 import io.github.vooft.kotlinsmile.encoder.structure.HeaderWriterSession
 import io.github.vooft.kotlinsmile.encoder.structure.StructuralWriter
@@ -20,15 +24,20 @@ import io.github.vooft.kotlinsmile.encoder.values.ValueShortStringWriterSession
 import io.github.vooft.kotlinsmile.encoder.values.ValueSimpleLiteralWriter
 import io.github.vooft.kotlinsmile.encoder.values.ValueSimpleLiteralWriterSession
 
-class SmileEncoderSession(private val builder: ByteArrayBuilder) :
+class SmileEncoderSession(private val builder: ByteArrayBuilder, private val sharedStorage: SmileSharedStorage) :
     HeaderWriter by HeaderWriterSession(builder),
     IntegerWriter by IntegerWriterSession(builder),
     FloatWriter by FloatWriterSession(builder),
     StructuralWriter by StructuralWriterSession(builder),
     ValueShortStringWriter by ValueShortStringWriterSession(builder),
-    KeyStringWriter by KeyStringWriterSession(builder),
+    KeyStringWriter by DecidingSharedKeyStringWriter(
+        delegate = KeyStringWriterSession(builder = builder, sharedStorage = sharedStorage),
+        sharedKeyStringWriter = SharedKeyStringWriterSession(builder = builder, sharedStorage = sharedStorage)
+    ),
     ValueLongStringWriter by ValueLongStringWriterSession(builder),
     ValueSimpleLiteralWriter by ValueSimpleLiteralWriterSession(builder),
-    BinaryWriter by BinaryWriterSession(builder) {
-        fun toByteArray(): ByteArray = builder.toByteArray()
-    }
+    BinaryWriter by BinaryWriterSession(builder),
+    SharedKeyStringWriter by SharedKeyStringWriterSession(builder, sharedStorage) {
+
+    fun toByteArray(): ByteArray = builder.toByteArray()
+}
