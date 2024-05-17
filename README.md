@@ -4,6 +4,9 @@
     * [ ] BigInteger
     * [ ] BigDecimal
 * Extra configuration flags
-    * [ ] Shared property name flag
-    * [ ] Raw binary flag
-    * [ ] Shared String value flag
+    * [ ] Optional header 
+    * [x] Shared property name flag
+    * [ ] Raw binary flag (instead of 7-bit encoding)
+    * [x] Shared String value flag
+* Some expected behavior
+    * [ ] Stop reading when 0xFF is found, except when it raw binary mode 

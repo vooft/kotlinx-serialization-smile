@@ -42,7 +42,4 @@ class SmileEncoderSession(private val builder: ByteArrayBuilder, private val sha
     ValueLongStringWriter by ValueLongStringWriterSession(builder),
     ValueSimpleLiteralWriter by ValueSimpleLiteralWriterSession(builder),
     BinaryWriter by BinaryWriterSession(builder),
-    SharedKeyStringWriter by SharedKeyStringWriterSession(builder, sharedStorage) {
-
-    fun toByteArray(): ByteArray = builder.toByteArray()
-}
+    SharedKeyStringWriter by SharedKeyStringWriterSession(builder, sharedStorage)

@@ -17,6 +17,7 @@ fun buildByteArray(block: ByteArrayBuilder.() -> Unit): ByteArray {
     return builder.toByteArray()
 }
 
+// TODO: replace with manual byte array, because ByteString.toByteArray() copies the array
 class ByteStringByteArrayBuilder(initialCapacity: Int = 1024): ByteArrayBuilder {
     private val builder = ByteStringBuilder(initialCapacity) // 1 kb default size
 

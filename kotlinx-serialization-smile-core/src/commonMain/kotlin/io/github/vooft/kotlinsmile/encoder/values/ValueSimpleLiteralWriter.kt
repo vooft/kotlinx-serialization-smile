@@ -4,6 +4,7 @@ import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralBoolean
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralEmptyString
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralNull
+import kotlin.jvm.JvmInline
 
 interface ValueSimpleLiteralWriter {
     fun valueEmptyString()
@@ -11,7 +12,8 @@ interface ValueSimpleLiteralWriter {
     fun valueBoolean(value: Boolean)
 }
 
-class ValueSimpleLiteralWriterSession(private val builder: ByteArrayBuilder): ValueSimpleLiteralWriter {
+@JvmInline
+value class ValueSimpleLiteralWriterSession(private val builder: ByteArrayBuilder): ValueSimpleLiteralWriter {
     override fun valueEmptyString() = builder.append(SimpleLiteralEmptyString.value)
 
     override fun valueNull() = builder.append(SimpleLiteralNull.value)

@@ -19,9 +19,9 @@ class SmileEncoderAdapter(
 ) : Encoder by SmileValueEncoder(session, serializersModule) {
 
     init {
-        session.header(config)
+        session.preallocateHeader()
     }
 
-    fun toByteArray(): ByteArray = session.toByteArray()
+    fun toByteArray(): ByteArray = session.toByteArray(config)
 }
 

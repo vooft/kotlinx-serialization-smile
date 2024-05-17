@@ -7,13 +7,15 @@ import io.github.vooft.kotlinsmile.common.requireUnicode
 import io.github.vooft.kotlinsmile.token.SmileMarkers
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongUnicode
+import kotlin.jvm.JvmInline
 
 interface ValueLongStringWriter {
     fun valueLongAscii(value: SmileString)
     fun valueLongUnicode(value: SmileString)
 }
 
-class ValueLongStringWriterSession(private val builder: ByteArrayBuilder) : ValueLongStringWriter {
+@JvmInline
+value class ValueLongStringWriterSession(private val builder: ByteArrayBuilder) : ValueLongStringWriter {
     override fun valueLongAscii(value: SmileString) {
         value.requireAscii()
 
