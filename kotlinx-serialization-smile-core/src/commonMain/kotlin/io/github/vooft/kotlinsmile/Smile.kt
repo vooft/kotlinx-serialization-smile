@@ -7,9 +7,9 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.serializer
 
-object Smile {
+open class Smile(private val config: SmileConfig) {
     fun <T> encode(serializer: SerializationStrategy<T>, value: T): ByteArray {
-        val encoder = SmileEncoderAdapter(SmileConfig.DEFAULT)
+        val encoder = SmileEncoderAdapter(config)
         encoder.encodeSerializableValue(serializer, value)
         return encoder.toByteArray()
     }
@@ -24,6 +24,8 @@ object Smile {
     }
 
     inline fun <reified T> decode(data: ByteArray): T = decode(serializer(), data)
+
+    companion object : Smile(SmileConfig.DEFAULT)
 }
 
 // temp solution for testing

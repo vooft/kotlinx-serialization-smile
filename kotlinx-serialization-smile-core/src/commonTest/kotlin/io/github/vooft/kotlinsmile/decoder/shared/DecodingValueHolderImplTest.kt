@@ -52,11 +52,11 @@ class DecodingValueHolderImplTest {
 
         val value254 = "254"
         holder.store(value254) shouldBe 254
-        holder.get(254) shouldNotBe value254 shouldHaveLength 65
+        holder.get(254) shouldNotBe value254 shouldHaveLength 0
 
         val value255 = "255"
         holder.store(value255) shouldBe 255
-        holder.get(255) shouldNotBe value255 shouldHaveLength 65
+        holder.get(255) shouldNotBe value255 shouldHaveLength 0
 
         val value256 = "256"
         holder.store(value256) shouldBe 256
@@ -95,7 +95,7 @@ class DecodingValueHolderImplTest {
 
             id shouldBe i
             when (id) {
-                in ignoredIndexes -> holder.get(id) shouldNotBe value shouldHaveLength 65
+                in ignoredIndexes -> holder.get(id) shouldNotBe value shouldHaveLength 0
                 else -> holder.get(id) shouldBe value
             }
         }
