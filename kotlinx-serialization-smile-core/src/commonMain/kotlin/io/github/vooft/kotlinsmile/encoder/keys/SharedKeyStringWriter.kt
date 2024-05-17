@@ -20,7 +20,7 @@ class SharedKeyStringWriterSession(
         val index = sharedStorage.lookupKey(key)
         requireNotNull(index) { "Key $key is not shared yet" }
 
-        if (index < LONG_REFERENCE_FIRST) {
+        if (index !in LongSharedKey.VALUES_RANGE) {
             val id = ShortSharedKey.offset.toUByte() + index.toUByte()
             builder.append(id.toByte())
         } else {
@@ -35,5 +35,4 @@ class SharedKeyStringWriterSession(
     }
 }
 
-private const val LONG_REFERENCE_FIRST = 31
 private const val TWO_LSB_MASK = 0b0000_0011

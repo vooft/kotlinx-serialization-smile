@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 import java.util.concurrent.ThreadLocalRandom
 
 class JacksonCompatibilityTest : ShouldSpec({
-    System.setProperty("kotest.assertions.collection.print.size", "1000")
+    System.setProperty("kotest.assertions.collection.print.size", "10000")
 
     val smileMapper = ObjectMapper(
         SmileFactory.builder()
@@ -174,9 +174,6 @@ class JacksonCompatibilityTest : ShouldSpec({
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
             ts = allTestCases
-//            ts = listOf(
-//                ObjWithSerializer(ObjectWithTwoNestedLongAsciiFields())
-//            )
         ) {
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
@@ -184,7 +181,7 @@ class JacksonCompatibilityTest : ShouldSpec({
             val actual = smile.encode(it)
             println(actual.toHexString())
 
-            actual shouldBe encoded
+            actual.toHexString().replace(',', '\n') shouldBe encoded.toHexString().replace(',', '\n')
         }
     }
 
