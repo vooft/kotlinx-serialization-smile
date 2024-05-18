@@ -85,6 +85,10 @@ mavenPublishing {
                 url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
             }
         }
+        scm {
+            connection = "https://github.com/vooft/kotlinx-serialization-smile"
+            url = "https://github.com/vooft/kotlinx-serialization-smile"
+        }
         developers {
             developer {
                 name = "kotlinx-serialization-smile team"

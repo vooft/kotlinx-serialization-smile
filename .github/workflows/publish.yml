@@ -28,9 +28,10 @@ jobs:
 
       - uses: actions/cache@v3
         with:
-          path: |
-            ~/.konan
-          key: "${{ runner.os }}-${{ hashFiles('**/.lock') }}"
+          path: ~/.konan
+          key: ${{ runner.os }}-konan
+          restore-keys: |
+            ${{ runner.os }}-konan
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
