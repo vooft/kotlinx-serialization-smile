@@ -1,0 +1,42 @@
+name: Benchmark
+
+on:
+  workflow_dispatch:
+
+
+permissions:
+  checks: write
+  contents: write
+
+jobs:
+  bechmark:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan
+          restore-keys: |
+            ${{ runner.os }}-konan
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: build --parallel
+
+      - run: make jacksonBenchmark-linux
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: profile-results
+          path: profile-results/**
