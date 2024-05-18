@@ -13,7 +13,7 @@ import kotlin.random.nextInt
 import kotlin.random.nextLong
 
 @Serializable
-data class SmileMessage(
+data class LargeSmileMessage(
     val smallByte: Byte,
     val regularInt: Int,
     val longInt: Long,
@@ -37,7 +37,7 @@ data class SmileMessage(
     val boolean: Boolean
 ) {
     companion object {
-        fun next() = SmileMessage(
+        fun next() = LargeSmileMessage(
             smallByte = Random.nextInt(SmallInteger.values).toByte(),
             regularInt = Random.nextInt(RegularInteger.values),
             longInt = Random.nextLong(LongInteger.values),
@@ -65,6 +65,25 @@ data class SmileMessage(
             emptyString = "",
             nullValue = null,
             boolean = Random.nextBoolean()
+        )
+    }
+}
+
+@Serializable
+data class SmallSmileMessage(
+    val id: Int,
+    val username: String,
+    val password: String,
+    val enabled: Boolean,
+    val nestedList: List<NestedObject>
+) {
+    companion object {
+        fun next() = SmallSmileMessage(
+            id = Random.nextInt(100),
+            username = Random.nextAscii(10),
+            password = Random.nextAscii(20),
+            enabled = Random.nextBoolean(),
+            nestedList = List(10) { NestedObject.next() }
         )
     }
 }

@@ -18,7 +18,6 @@ class SmileDecoderAdapter(
         session = kotlin.run {
             val iterator = ByteArrayIteratorImpl(data)
             val header = HeaderReaderSession(iterator).header()
-            println(header)
             SmileDecoderSession(
                 iterator = iterator,
                 sharedStorage = SmileSharedStorageImpl(shareKeys = header.sharePropertyName, shareValues = header.shareStringValue)

@@ -30,11 +30,6 @@ fun ByteArrayIterator.nextRawBinary(decodedLength: Int): ByteArray {
         // if carryoverBits is less than 0, then we need to start reading another byte first
     } while (index < decodedLength - 1 || carryoverBits < 0)
 
-//    if (carryoverBits < 0) {
-//        buffer = nextUByte() shl 7
-//        carryoverBits = 6
-//    }
-
     val byte = nextUByte()
     buffer = buffer shr 7
     buffer = buffer shl (8 - carryoverBits - 1)

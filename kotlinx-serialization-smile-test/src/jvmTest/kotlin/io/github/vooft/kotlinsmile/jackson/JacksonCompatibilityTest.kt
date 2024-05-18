@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.vooft.kotlinsmile.LargeSmileMessage
 import io.github.vooft.kotlinsmile.Smile
 import io.github.vooft.kotlinsmile.SmileConfig
-import io.github.vooft.kotlinsmile.SmileMessage
+import io.github.vooft.kotlinsmile.SmileEncoder
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
@@ -86,7 +87,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         ObjWithSerializer(Long.MIN_VALUE, "root level min long"),
     )
 
-    val hugeObject = listOf(ObjWithSerializer(SmileMessage.next(), "huge object"))
+    val hugeObject = listOf(ObjWithSerializer(LargeSmileMessage.next(), "huge object"))
 
     val objectsWithLotFieldsValues = listOf(
         ObjWithSerializer(ObjectWithTwoNestedFields()),
@@ -601,4 +602,4 @@ private val logger = KotlinLogging.logger { }
 class ObjWithSerializer<T>(val obj: T, val serializer: KSerializer<T>, val name: String?)
 inline fun <reified T> ObjWithSerializer(obj: T, name: String? = null) = ObjWithSerializer(obj, serializer<T>(), name)
 
-fun <T> Smile.encodeObjWithSerializer(objWithSerializer: ObjWithSerializer<T>) = encode(objWithSerializer.serializer, objWithSerializer.obj)
+fun <T> SmileEncoder.encodeObjWithSerializer(obj: ObjWithSerializer<T>) = encode(obj.serializer, obj.obj)

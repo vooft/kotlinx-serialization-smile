@@ -18,22 +18,38 @@ import kotlinx.benchmark.Warmup
 @BenchmarkMode(Mode.Throughput)
 class MultiplatformSmileBenchmark {
 
-    private lateinit var message: SmileMessage
-    private lateinit var serialized: ByteArray
+    private lateinit var smallMessage: SmallSmileMessage
+    private lateinit var smallSerialized: ByteArray
+
+    private lateinit var largeMessage: LargeSmileMessage
+    private lateinit var largeSerialized: ByteArray
 
     @Setup
     fun setUp() {
-        message = SmileMessage.next()
-        serialized = Smile.encode(message)
+        largeMessage = LargeSmileMessage.next()
+        largeSerialized = Smile.encode(largeMessage)
+
+        smallMessage = SmallSmileMessage.next()
+        smallSerialized = Smile.encode(smallMessage)
     }
 
     @Benchmark
-    fun kotlinSerialize(): ByteArray {
-        return Smile.encode(message)
+    fun kotlinSerializeLarge(): ByteArray {
+        return Smile.encode(largeMessage)
     }
 
     @Benchmark
-    fun kotlinDeserialize(): SmileMessage {
-        return Smile.decode(serialized)
+    fun kotlinSerializeSmall(): ByteArray {
+        return Smile.encode(smallMessage)
+    }
+
+    @Benchmark
+    fun kotlinDeserializeLarge(): LargeSmileMessage {
+        return Smile.decode(largeSerialized)
+    }
+
+    @Benchmark
+    fun kotlinDeserializeSmall(): SmallSmileMessage {
+        return Smile.decode(smallSerialized)
     }
 }

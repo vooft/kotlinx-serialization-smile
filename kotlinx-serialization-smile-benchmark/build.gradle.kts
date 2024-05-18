@@ -1,3 +1,5 @@
+import kotlinx.benchmark.gradle.JvmBenchmarkTarget
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinx.benchmark)
@@ -44,7 +46,11 @@ kotlin {
 }
 
 benchmark {
-    targets.register("jvm")
+    targets.register("jvm") {
+        this as JvmBenchmarkTarget
+        jmhVersion = "1.37" // TODO: remove once kotlinx.benchmark updates bundled JMH
+    }
+
     targets.register("js")
 
     // not working for some reason
