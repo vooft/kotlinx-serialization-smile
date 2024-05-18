@@ -28,6 +28,7 @@ class SmileMapDecoder(
             delegate.setKeyMode()
             val token = session.peekKeyToken()
             if (token == SmileKeyToken.KeyEndObjectMarker) {
+                session.skip()
                 return CompositeDecoder.DECODE_DONE
             }
 
@@ -37,4 +38,6 @@ class SmileMapDecoder(
             return index++
         }
     }
+
+
 }

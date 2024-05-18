@@ -30,11 +30,8 @@ data class SmileMessage(
     val binary: ByteArrayWrapper,
     val nestedObject: NestedObject,
     val listOfObjects: List<NestedObject>,
-
-    // TODO: for some reason not working properly
-//    val stringMapOfObjects: Map<String, NestedObject>,
-//    val intMapOfObjects: Map<Int, NestedObject>,
-
+    val stringMapOfObjects: Map<String, NestedObject>,
+    val intMapOfObjects: Map<Int, NestedObject>,
     val emptyString: String,
     val nullValue: String?,
     val boolean: Boolean
@@ -57,14 +54,14 @@ data class SmileMessage(
             binary = ByteArrayWrapper(Random.nextBytes(Random.nextInt(100..200))),
             nestedObject = NestedObject.next(),
             listOfObjects = List(10) { NestedObject.next() },
-//            stringMapOfObjects = mapOf(
-//                Random.nextUnicode(10) to NestedObject.next(),
-//                Random.nextAscii(10) to NestedObject.next()
-//            ),
-//            intMapOfObjects = mapOf(
-//                Random.nextInt(100) to NestedObject.next(),
-//                Random.nextInt(100) to NestedObject.next()
-//            ),
+            stringMapOfObjects = mapOf(
+                Random.nextUnicode(10) to NestedObject.next(),
+                Random.nextAscii(10) to NestedObject.next()
+            ),
+            intMapOfObjects = mapOf(
+                Random.nextInt(100) to NestedObject.next(),
+                Random.nextInt(100) to NestedObject.next()
+            ),
             emptyString = "",
             nullValue = null,
             boolean = Random.nextBoolean()
