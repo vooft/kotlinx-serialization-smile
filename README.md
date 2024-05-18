@@ -45,10 +45,16 @@ This will use the default configuration.
 
 The goal is to support all the features defined in the Smile specification, 
 at the moment library can encode and decode almost all messages 
-that produced by the default Jackson ObjectMapper configuration (exceptions are noted below)..
+that produced by the default Jackson ObjectMapper configuration (exceptions are noted below).
 
 ### Supported data types
+* ✅ Structural types
+  * ✅ Classes (incl. nested classes)
+  * ✅ Arrays
+  * ✅ Collections (List, Set)
+  * ✅ Maps
 * ✅ Simple literals (empty string, null, boolean)
+* ✅ Enums
 * ❗Integers
   * ✅ Small integers (values in range [-16..15])
   * ✅ 32-bit integers
