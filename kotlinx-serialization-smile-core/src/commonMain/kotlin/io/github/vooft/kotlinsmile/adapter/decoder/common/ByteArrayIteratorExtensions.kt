@@ -16,5 +16,3 @@ fun ByteArrayIterator.peekKeyToken(): SmileKeyToken {
     rollback(1)
     return SmileTokensHolder.keyToken(byte) ?: error("Unknown key token: 0x${byte.toUByte().toString(16)}")
 }
-
-fun ByteArrayIterator.nextUByte() = next().toUInt() and 0xFFu

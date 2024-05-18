@@ -1,17 +1,16 @@
 package io.github.vooft.kotlinsmile.decoder.raw
 
-import io.github.vooft.kotlinsmile.adapter.decoder.common.nextUByte
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
 
 fun ByteArrayIterator.nextRawBinary(decodedLength: Int): ByteArray {
-    var buffer = 0u
+    var buffer = 0
     var carryoverBits = -1
     var index = 0
 
     val result = ByteArray(decodedLength)
 
     do {
-        val byte = nextUByte()
+        val byte = next().toInt() and 0xFF
         buffer = buffer or byte
 
         if (carryoverBits >= 0) {
@@ -30,7 +29,7 @@ fun ByteArrayIterator.nextRawBinary(decodedLength: Int): ByteArray {
         // if carryoverBits is less than 0, then we need to start reading another byte first
     } while (index < decodedLength - 1 || carryoverBits < 0)
 
-    val byte = nextUByte()
+    val byte = next().toInt() and 0xFF
     buffer = buffer shr 7
     buffer = buffer shl (8 - carryoverBits - 1)
     result[index] = (buffer or byte and BYTE_FF).toByte()
@@ -38,4 +37,4 @@ fun ByteArrayIterator.nextRawBinary(decodedLength: Int): ByteArray {
     return result
 }
 
-private const val BYTE_FF = 0xFFu
+private const val BYTE_FF = 0xFF
