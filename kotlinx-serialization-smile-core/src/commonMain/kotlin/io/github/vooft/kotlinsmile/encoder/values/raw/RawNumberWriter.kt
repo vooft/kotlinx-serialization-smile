@@ -9,16 +9,16 @@ import kotlin.math.max
 fun ByteArrayBuilder.appendRawInt(value: Int, config: AppendConfig) {
     val bytes = ByteArray(config.bitShifts.size)
 
-    var remaining = value.toUInt()
+    var remaining = value
     var bytesTotal = 0
     for (shift in config.bitShifts) {
         val bitMask = ALL_ONES_BYTE shr (8 - shift)
         bytes[bytesTotal++] = (remaining and bitMask).toByte()
-        if (remaining <= bitMask) {
+
+        remaining = remaining ushr shift
+        if (remaining == 0) {
             break
         }
-
-        remaining = remaining shr shift
     }
 
     for (i in max(bytesTotal - 1, config.minBytes - 1) downTo 1) {
@@ -32,15 +32,15 @@ fun ByteArrayBuilder.appendRawLong(value: Long, config: AppendConfig) {
     val bytes = ByteArray(config.bitShifts.size)
 
     var bytesTotal = 0
-    var remaining = value.toULong()
+    var remaining = value
     for (shift in config.bitShifts) {
         val bitMask = ALL_ONES_BYTE shr (8 - shift)
-        bytes[bytesTotal++] = (remaining and bitMask.toULong()).toByte()
-        if (remaining <= bitMask) {
+        bytes[bytesTotal++] = (remaining and bitMask.toLong()).toByte()
+
+        remaining = remaining ushr shift
+        if (remaining == 0L) {
             break
         }
-
-        remaining = remaining shr shift
     }
 
     for (i in max(bytesTotal - 1, config.minBytes - 1) downTo 1) {
@@ -80,5 +80,5 @@ sealed interface AppendConfig {
     }
 }
 
-private const val ALL_ONES_BYTE = 0b1111_1111u
-private const val FIRST_BIT_MASK = 0b1000_0000u
+private const val ALL_ONES_BYTE: Int = 0b1111_1111
+private const val FIRST_BIT_MASK: Int = 0b1000_0000
