@@ -3,7 +3,7 @@ package io.github.vooft.kotlinsmile.encoder.values.raw
 import io.github.vooft.kotlinsmile.common.ByteArrayBuilder
 
 fun ByteArrayBuilder.appendRawBinary(data: ByteArray) {
-    var buffer = 0u
+    var buffer = 0
     var index = 0
 
     while (index < data.size) {
@@ -13,7 +13,7 @@ fun ByteArrayBuilder.appendRawBinary(data: ByteArray) {
             carryoverBits++
 
             // read byte and zero whatever is not important
-            val byte = data[index++].toUInt() and BYTE_FF
+            val byte = data[index++].toInt() and BYTE_FF
 
             // smallest byte should be zero, just copy from the just read one
             buffer = buffer or byte
@@ -36,10 +36,10 @@ fun ByteArrayBuilder.appendRawBinary(data: ByteArray) {
 
         if (carryoverBits > 0) {
             append((buffer shr 8).toByte())
-            buffer = 0u
+            buffer = 0
         }
     }
 }
 
-private const val BYTE_FF = 0xFFu
-private const val BYTE_7_BIT = 0b0111_1111u
+private const val BYTE_FF: Int = 0xFF
+private const val BYTE_7_BIT: Int = 0b0111_1111
