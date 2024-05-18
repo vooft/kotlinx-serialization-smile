@@ -2,8 +2,8 @@ package io.github.vooft.kotlinsmile.decoder.values
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
-import io.github.vooft.kotlinsmile.decoder.values.raw.nextRawBinary
-import io.github.vooft.kotlinsmile.decoder.values.raw.nextRawInt
+import io.github.vooft.kotlinsmile.decoder.raw.nextRawBinary
+import io.github.vooft.kotlinsmile.decoder.raw.nextRawInt
 import io.github.vooft.kotlinsmile.token.SmileValueToken.BinaryValue
 
 interface BinaryReader {

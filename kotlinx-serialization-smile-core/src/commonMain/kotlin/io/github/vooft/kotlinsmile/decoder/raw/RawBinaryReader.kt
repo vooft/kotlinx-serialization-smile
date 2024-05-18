@@ -1,4 +1,4 @@
-package io.github.vooft.kotlinsmile.decoder.values.raw
+package io.github.vooft.kotlinsmile.decoder.raw
 
 import io.github.vooft.kotlinsmile.adapter.decoder.common.nextUByte
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator

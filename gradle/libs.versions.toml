@@ -7,7 +7,6 @@ kotlinx-benchmark = "0.4.10"
 
 [libraries]
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.6.3" }
-kotlinx-io-bytestring = { module = "org.jetbrains.kotlinx:kotlinx-io-bytestring", version = "0.3.4" }
 
 # logging
 kotlin-logging-core = { module = "io.github.oshai:kotlin-logging", version.ref = "kotlin-logging" }

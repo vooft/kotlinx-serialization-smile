@@ -1,7 +1,7 @@
 package io.github.vooft.kotlinsmile.decoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
-import io.github.vooft.kotlinsmile.token.SmileMarkers
+import io.github.vooft.kotlinsmile.decoder.raw.nextRawLongString
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongUnicode
 
@@ -15,27 +15,13 @@ class ValueLongStringReaderSession(private val iterator: ByteArrayIterator): Val
         val firstByte = iterator.next()
         require(firstByte == LongAscii.firstByte) { "Invalid token for long ascii value: ${firstByte.toUByte().toString(16)}" }
 
-        return readLongString()
+        return iterator.nextRawLongString()
     }
 
     override fun valueLongUnicode(): String {
         val firstByte = iterator.next()
         require(firstByte == LongUnicode.firstByte) { "Invalid token for long unicode value: ${firstByte.toUByte().toString(16)}" }
 
-        return readLongString()
-    }
-
-    private fun readLongString(): String {
-        var counter = 0
-        while (iterator.next() != SmileMarkers.STRING_END_MARKER)  {
-            counter++
-        }
-
-        iterator.rollback(counter + 1)
-
-        val decoded = iterator.nextString(counter)
-        require(iterator.next() == SmileMarkers.STRING_END_MARKER) { "Invalid end marker for long unicode key" }
-
-        return decoded
+        return iterator.nextRawLongString()
     }
 }

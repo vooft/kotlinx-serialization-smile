@@ -2,10 +2,10 @@ package io.github.vooft.kotlinsmile.decoder.keys
 
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
 import io.github.vooft.kotlinsmile.common.shared.SmileSharedStorage
+import io.github.vooft.kotlinsmile.decoder.raw.nextRawLongString
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyLongUnicode
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortAscii
 import io.github.vooft.kotlinsmile.token.SmileKeyToken.KeyShortUnicode
-import io.github.vooft.kotlinsmile.token.SmileMarkers
 import io.github.vooft.kotlinsmile.token.contains
 
 interface KeyStringReader {
@@ -40,17 +40,6 @@ class KeyStringReaderSession(
         val firstByte = iterator.next()
         require(firstByte == KeyLongUnicode.firstByte) { "Invalid token for long unicode key: ${firstByte.toUByte().toString(16)}" }
 
-        // TODO: move to shared method
-        var counter = 0
-        while (iterator.next() != SmileMarkers.STRING_END_MARKER) {
-            counter++
-        }
-
-        iterator.rollback(counter + 1)
-
-        val decoded = iterator.nextString(counter)
-        require(iterator.next() == SmileMarkers.STRING_END_MARKER) { "Invalid end marker for long unicode key" }
-
-        return decoded.also { sharedStorage.storeKey(it) }
+        return iterator.nextRawLongString().also { sharedStorage.storeKey(it) }
     }
 }

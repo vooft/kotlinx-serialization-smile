@@ -34,7 +34,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.kotlinx.serialization.core)
-            api(libs.kotlinx.io.bytestring)
             implementation(libs.kotlin.logging.core)
         }
 

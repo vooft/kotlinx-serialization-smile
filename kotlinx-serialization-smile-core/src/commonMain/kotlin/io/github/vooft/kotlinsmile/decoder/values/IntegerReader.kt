@@ -2,8 +2,8 @@ package io.github.vooft.kotlinsmile.decoder.values
 
 import io.github.vooft.kotlinsmile.common.ByteArrayIterator
 import io.github.vooft.kotlinsmile.common.ZigzagInteger
-import io.github.vooft.kotlinsmile.decoder.values.raw.nextRawInt
-import io.github.vooft.kotlinsmile.decoder.values.raw.nextRawLong
+import io.github.vooft.kotlinsmile.decoder.raw.nextRawInt
+import io.github.vooft.kotlinsmile.decoder.raw.nextRawLong
 import io.github.vooft.kotlinsmile.token.SmileValueToken.LongInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.RegularInteger
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
