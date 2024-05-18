@@ -13,7 +13,7 @@ permissions:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +23,12 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.konan
+          key: "${{ runner.os }}-${{ hashFiles('**/.lock') }}"
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
@@ -36,4 +42,4 @@ jobs:
         with:
           include_passed: true
           detailed_summary: true
-          report_paths: '**/build/test-results/test/TEST-*.xml'
+          report_paths: '**/build/test-results/test/*/TEST-*.xml'

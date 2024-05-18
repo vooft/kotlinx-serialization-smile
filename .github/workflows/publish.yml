@@ -7,7 +7,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     env:
       ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
@@ -25,6 +25,12 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.konan
+          key: "${{ runner.os }}-${{ hashFiles('**/.lock') }}"
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
