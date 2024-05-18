@@ -12,6 +12,7 @@ kotlin {
     jvm()
 
     macosArm64()
+    linuxX64()
 
     js(IR) {
         browser()
@@ -83,14 +84,9 @@ mavenPublishing {
                 url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
             }
         }
-        scm {
-            connection = "https://github.com/vooft/kotlinx-serialization-smile"
-            url = "https://github.com/vooft/kotlinx-serialization-smile"
-        }
         developers {
             developer {
-                name = "vooft"
-                email.set("costume_jazzes_0x@icloud.com")
+                name = "kotlinx-serialization-smile team"
             }
         }
     }
