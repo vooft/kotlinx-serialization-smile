@@ -1,8 +1,11 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotest.multiplatform)
     alias(libs.plugins.mokkery)
+    alias(libs.plugins.maven.central.publish)
 }
 
 kotlin {
@@ -61,6 +64,34 @@ kotlin {
                 org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
             )
             exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        }
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+
+    pom {
+        name = "kotlinx-serialization-smile"
+        description = "kotlinx.serialization plugin for Smile data format"
+        url = "https://github.com/vooft/kotlinx-serialization-smile"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        scm {
+            connection = "https://github.com/vooft/kotlinx-serialization-smile"
+            url = "https://github.com/vooft/kotlinx-serialization-smile"
+        }
+        developers {
+            developer {
+                name = "vooft"
+                email.set("costume_jazzes_0x@icloud.com")
+            }
         }
     }
 }

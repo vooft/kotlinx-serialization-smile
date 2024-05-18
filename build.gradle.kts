@@ -4,10 +4,10 @@ plugins {
     alias(libs.plugins.detekt)
 }
 
-group = "io.github.vooft"
-version = "1.0-SNAPSHOT"
-
 allprojects {
+    group = "io.github.vooft"
+    version = System.getenv("TAG") ?: "1.0-SNAPSHOT"
+
     apply(plugin = "io.gitlab.arturbosch.detekt")
 
     repositories {
