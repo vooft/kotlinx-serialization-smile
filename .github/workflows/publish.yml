@@ -5,9 +5,19 @@ on:
     types: [published]
 
 jobs:
-  build:
+  publish:
 
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        include:
+          - target: publishAllPublicationsToMavenCentralRepository
+            os: macos-latest
+          - target: publishLinuxX64PublicationToMavenCentralRepository
+            os: ubuntu-latest
+          - target: publishMingwX64PublicationToMavenCentralRepository
+            os: windows-latest
+
+    runs-on: ${{ matrix.os }}
 
     env:
       ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
@@ -36,4 +46,4 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: :kotlinx-serialization-smile-core:publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+          arguments: :kotlinx-serialization-smile-core:${{ matrix.target }} --no-configuration-cache

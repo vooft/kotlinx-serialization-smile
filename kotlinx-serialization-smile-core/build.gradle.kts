@@ -15,6 +15,9 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    mingwX64()
+    linuxX64()
+
     js(IR) {
         browser()
         nodejs()
