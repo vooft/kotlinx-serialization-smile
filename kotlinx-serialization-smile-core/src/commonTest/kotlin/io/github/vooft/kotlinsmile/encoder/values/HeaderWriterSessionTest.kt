@@ -27,7 +27,7 @@ class HeaderWriterSessionTest {
         session.preallocateHeader()
 
         val actual = session.toByteArray(
-            config = SmileConfig(writeHeader = true, shareStringValue = true, sharePropertyName = true),
+            config = SmileConfig(writeHeader = true, shareValues = true, shareKeys = true),
         )
 //        actual shouldBe byteArrayOf(0x3A, 0x29, 0x0A, 0x7)
         actual shouldBe byteArrayOf(0x3A, 0x29, 0x0A, 0x3) // raw binary bit is only set when writing binary as 8 bits, not 7
@@ -40,7 +40,7 @@ class HeaderWriterSessionTest {
 
         shouldThrow<IllegalArgumentException> {
             session.toByteArray(
-                config = SmileConfig(writeHeader = true, shareStringValue = true, sharePropertyName = true),
+                config = SmileConfig(writeHeader = true, shareValues = true, shareKeys = true),
             )
         }
     }

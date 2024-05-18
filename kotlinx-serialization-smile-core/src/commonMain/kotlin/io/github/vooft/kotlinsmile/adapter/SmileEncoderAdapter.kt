@@ -14,7 +14,7 @@ class SmileEncoderAdapter(
     builder: ByteArrayBuilder = ByteArrayBuilder(),
     private val session: SmileEncoderSession = SmileEncoderSession(
         builder = builder,
-        sharedStorage = SmileSharedStorageImpl(shareKeys = config.sharePropertyName, shareValues = config.shareStringValue)
+        sharedStorage = SmileSharedStorageImpl(shareKeys = config.shareKeys, shareValues = config.shareValues)
     ),
     override val serializersModule: SerializersModule = EmptySerializersModule()
 ) : Encoder by SmileValueEncoder(session, serializersModule) {

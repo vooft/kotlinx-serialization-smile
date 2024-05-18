@@ -18,8 +18,8 @@ class HeaderReaderSession(private val iterator: ByteArrayIterator) : HeaderReade
 
         val configByte = iterator.next()
         return SmileConfig(
-            sharePropertyName = configByte and SHARED_STRING_PROPERTY_NAME_MASK != 0.toByte(),
-            shareStringValue = configByte and SHARED_STRING_VALUE_MASK != 0.toByte()
+            shareKeys = configByte and SHARED_STRING_PROPERTY_NAME_MASK != 0.toByte(),
+            shareValues = configByte and SHARED_STRING_VALUE_MASK != 0.toByte()
         )
     }
 }

@@ -36,7 +36,7 @@ class JacksonSmileBenchmark {
             .build()
     ).findAndRegisterModules()
 
-    private val smile = Smile(SmileConfig(shareStringValue = true, sharePropertyName = true))
+    private val smile = Smile(SmileConfig(shareValues = true, shareKeys = true))
 
     @Setup
     fun setUp() {

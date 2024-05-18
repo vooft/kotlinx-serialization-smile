@@ -20,7 +20,7 @@ class SmileDecoderAdapter(
             val header = HeaderReaderSession(iterator).header()
             SmileDecoderSession(
                 iterator = iterator,
-                sharedStorage = SmileSharedStorageImpl(shareKeys = header.sharePropertyName, shareValues = header.shareStringValue)
+                sharedStorage = SmileSharedStorageImpl(shareKeys = header.shareKeys, shareValues = header.shareValues)
             )
         },
         serializersModule = serializersModule

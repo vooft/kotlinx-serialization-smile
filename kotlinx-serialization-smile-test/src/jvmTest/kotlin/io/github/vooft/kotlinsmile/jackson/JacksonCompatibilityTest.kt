@@ -159,7 +159,7 @@ class JacksonCompatibilityTest : ShouldSpec({
                 .build()
         ).findAndRegisterModules()
 
-        val smile = Smile(SmileConfig(shareStringValue = false, sharePropertyName = true))
+        val smile = Smile(SmileConfig(shareValues = false, shareKeys = true))
 
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
@@ -186,7 +186,7 @@ class JacksonCompatibilityTest : ShouldSpec({
                 .build()
         ).findAndRegisterModules()
 
-        val smile = Smile(SmileConfig(shareStringValue = true, sharePropertyName = false))
+        val smile = Smile(SmileConfig(shareValues = true, shareKeys = false))
 
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
@@ -262,7 +262,7 @@ class JacksonCompatibilityTest : ShouldSpec({
                 .build()
         ).findAndRegisterModules()
 
-        val smile = Smile(SmileConfig(shareStringValue = true, sharePropertyName = true))
+        val smile = Smile(SmileConfig(shareValues = true, shareKeys = true))
 
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },

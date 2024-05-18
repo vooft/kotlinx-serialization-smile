@@ -32,9 +32,9 @@ class HeaderWriterSession(private val builder: ByteArrayBuilder) : HeaderWriter 
 
         val result = builder.toByteArray()
 
-        val rawBinaryMask = HAS_RAW_BINARY_MASK.maskIf(!config.writeValueAs7Bits)
-        val sharedPropertyNameMask = SHARED_STRING_PROPERTY_NAME_MASK.maskIf(config.sharePropertyName)
-        val sharedStringValueMask = SHARED_STRING_VALUE_MASK.maskIf(config.shareStringValue)
+        val rawBinaryMask = HAS_RAW_BINARY_MASK.maskIf(!config.writeBinaryAs7Bits)
+        val sharedPropertyNameMask = SHARED_STRING_PROPERTY_NAME_MASK.maskIf(config.shareKeys)
+        val sharedStringValueMask = SHARED_STRING_VALUE_MASK.maskIf(config.shareValues)
 
         result[FLAG_BYTE_INDEX] = VERSION_MASK or rawBinaryMask or sharedPropertyNameMask or sharedStringValueMask
 
