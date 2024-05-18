@@ -19,7 +19,8 @@ class HeaderWriterSession(private val builder: ByteArrayBuilder) : HeaderWriter 
     private var preallocated = false
 
     override fun preallocateHeader() {
-        // TODO: ensure this is written in an empty buffer
+        require(builder.isEmpty()) { "Header should be preallocated only in an empty array" }
+
         preallocated = true
 
         builder.append(FIXED_HEADER)

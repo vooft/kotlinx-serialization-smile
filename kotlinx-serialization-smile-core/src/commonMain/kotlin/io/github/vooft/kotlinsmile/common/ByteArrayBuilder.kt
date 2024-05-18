@@ -6,6 +6,7 @@ interface ByteArrayBuilder {
     fun append(byte: Byte, offset: Byte = 0)
     fun append(array: ByteArray)
 
+    fun isEmpty(): Boolean
     fun clear()
 
     fun toByteArray(): ByteArray
@@ -34,6 +35,8 @@ private class SimpleByteArrayBuilder(initialCapacity: Int = 64) : ByteArrayBuild
         array.copyInto(buffer, index)
         index += array.size
     }
+
+    override fun isEmpty(): Boolean = index == 0
 
     override fun clear() {
         index = 0

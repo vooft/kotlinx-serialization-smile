@@ -30,7 +30,7 @@ class HeaderWriterSessionTest {
             config = SmileConfig(writeHeader = true, shareStringValue = true, sharePropertyName = true),
         )
 //        actual shouldBe byteArrayOf(0x3A, 0x29, 0x0A, 0x7)
-        actual shouldBe byteArrayOf(0x3A, 0x29, 0x0A, 0x3) // for some reason jackson doesn't set the raw binary bit
+        actual shouldBe byteArrayOf(0x3A, 0x29, 0x0A, 0x3) // raw binary bit is only set when writing binary as 8 bits, not 7
     }
 
     @Test
@@ -42,6 +42,18 @@ class HeaderWriterSessionTest {
             session.toByteArray(
                 config = SmileConfig(writeHeader = true, shareStringValue = true, sharePropertyName = true),
             )
+        }
+    }
+
+    @Test
+    fun should_fail_to_preallocate_in_non_empty_builder() {
+        val builder = ByteArrayBuilder()
+        builder.append(0x1)
+
+        val session = HeaderWriterSession(builder)
+
+        shouldThrow<IllegalArgumentException> {
+            session.preallocateHeader()
         }
     }
 }
