@@ -1,3 +1,8 @@
+![Build and test](https://github.com/vooft/kotlinx-serialization-smile/actions/workflows/build.yml/badge.svg?branch=main)
+![Releases](https://img.shields.io/github/v/release/vooft/kotlinx-serialization-smile)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.vooft/kotlinx-serialization-smile-core)
+![License](https://img.shields.io/github/license/vooft/kotlinx-serialization-smile)
+
 # kotlinx-serialization-smile
 Kotlin Multiplatform library to support [Smile](https://en.wikipedia.org/wiki/Smile_(data_interchange_format)) format for `kotlinx.serialization`.
 
