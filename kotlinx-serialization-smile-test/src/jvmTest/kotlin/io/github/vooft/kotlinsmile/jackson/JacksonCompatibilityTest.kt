@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.dataformat.smile.SmileGenerator
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.github.vooft.kotlinsmile.ObjWithSerializer
 import io.github.vooft.kotlinsmile.Smile
 import io.github.vooft.kotlinsmile.SmileConfig
 import io.github.vooft.kotlinsmile.SmileMessage
@@ -13,7 +12,9 @@ import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.serializer
 import java.util.concurrent.ThreadLocalRandom
 
 // TODO: reorganize
@@ -119,7 +120,7 @@ class JacksonCompatibilityTest : ShouldSpec({
             logger.info { "E: " + expected.toHexString() }
             logger.info { "E: " + expected.toBinaryString() }
 
-            val actual = Smile.encode(it)
+            val actual = Smile.encodeObjWithSerializer(it)
             logger.info { "A: " + actual.toHexString() }
             logger.info { "A: " + actual.toBinaryString() }
             println()
@@ -153,7 +154,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
 
-            val actual = Smile.encode(it)
+            val actual = Smile.encodeObjWithSerializer(it)
 
             withClue("E: " + expected.toHexString() + "\n" + "A: " + actual.toHexString()) {
                 actual shouldBe expected
@@ -179,7 +180,7 @@ class JacksonCompatibilityTest : ShouldSpec({
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
 
-            val actual = smile.encode(it)
+            val actual = smile.encodeObjWithSerializer(it)
             println(actual.toHexString())
 
             actual.toHexString().replace(',', '\n') shouldBe encoded.toHexString().replace(',', '\n')
@@ -204,7 +205,7 @@ class JacksonCompatibilityTest : ShouldSpec({
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
 
-            val actual = smile.encode(it)
+            val actual = smile.encodeObjWithSerializer(it)
             println(actual.toHexString())
 
             actual.toHexString().replace(',', '\n') shouldBe encoded.toHexString().replace(',', '\n')
@@ -280,7 +281,7 @@ class JacksonCompatibilityTest : ShouldSpec({
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
 
-            val actual = smile.encode(it)
+            val actual = smile.encodeObjWithSerializer(it)
             println(actual.toHexString())
 
             actual.toHexString().replace(',', '\n') shouldBe encoded.toHexString().replace(',', '\n')
@@ -596,3 +597,8 @@ private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte(
 private fun ByteArray.toBinaryString() = joinToString(", ", "[", "]") { it.toUByte().toString(2).padStart(8, '0') }
 
 private val logger = KotlinLogging.logger { }
+
+class ObjWithSerializer<T>(val obj: T, val serializer: KSerializer<T>, val name: String?)
+inline fun <reified T> ObjWithSerializer(obj: T, name: String? = null) = ObjWithSerializer(obj, serializer<T>(), name)
+
+fun <T> Smile.encodeObjWithSerializer(objWithSerializer: ObjWithSerializer<T>) = encode(objWithSerializer.serializer, objWithSerializer.obj)

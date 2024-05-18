@@ -1,11 +1,17 @@
 import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
+    // core kotlin plugins
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
+
+    // publish
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.maven.central.publish)
+
+    // test plugins
     alias(libs.plugins.kotest.multiplatform)
     alias(libs.plugins.mokkery)
-    alias(libs.plugins.maven.central.publish)
 }
 
 kotlin {

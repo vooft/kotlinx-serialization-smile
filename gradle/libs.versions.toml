@@ -38,6 +38,7 @@ kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" 
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 mokkery = { id = "dev.mokkery", version = "1.9.24-1.7.0" }
 maven-central-publish = { id = "com.vanniktech.maven.publish", version = "0.28.0" }
+dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
 
 [bundles]
 logging-jvm = ["kotlin-logging-jvm", "slf4j-api", "logback-classic"]
