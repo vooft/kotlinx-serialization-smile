@@ -34,16 +34,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.kotlinx.serialization.core)
-            implementation(libs.kotlin.logging.core)
         }
 
-        jvmMain.dependencies {
-            implementation(libs.kotlin.logging.jvm)
-        }
+        jvmMain.dependencies { }
 
-        jsMain.dependencies {
-            implementation(libs.kotlin.logging.js)
-        }
+        jsMain.dependencies { }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -56,7 +51,6 @@ kotlin {
         jvmTest.dependencies {
             // must be present even for commonTests only
             implementation(libs.kotest.runner.junit5)
-            implementation(libs.bundles.logging.jvm)
         }
     }
 

@@ -3,7 +3,6 @@ package io.github.vooft.kotlinsmile.jackson
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.dataformat.smile.SmileGenerator
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.LargeSmileMessage
 import io.github.vooft.kotlinsmile.Smile
 import io.github.vooft.kotlinsmile.SmileConfig
@@ -116,15 +115,7 @@ class JacksonCompatibilityTest : ShouldSpec({
         ) {
             val expected = smileMapper.writeValueAsBytes(it.obj)
 
-            println()
-            logger.info { it.name ?: it.obj!!::class.simpleName!! }
-            logger.info { "E: " + expected.toHexString() }
-            logger.info { "E: " + expected.toBinaryString() }
-
             val actual = Smile.encodeObjWithSerializer(it)
-            logger.info { "A: " + actual.toHexString() }
-            logger.info { "A: " + actual.toBinaryString() }
-            println()
 
             actual shouldBe expected
         }
@@ -136,10 +127,6 @@ class JacksonCompatibilityTest : ShouldSpec({
             ts = allTestCases
         ) {
             val data = smileMapper.writeValueAsBytes(it.obj)
-//            smileMapper.readValue(data, it.obj!!::class.java) shouldBe it.obj
-
-            logger.info { "D: " + data.toHexString() }
-
             val actual = Smile.decode(it.serializer, data)
             actual shouldBe it.obj
         }
@@ -180,9 +167,11 @@ class JacksonCompatibilityTest : ShouldSpec({
         ) {
             val encoded = smileMapperWithSharedNames.writeValueAsBytes(it.obj)
             println(encoded.toHexString())
+            println(encoded.toBinaryString())
 
             val actual = smile.encodeObjWithSerializer(it)
             println(actual.toHexString())
+            println(actual.toBinaryString())
 
             actual.toHexString().replace(',', '\n') shouldBe encoded.toHexString().replace(',', '\n')
         }
@@ -596,8 +585,6 @@ enum class TestEnum {
 
 private fun ByteArray.toHexString() = joinToString(", ", "[", "]") { it.toUByte().toString(16).padStart(2, '0') } + "]"
 private fun ByteArray.toBinaryString() = joinToString(", ", "[", "]") { it.toUByte().toString(2).padStart(8, '0') }
-
-private val logger = KotlinLogging.logger { }
 
 class ObjWithSerializer<T>(val obj: T, val serializer: KSerializer<T>, val name: String?)
 inline fun <reified T> ObjWithSerializer(obj: T, name: String? = null) = ObjWithSerializer(obj, serializer<T>(), name)

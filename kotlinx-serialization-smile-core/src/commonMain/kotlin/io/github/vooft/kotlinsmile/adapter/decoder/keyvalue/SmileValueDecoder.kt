@@ -1,6 +1,5 @@
 package io.github.vooft.kotlinsmile.adapter.decoder.keyvalue
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.adapter.decoder.common.valueInt
 import io.github.vooft.kotlinsmile.adapter.decoder.common.valueString
 import io.github.vooft.kotlinsmile.adapter.decoder.structure.SmileByteArrayDecoder
@@ -56,8 +55,6 @@ class SmileValueDecoder(
             else -> error("Not supported ${descriptor.kind}")
         }
 
-        logger.debug { "Begin ${descriptor.kind} ${descriptor.serialName} with ${nested::class}" }
-
         return nested
     }
 
@@ -93,8 +90,4 @@ class SmileValueDecoder(
     override fun decodeShort(): Short = session.valueSmallInteger().toShort()
 
     override fun decodeString(): String = session.valueString()
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
-    }
 }

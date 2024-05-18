@@ -1,6 +1,5 @@
 package io.github.vooft.kotlinsmile.adapter.decoder.common
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -32,9 +31,7 @@ abstract class AbstractSmileCompositeDecoder(private val delegate: Decoder) : Co
 
     override fun decodeStringElement(descriptor: SerialDescriptor, index: Int) = delegate.decodeString()
 
-    override fun endStructure(descriptor: SerialDescriptor) {
-        logger.debug { "End ${descriptor.kind} ${descriptor.serialName} with class ${this::class}" }
-    }
+    override fun endStructure(descriptor: SerialDescriptor) = Unit
 
     override fun <T : Any> decodeNullableSerializableElement(
         descriptor: SerialDescriptor,
@@ -53,8 +50,4 @@ abstract class AbstractSmileCompositeDecoder(private val delegate: Decoder) : Co
         deserializer: DeserializationStrategy<T>,
         previousValue: T?
     ) = delegate.decodeSerializableValue(deserializer)
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
-    }
 }

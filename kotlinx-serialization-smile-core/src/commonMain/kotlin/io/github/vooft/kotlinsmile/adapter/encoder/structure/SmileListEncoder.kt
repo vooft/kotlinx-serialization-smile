@@ -1,6 +1,5 @@
 package io.github.vooft.kotlinsmile.adapter.encoder.structure
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.adapter.encoder.common.AbstractSmileCompositeEncoder
 import io.github.vooft.kotlinsmile.adapter.encoder.keyvalue.SmileValueEncoder
 import io.github.vooft.kotlinsmile.encoder.SmileEncoderSession
@@ -19,17 +18,11 @@ class SmileListEncoder(
 
     override fun encodeElement(descriptor: SerialDescriptor, index: Int): Boolean {
         require(descriptor.kind == StructureKind.LIST) { "Can only encode lists, but found $descriptor" }
-        logger.debug { "Encoding element $index of an array" }
         return true
     }
 
     override fun endStructure(descriptor: SerialDescriptor) {
         require(descriptor.kind == StructureKind.LIST) { "Can only encode lists, but found $descriptor" }
-        logger.debug { "Ending array" }
         session.endArray()
-    }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
     }
 }

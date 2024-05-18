@@ -114,16 +114,15 @@ There is no standard `BigInteger` or `BigDecimal` implementation in Kotlin, pote
 Library is designed to be fast and efficient, a benchmark is available in the [kotlinx-serialization-smile-benchmark](kotlinx-serialization-smile-benchmark) module.
 It is slightly less performant on JVM than Jackson (executed on M2 Macbook Pro):
 ```
-Benchmark                                             Mode  Cnt    Score    Error   Units
-JacksonSmileBenchmark.jacksonDeserializeLarge        thrpt    5  117.358 ±  0.245  ops/ms
-JacksonSmileBenchmark.kotlinDeserializeLarge         thrpt    5   95.336 ±  1.081  ops/ms
+JacksonSmileBenchmark.largeDeserializeJackson        thrpt    5  114.235 ±  3.184  ops/ms
+JacksonSmileBenchmark.largeDeserializeKotlin         thrpt    5  109.664 ±  3.474  ops/ms
 
-JacksonSmileBenchmark.jacksonDeserializeSmall        thrpt    5  223.094 ± 12.224  ops/ms
-JacksonSmileBenchmark.kotlinDeserializeSmall         thrpt    5  236.330 ± 16.425  ops/ms
+JacksonSmileBenchmark.largeSerializeJackson          thrpt    5  236.492 ±  4.326  ops/ms
+JacksonSmileBenchmark.largeSerializeKotlin           thrpt    5  129.568 ±  3.960  ops/ms
 
-JacksonSmileBenchmark.jacksonSerializeLarge          thrpt    5  250.316 ±  1.529  ops/ms
-JacksonSmileBenchmark.kotlinSerializeLarge           thrpt    5  203.799 ±  0.457  ops/ms
+JacksonSmileBenchmark.smallDeserializeJackson        thrpt    5  220.960 ±  5.398  ops/ms
+JacksonSmileBenchmark.smallDeserializeKotlin         thrpt    5  310.425 ±  1.662  ops/ms
 
-JacksonSmileBenchmark.jacksonSerializeSmall          thrpt    5  623.447 ±  2.316  ops/ms
-JacksonSmileBenchmark.kotlinSerializeSmall           thrpt    5  521.293 ±  0.785  ops/ms
+JacksonSmileBenchmark.smallSerializeJackson          thrpt    5  584.505 ± 11.273  ops/ms
+JacksonSmileBenchmark.smallSerializeKotlin           thrpt    5  445.315 ±  0.841  ops/ms
 ```

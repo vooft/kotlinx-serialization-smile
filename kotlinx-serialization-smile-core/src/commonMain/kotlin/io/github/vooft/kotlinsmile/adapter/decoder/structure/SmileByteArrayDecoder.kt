@@ -1,6 +1,5 @@
 package io.github.vooft.kotlinsmile.adapter.decoder.structure
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.decoder.SmileDecoderSession
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -11,7 +10,7 @@ import kotlinx.serialization.modules.SerializersModule
 
 @OptIn(ExperimentalSerializationApi::class)
 class SmileByteArrayDecoder(
-    private val session: SmileDecoderSession,
+    session: SmileDecoderSession,
     override val serializersModule: SerializersModule
 ) : AbstractDecoder() {
 
@@ -34,12 +33,4 @@ class SmileByteArrayDecoder(
 
     override fun decodeByte(): Byte = data[index]
 
-    override fun endStructure(descriptor: SerialDescriptor) {
-        logger.debug { "end structure" }
-        super.endStructure(descriptor)
-    }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
-    }
 }

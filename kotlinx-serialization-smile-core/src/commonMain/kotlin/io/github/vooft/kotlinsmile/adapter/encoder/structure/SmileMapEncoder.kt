@@ -1,6 +1,5 @@
 package io.github.vooft.kotlinsmile.adapter.encoder.structure
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.adapter.encoder.KeyValueSmileEncoder
 import io.github.vooft.kotlinsmile.adapter.encoder.common.AbstractSmileCompositeEncoder
 import io.github.vooft.kotlinsmile.encoder.SmileEncoderSession
@@ -32,12 +31,6 @@ class SmileMapEncoder(
     override fun endStructure(descriptor: SerialDescriptor) {
         require(descriptor.kind == StructureKind.MAP) { "Can only encode lists, but found $descriptor" }
 
-        logger.debug { "Ending map" }
-
         session.endObject()
-    }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
     }
 }

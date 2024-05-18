@@ -11,8 +11,9 @@ import kotlinx.serialization.modules.SerializersModule
 
 class SmileEncoderAdapter(
     private val config: SmileConfig,
+    builder: ByteArrayBuilder = ByteArrayBuilder(),
     private val session: SmileEncoderSession = SmileEncoderSession(
-        builder = ByteArrayBuilder(10240),
+        builder = builder,
         sharedStorage = SmileSharedStorageImpl(shareKeys = config.sharePropertyName, shareValues = config.shareStringValue)
     ),
     override val serializersModule: SerializersModule = EmptySerializersModule()

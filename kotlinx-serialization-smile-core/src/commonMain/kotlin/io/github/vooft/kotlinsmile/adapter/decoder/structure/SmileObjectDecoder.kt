@@ -1,6 +1,5 @@
 package io.github.vooft.kotlinsmile.adapter.decoder.structure
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.adapter.decoder.common.AbstractSmileCompositeDecoder
 import io.github.vooft.kotlinsmile.adapter.decoder.common.keyString
 import io.github.vooft.kotlinsmile.adapter.decoder.keyvalue.SmileValueDecoder
@@ -26,7 +25,6 @@ class SmileObjectDecoder(
         }
 
         val nextToken = session.peekKeyToken()
-        logger.debug { "Decoding object key $nextToken" }
 
         return when (nextToken) {
             SmileKeyToken.KeyEndObjectMarker -> {
@@ -36,13 +34,8 @@ class SmileObjectDecoder(
 
             else -> {
                 val propertyName = session.keyString()
-                logger.debug { "Decoding property $propertyName" }
                 descriptor.getElementIndex(propertyName)
             }
         }
-    }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
     }
 }

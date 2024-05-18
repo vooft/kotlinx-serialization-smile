@@ -2,18 +2,10 @@
 #kotlin = "2.0.0-RC3"
 kotlin = "1.9.24" # downgrade to make it work with mokkery
 kotest = "5.9.0"
-kotlin-logging = "6.0.9"
 kotlinx-benchmark = "0.4.10"
 
 [libraries]
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.6.3" }
-
-# logging
-kotlin-logging-core = { module = "io.github.oshai:kotlin-logging", version.ref = "kotlin-logging" }
-kotlin-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
-kotlin-logging-js = { module = "io.github.oshai:kotlin-logging-js", version.ref = "kotlin-logging" }
-slf4j-api = { module = "org.slf4j:slf4j-api", version = "2.0.13" }
-logback-classic = { module = "ch.qos.logback:logback-classic", version = "1.5.6" }
 
 # benchmark
 kotlinx-benchmark-runtime = { module = "org.jetbrains.kotlinx:kotlinx-benchmark-runtime", version.ref = "kotlinx-benchmark" }
@@ -38,6 +30,3 @@ kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kot
 mokkery = { id = "dev.mokkery", version = "1.9.24-1.7.0" }
 maven-central-publish = { id = "com.vanniktech.maven.publish", version = "0.28.0" }
 dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
-
-[bundles]
-logging-jvm = ["kotlin-logging-jvm", "slf4j-api", "logback-classic"]

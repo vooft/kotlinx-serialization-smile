@@ -1,6 +1,5 @@
 package io.github.vooft.kotlinsmile.adapter.encoder.structure
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.vooft.kotlinsmile.adapter.encoder.common.AbstractSmileCompositeEncoder
 import io.github.vooft.kotlinsmile.adapter.encoder.common.keyString
 import io.github.vooft.kotlinsmile.adapter.encoder.keyvalue.SmileValueEncoder
@@ -25,8 +24,6 @@ class SmileObjectEncoder(
         }
 
         val name = descriptor.getElementName(index).toSmile()
-        logger.debug { "encodeElement: descriptor=${descriptor.kind}, property name=$name" }
-
         session.keyString(name)
 
         return true
@@ -37,12 +34,6 @@ class SmileObjectEncoder(
             "Can only encode classes or objects, but found $descriptor"
         }
 
-        logger.debug { "Ending object" }
-
         session.endObject()
-    }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
     }
 }

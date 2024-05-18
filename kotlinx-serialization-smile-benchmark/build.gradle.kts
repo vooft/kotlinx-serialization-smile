@@ -34,12 +34,9 @@ kotlin {
             implementation(libs.jackson.dataformat.smile)
             implementation(libs.jackson.module.kotlin)
             implementation(libs.kotlin.reflect)
-            implementation(libs.bundles.logging.jvm)
         }
 
-        jsMain.dependencies {
-            implementation(libs.kotlin.logging.js)
-        }
+        jsMain.dependencies { }
 
         nativeMain { }
     }
