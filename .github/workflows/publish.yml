@@ -36,4 +36,4 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: :kotlinx-serialization-smile-core:publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+          arguments: :kotlinx-serialization-smile-core:publishAndReleaseToMavenCentral --no-configuration-cache
