@@ -55,25 +55,25 @@ sealed interface AppendConfig {
     val bitShifts: List<Int>
     val lastByteOrMask: Byte
 
-    object IntConfig : AppendConfig {
+    data object IntConfig : AppendConfig {
         override val minBytes = 1
         override val bitShifts = listOf(6, 7, 7, 7, 7)
         override val lastByteOrMask = FIRST_BIT_MASK.toByte()
     }
 
-    object LongConfig : AppendConfig {
+    data object LongConfig : AppendConfig {
         override val minBytes = 1
         override val bitShifts = listOf(6, 7, 7, 7, 7, 7, 7, 7, 7, 7)
         override val lastByteOrMask = FIRST_BIT_MASK.toByte()
     }
 
-    object FloatConfig : AppendConfig {
+    data object FloatConfig : AppendConfig {
         override val minBytes = FloatValue.SERIALIZED_BYTES
         override val bitShifts = List(minBytes) { 7 }
         override val lastByteOrMask = 0.toByte()
     }
 
-    object DoubleConfig : AppendConfig {
+    data object DoubleConfig : AppendConfig {
         override val minBytes = DoubleValue.SERIALIZED_BYTES
         override val bitShifts = List(minBytes) { 7 }
         override val lastByteOrMask = 0.toByte()

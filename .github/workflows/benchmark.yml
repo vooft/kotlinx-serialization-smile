@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  bechmark:
+  benchmark:
 
     runs-on: ubuntu-latest
 

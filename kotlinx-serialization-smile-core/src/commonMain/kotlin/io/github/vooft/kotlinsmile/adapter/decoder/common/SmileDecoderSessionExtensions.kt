@@ -17,7 +17,6 @@ import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortSharedValue
 import io.github.vooft.kotlinsmile.token.SmileValueToken.ShortUnicode
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SimpleLiteralEmptyString
 import io.github.vooft.kotlinsmile.token.SmileValueToken.SmallInteger
-import io.github.vooft.kotlinsmile.token.SmileValueToken.SmileStringToken
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyAscii
 import io.github.vooft.kotlinsmile.token.SmileValueToken.TinyUnicode
 
@@ -32,8 +31,7 @@ fun SmileDecoderSession.valueInt(): Long {
 }
 
 fun SmileDecoderSession.valueString(): String {
-    val token = peekValueToken()
-    return when (token) {
+    return when (val token = peekValueToken()) {
         LongAscii -> valueLongAscii()
         SimpleLiteralEmptyString -> valueEmptyString()
         LongUnicode -> valueLongUnicode()
@@ -43,20 +41,6 @@ fun SmileDecoderSession.valueString(): String {
         TinyUnicode -> valueTinyUnicode()
         ShortSharedValue -> shortSharedValue()
         LongSharedValue -> longSharedValue()
-        else -> error("Unexpected token $token")
-    }
-}
-
-fun SmileDecoderSession.peekStringValueToken(): SmileStringToken {
-    return when (val token = peekValueToken()) {
-        is SmileStringToken -> token
-        else -> error("Unexpected token $token")
-    }
-}
-
-fun SmileDecoderSession.peekStringKeyToken(): SmileKeyStringToken {
-    return when (val token = peekKeyToken()) {
-        is SmileKeyStringToken -> token
         else -> error("Unexpected token $token")
     }
 }

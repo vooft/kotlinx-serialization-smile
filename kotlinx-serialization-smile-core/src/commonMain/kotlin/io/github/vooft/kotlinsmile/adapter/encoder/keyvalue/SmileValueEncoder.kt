@@ -66,7 +66,7 @@ class SmileValueEncoder(
 
     override fun encodeInt(value: Int) = session.valueInteger(value.toLong())
 
-    override fun encodeLong(value: Long) = session.valueInteger(value.toLong())
+    override fun encodeLong(value: Long) = session.valueInteger(value)
 
     override fun encodeNull() = session.valueNull()
 

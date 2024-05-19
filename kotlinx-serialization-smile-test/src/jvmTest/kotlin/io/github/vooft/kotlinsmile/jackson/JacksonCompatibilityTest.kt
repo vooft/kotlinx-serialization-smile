@@ -65,7 +65,7 @@ class JacksonCompatibilityTest : ShouldSpec({
     val valueTestCases = listOf(
         ObjWithSerializer(SimpleClass(a = Short.MAX_VALUE.toInt(), bb = Short.MIN_VALUE.toInt()), "short edges"),
         ObjWithSerializer(TinyAsciiPropertyValueClass()),
-        ObjWithSerializer(TinUnicodeyPropertyValueClass()),
+        ObjWithSerializer(TinyUnicodePropertyValueClass()),
         ObjWithSerializer(ShortAsciiPropertyValueClass()),
         ObjWithSerializer(ShortUnicodePropertyValueClass()),
         ObjWithSerializer(LongAsciiPropertyValueClass()),
@@ -465,7 +465,7 @@ data class ObjectWithSameShortStringValues(val field1: String = "test123", val f
 data class TinyAsciiPropertyValueClass(val a: String = "test123")
 
 @Serializable
-data class TinUnicodeyPropertyValueClass(val a: String = "👨‍💼")
+data class TinyUnicodePropertyValueClass(val a: String = "👨‍💼")
 
 @Serializable
 data class ShortAsciiPropertyValueClass(val a: String = "a".repeat(50))
