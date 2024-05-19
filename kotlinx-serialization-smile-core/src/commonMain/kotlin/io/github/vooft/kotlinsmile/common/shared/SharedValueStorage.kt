@@ -7,8 +7,8 @@ interface SharedValueStorage {
 }
 
 class SharedValueStorageImpl : SharedValueStorage {
-    private val valueToId = mutableMapOf<String, Int>()
-    private val valuesList = mutableListOf<String>()
+    private val valueToId = HashMap<String, Int>(256)
+    private val valuesList = ArrayList<String>(256)
 
     override fun store(value: String): Int {
         if (valuesList.size >= MAX_STORAGE_SIZE) {
@@ -23,7 +23,7 @@ class SharedValueStorageImpl : SharedValueStorage {
 
         val newIndex = valuesList.size
         if (!isJacksonValidIndex(newIndex)) {
-            valuesList.add("") // put an empty string to avoid this index
+            valuesList.add(EMPTY_STRING) // put an empty string to avoid this index
         } else {
             valueToId[value] = newIndex
             valuesList.add(value)
@@ -57,4 +57,5 @@ enum class StorageType {
     VALUES
 }
 
+private const val EMPTY_STRING = ""
 private const val MAX_STORAGE_SIZE = 1024
