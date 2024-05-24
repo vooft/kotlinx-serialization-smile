@@ -112,7 +112,8 @@ There is no standard `BigInteger` or `BigDecimal` implementation in Kotlin, pote
 # Performance
 
 Library is designed to be fast and efficient, a benchmark is available in the [kotlinx-serialization-smile-benchmark](kotlinx-serialization-smile-benchmark) module.
-It is slightly less performant on JVM than Jackson (executed on M2 Macbook Pro):
+
+It is slightly less performant on JVM than Jackson in some cases (executed on M2 Macbook Pro):
 ```
 Benchmark                                             Mode  Cnt    Score   Error   Units
 JacksonSmileBenchmark.largeDeserializeJackson        thrpt   10  114.965 ± 0.221  ops/ms
