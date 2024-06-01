@@ -9,12 +9,6 @@ import kotlinx.serialization.encoding.Encoder
 @OptIn(ExperimentalSerializationApi::class)
 abstract class AbstractSmileCompositeEncoder(private val delegate: Encoder) : CompositeEncoder {
 
-    /**
-     * Invoked before writing an element that is part of the structure to determine whether it should be encoded.
-     * Element information can be obtained from the [descriptor] by the given [index].
-     *
-     * @return `true` if the value should be encoded, false otherwise
-     */
     open fun encodeElement(descriptor: SerialDescriptor, index: Int): Boolean = true
 
     override fun encodeBooleanElement(descriptor: SerialDescriptor, index: Int, value: Boolean) {
