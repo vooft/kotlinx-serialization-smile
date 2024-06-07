@@ -2,7 +2,7 @@
 #kotlin = "2.0.0-RC3"
 kotlin = "2.0.0" # downgrade to make it work with mokkery
 kotest = "5.9.1"
-kotlinx-benchmark = "0.4.10"
+kotlinx-benchmark = "0.4.11"
 
 [libraries]
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.7.0" }
