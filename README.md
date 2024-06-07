@@ -35,6 +35,19 @@ JacksonJsonSmileBenchmark.smileSmallSerialize    thrpt    5  616.633 ±  2.665  
 ```
 </details>
 
+## Supported platforms
+
+Library does not have any non-multiplatform dependencies, so adding any new platform should not be an issue.
+
+Currently it is compiled for:
+* jvm
+* macosArm64
+* iosArm64
+* iosSimulatorArm64
+* mingwX64
+* linuxX64
+* js (browser/nodejs)
+
 # Quick start
 Library is published to Maven Central under name [io.github.vooft:kotlinx-serialization-smile-core](https://central.sonatype.com/search?namespace=io.github.vooft).
 
