@@ -47,6 +47,7 @@ Currently it is compiled for:
 * mingwX64
 * linuxX64
 * js (browser/nodejs)
+* wasm (browser/nodejs)
 
 # Quick start
 Library is published to Maven Central under name [io.github.vooft:kotlinx-serialization-smile-core](https://central.sonatype.com/search?namespace=io.github.vooft).

@@ -1,4 +1,5 @@
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -17,6 +18,12 @@ kotlin {
     macosArm64()
 
     js(IR) {
+        browser()
+        nodejs()
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
         browser()
         nodejs()
     }
@@ -49,6 +56,7 @@ benchmark {
     }
 
     targets.register("js")
+    targets.register("wasmJs")
 
     // not working for some reason
     targets.register("macosArm64")
