@@ -1,6 +1,6 @@
 [versions]
 #kotlin = "2.0.0-RC3"
-kotlin = "2.0.0" # downgrade to make it work with mokkery
+kotlin = "2.0.10" # downgrade to make it work with mokkery
 kotest = "5.9.1"
 kotlinx-benchmark = "0.4.11"
 
