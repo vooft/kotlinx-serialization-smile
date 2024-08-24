@@ -1,6 +1,6 @@
 [versions]
 #kotlin = "2.0.0-RC3"
-kotlin = "2.0.10" # downgrade to make it work with mokkery
+kotlin = "2.0.20" # downgrade to make it work with mokkery
 kotest = "5.9.1"
 kotlinx-benchmark = "0.4.11"
 
@@ -26,6 +26,6 @@ kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "ko
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.6" }
 kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
-mokkery = { id = "dev.mokkery", version = "2.2.0" }
+mokkery = { id = "dev.mokkery", version = "2.3.0" }
 maven-central-publish = { id = "com.vanniktech.maven.publish", version = "0.29.0" }
 dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
