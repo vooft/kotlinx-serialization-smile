@@ -27,4 +27,4 @@ kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" 
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 mokkery = { id = "dev.mokkery", version = "2.6.1" }
 maven-central-publish = { id = "com.vanniktech.maven.publish", version = "0.30.0" }
-dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
+dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
