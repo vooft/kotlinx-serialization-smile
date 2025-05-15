@@ -26,5 +26,5 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
 kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 mokkery = { id = "dev.mokkery", version = "2.7.0" }
-maven-central-publish = { id = "com.vanniktech.maven.publish", version = "0.30.0" }
+maven-central-publish = { id = "com.vanniktech.maven.publish", version = "0.32.0" }
 dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
