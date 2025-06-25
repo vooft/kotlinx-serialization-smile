@@ -2,6 +2,7 @@
 kotlin = "2.2.0"
 kotest = "5.9.1"
 kotlinx-benchmark = "0.4.14"
+jackson = "2.19.1"
 
 [libraries]
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.8.1" }
@@ -15,8 +16,8 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-framework-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
-jackson-dataformat-smile = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-smile", version = "2.19.0" }
-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version = "2.19.0" }
+jackson-dataformat-smile = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-smile", version.ref = "jackson" }
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -26,5 +27,5 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
 kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 mokkery = { id = "dev.mokkery", version = "2.9.0" }
-maven-central-publish = { id = "com.vanniktech.maven.publish", version = "0.32.0" }
+maven-central-publish = { id = "com.vanniktech.maven.publish", version = "0.33.0" }
 dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
