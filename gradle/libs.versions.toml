@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.2.21"
 kotest = "5.9.1"
-kotlinx-benchmark = "0.4.14"
+kotlinx-benchmark = "0.4.15"
 jackson = "2.20.1"
 
 [libraries]
