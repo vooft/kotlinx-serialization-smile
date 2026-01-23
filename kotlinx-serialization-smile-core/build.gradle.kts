@@ -12,6 +12,7 @@ plugins {
     // test plugins
     alias(libs.plugins.kotest.multiplatform)
     alias(libs.plugins.mokkery)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -50,6 +51,7 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.kotest.assertions.core)
             implementation(libs.kotlin.reflect)
+            implementation(libs.kotest.framework.engine)
         }
 
         jvmTest.dependencies {

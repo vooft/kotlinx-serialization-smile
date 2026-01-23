@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotest.multiplatform)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -31,7 +32,6 @@ kotlin {
             implementation(libs.jackson.dataformat.smile)
             implementation(libs.jackson.module.kotlin)
             implementation(libs.kotest.runner.junit5)
-            implementation(libs.kotest.framework.datatest)
             implementation(libs.kotlin.reflect)
         }
     }
