@@ -2,7 +2,7 @@
 kotlin = "2.3.21"
 kotest = "6.1.11"
 kotlinx-benchmark = "0.4.17"
-jackson = "2.21.3"
+jackson = "2.22.0"
 
 [libraries]
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.11.0" }
