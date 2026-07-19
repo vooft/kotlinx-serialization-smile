@@ -25,7 +25,7 @@ kotlin {
     mingwX64()
     linuxX64()
 
-    js(IR) {
+    js {
         browser()
         nodejs()
     }

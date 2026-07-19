@@ -11,7 +11,7 @@ kotlin {
     jvm()
     macosArm64()
 
-    js(IR) {
+    js {
         browser()
         nodejs()
     }
