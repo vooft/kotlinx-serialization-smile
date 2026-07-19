@@ -1,8 +1,8 @@
 package io.github.vooft.kotlinsmile
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.smile.SmileFactory
-import com.fasterxml.jackson.dataformat.smile.SmileGenerator
+import tools.jackson.dataformat.smile.SmileFactory
+import tools.jackson.dataformat.smile.SmileMapper
+import tools.jackson.dataformat.smile.SmileWriteFeature
 import kotlinx.benchmark.Benchmark
 import kotlinx.benchmark.BenchmarkMode
 import kotlinx.benchmark.BenchmarkTimeUnit
@@ -29,12 +29,12 @@ class JacksonSmileBenchmark {
     private lateinit var smallMessage: SmallSmileMessage
     private lateinit var serializedSmall: ByteArray
 
-    private val jackson = ObjectMapper(
+    private val jackson = SmileMapper.builder(
         SmileFactory.builder()
-            .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, true)
-            .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, true)
+            .configure(SmileWriteFeature.CHECK_SHARED_STRING_VALUES, true)
+            .configure(SmileWriteFeature.CHECK_SHARED_NAMES, true)
             .build()
-    ).findAndRegisterModules()
+    ).findAndAddModules().build()
 
     private val smile = Smile(SmileConfig(shareValues = true, shareKeys = true))
 

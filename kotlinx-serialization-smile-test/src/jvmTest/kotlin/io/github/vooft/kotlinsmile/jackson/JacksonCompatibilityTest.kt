@@ -1,8 +1,8 @@
 package io.github.vooft.kotlinsmile.jackson
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.smile.SmileFactory
-import com.fasterxml.jackson.dataformat.smile.SmileGenerator
+import tools.jackson.dataformat.smile.SmileFactory
+import tools.jackson.dataformat.smile.SmileMapper
+import tools.jackson.dataformat.smile.SmileWriteFeature
 import io.github.vooft.kotlinsmile.LargeSmileMessage
 import io.github.vooft.kotlinsmile.Smile
 import io.github.vooft.kotlinsmile.SmileConfig
@@ -21,13 +21,13 @@ import java.util.concurrent.ThreadLocalRandom
 class JacksonCompatibilityTest : ShouldSpec({
     System.setProperty("kotest.assertions.collection.print.size", "10000")
 
-    val smileMapper = ObjectMapper(
+    val smileMapper = SmileMapper.builder(
         SmileFactory.builder()
-//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
-            .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, false)
-            .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, false)
+//            .configure(SmileWriteFeature.WRITE_HEADER, false)
+            .configure(SmileWriteFeature.CHECK_SHARED_STRING_VALUES, false)
+            .configure(SmileWriteFeature.CHECK_SHARED_NAMES, false)
             .build()
-    ).findAndRegisterModules()
+    ).findAndAddModules().build()
 
     val basicTestCases = listOf(ObjWithSerializer(SimpleClass()))
 
@@ -151,13 +151,13 @@ class JacksonCompatibilityTest : ShouldSpec({
     }
 
     context("should serialize object with shared names") {
-        val smileMapperWithSharedNames = ObjectMapper(
+        val smileMapperWithSharedNames = SmileMapper.builder(
             SmileFactory.builder()
-//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, false)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, true)
+//            .configure(SmileWriteFeature.WRITE_HEADER, false)
+                .configure(SmileWriteFeature.CHECK_SHARED_STRING_VALUES, false)
+                .configure(SmileWriteFeature.CHECK_SHARED_NAMES, true)
                 .build()
-        ).findAndRegisterModules()
+        ).findAndAddModules().build()
 
         val smile = Smile(SmileConfig(shareValues = false, shareKeys = true))
 
@@ -178,13 +178,13 @@ class JacksonCompatibilityTest : ShouldSpec({
     }
 
     context("should serialize object with shared values") {
-        val smileMapperWithSharedNames = ObjectMapper(
+        val smileMapperWithSharedNames = SmileMapper.builder(
             SmileFactory.builder()
-//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, true)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, false)
+//            .configure(SmileWriteFeature.WRITE_HEADER, false)
+                .configure(SmileWriteFeature.CHECK_SHARED_STRING_VALUES, true)
+                .configure(SmileWriteFeature.CHECK_SHARED_NAMES, false)
                 .build()
-        ).findAndRegisterModules()
+        ).findAndAddModules().build()
 
         val smile = Smile(SmileConfig(shareValues = true, shareKeys = false))
 
@@ -203,13 +203,13 @@ class JacksonCompatibilityTest : ShouldSpec({
     }
 
     context("should deserialize object with shared names") {
-        val smileMapperWithSharedNames = ObjectMapper(
+        val smileMapperWithSharedNames = SmileMapper.builder(
             SmileFactory.builder()
-//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, false)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, true)
+//            .configure(SmileWriteFeature.WRITE_HEADER, false)
+                .configure(SmileWriteFeature.CHECK_SHARED_STRING_VALUES, false)
+                .configure(SmileWriteFeature.CHECK_SHARED_NAMES, true)
                 .build()
-        ).findAndRegisterModules()
+        ).findAndAddModules().build()
 
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
@@ -224,13 +224,13 @@ class JacksonCompatibilityTest : ShouldSpec({
     }
 
     context("should deserialize object with list with shared values") {
-        val smileMapperWithSharedNames = ObjectMapper(
+        val smileMapperWithSharedNames = SmileMapper.builder(
             SmileFactory.builder()
-//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, true)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, false)
+//            .configure(SmileWriteFeature.WRITE_HEADER, false)
+                .configure(SmileWriteFeature.CHECK_SHARED_STRING_VALUES, true)
+                .configure(SmileWriteFeature.CHECK_SHARED_NAMES, false)
                 .build()
-        ).findAndRegisterModules()
+        ).findAndAddModules().build()
 
         withData(
             nameFn = { it.name ?: it.obj::class.simpleName!! },
@@ -254,13 +254,13 @@ class JacksonCompatibilityTest : ShouldSpec({
     }
 
     context("should serialize object with shared names and values") {
-        val smileMapperWithSharedNames = ObjectMapper(
+        val smileMapperWithSharedNames = SmileMapper.builder(
             SmileFactory.builder()
-//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, true)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, true)
+//            .configure(SmileWriteFeature.WRITE_HEADER, false)
+                .configure(SmileWriteFeature.CHECK_SHARED_STRING_VALUES, true)
+                .configure(SmileWriteFeature.CHECK_SHARED_NAMES, true)
                 .build()
-        ).findAndRegisterModules()
+        ).findAndAddModules().build()
 
         val smile = Smile(SmileConfig(shareValues = true, shareKeys = true))
 
@@ -279,13 +279,13 @@ class JacksonCompatibilityTest : ShouldSpec({
     }
 
     context("should deserialize object with shared names and values") {
-        val smileMapperWithSharedNames = ObjectMapper(
+        val smileMapperWithSharedNames = SmileMapper.builder(
             SmileFactory.builder()
-//            .configure(SmileGenerator.Feature.WRITE_HEADER, false)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_STRING_VALUES, true)
-                .configure(SmileGenerator.Feature.CHECK_SHARED_NAMES, true)
+//            .configure(SmileWriteFeature.WRITE_HEADER, false)
+                .configure(SmileWriteFeature.CHECK_SHARED_STRING_VALUES, true)
+                .configure(SmileWriteFeature.CHECK_SHARED_NAMES, true)
                 .build()
-        ).findAndRegisterModules()
+        ).findAndAddModules().build()
 
         withData<ObjWithSerializer<*>>(
             nameFn = { it.name ?: it.obj!!::class.simpleName!! },
