@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.4.10"
-kotest = "6.2.1"
+kotest = "6.2.2"
 kotlinx-benchmark = "0.4.17"
 jackson = "3.2.1"
 
